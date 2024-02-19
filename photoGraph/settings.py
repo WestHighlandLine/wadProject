@@ -67,7 +67,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'photoGraph.wsgi.application'
+WSGI_APPLICATION = 'photoGraph.wsgi.application' 
 
 
 # Database
