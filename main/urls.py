@@ -1,6 +1,6 @@
 from django.urls import path
 from django.conf.urls import url
-from photoGraph import views
+from main import views
 
 
 app_name = 'photoGraph'

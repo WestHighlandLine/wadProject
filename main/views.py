@@ -8,29 +8,29 @@ from main.forms import UserForm, UserProfileForm
 
 
 def index(request):
-    pass
+    return HttpResponse("Index page")
 
 
 def about(request):
-    pass
+    return HttpResponse("About page")
 
 
 def contact_us(request):
-    pass
+    return HttpResponse("Contact page")
 
 
 @login_required
 def view_post(request): # will also need to take in an ID_slug
-    pass
+    return HttpResponse("View a post")
 
 
 @login_required
 def report_post(request): # will also need to take in an ID_slug
-    pass
+    return HttpResponse("report post")
 
 
 def signup(request):
-    pass
+    return HttpResponse("Sign up page")
 
 
 def login(request):
@@ -59,24 +59,24 @@ def logout(request):
     return redirect(reverse('photoGraph:index'))
 
 
-@login_required
+#login_required
 def my_account(request):
-    pass
+    return HttpResponse("My Account page")
 
 
-@login_required
+#@login_required
 def my_posts(request):
-    pass
+    return HttpResponse("My Posts page")
 
 
 @login_required
 def edit_post(request): # needs a slug for post ID
-    pass
+    return HttpResponse("Edit page")
 
 
 @login_required
 def create_post(request):
-    pass
+    return HttpResponse("Create Post page")
 
 
 # will also need a cookie handler if we need cookies.
