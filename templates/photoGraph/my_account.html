@@ -7,7 +7,8 @@
 
 {% block body_block %}
 
-{% if user.is_authenticated %}
+<!-- Put some user authentication-->
+
 <h1> Your Profile </h1>
 
 <!-- data is sent to URL specified in action-->
@@ -25,6 +26,6 @@
 </form>
 
 <p><a href="{ photograph:passwordChange}" >Change Password</a></p>
-{% endif %}
+
 
 {% endblock %}
