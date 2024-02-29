@@ -3,7 +3,9 @@ from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 
 class UserProfile(models.Model):
-    username = models.SlugField(User, on_delete=models.CASCADE, unique=True)
+    username = models.SlugField(User, unique=True)
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     
     password = models.CharField(max_length=255)  # Assuming encrypted password will be stored
     email = models.EmailField(unique=True)

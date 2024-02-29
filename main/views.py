@@ -80,7 +80,13 @@ def password_change_view(request):
         form = PasswordChangeForm(request.user)
     return render(request, 'photoGraph/passwordChange.html', {'form': form})
 
-
+#@login_required
+def my_account(request):
+    if request.user.is_authenticated:
+        user_profile = UserProfile.objects.get(user=request.user)
+        return render(request, 'photoGraph/my_account.html', {'user_profile': user_profile})
+ 
+      
 
 
 
