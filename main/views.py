@@ -8,29 +8,29 @@ from main.forms import UserForm, UserProfileForm
 from django.contrib import messages
 
 def index(request):
-    return HttpResponse("Index page")
+    return render(request, 'photoGraph/index.html')
 
 
 def about(request):
-    return HttpResponse("About page")
+    return render(request, 'photoGraph/about.html')
 
 
 def contact_us(request):
-    return HttpResponse("Contact page")
+    return render(request, 'photoGraph/contact_us.html')
 
 
 @login_required
 def view_post(request): # will also need to take in an ID_slug
-    return HttpResponse("View a post")
+    return render(request, 'photoGraph/post.html')
 
 
 @login_required
 def report_post(request): # will also need to take in an ID_slug
-    return HttpResponse("report post")
+    return render(request, 'photoGraph/report_post.html')
 
 
 def signup(request):
-    return HttpResponse("Sign up page")
+    return render(request, 'photoGraph/signup.html')
 
 
 def login(request):
@@ -58,15 +58,7 @@ def logout(request):
     logout(request)
     return redirect(reverse('photoGraph:index'))
 
-
-#@login_required
-def my_account(request):
-    if request.user.is_authenticated:
-        user_profile = UserProfile.objects.get(user=request.user)
-        return render(request, 'photoGraph/my_account.html', {'user_profile': user_profile})
- 
-        
-        
+    
     
 def update_profile(request):
     form = PasswordResetForm()
@@ -90,19 +82,16 @@ def password_change_view(request):
 
 
 
-#@login_required
-def my_posts(request):
-    return HttpResponse("My Posts page")
 
 
 @login_required
 def edit_post(request): # needs a slug for post ID
-    return HttpResponse("Edit page")
+    return render(request, 'photoGraph/edit_post.html')
 
 
 @login_required
 def create_post(request):
-    return HttpResponse("Create Post page")
+    return render(request, 'photoGraph/create_post.html')
 
 
 # will also need a cookie handler if we need cookies.
