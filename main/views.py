@@ -1,11 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from django.shortcuts import redirect
 from django.urls import reverse
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
 from main.forms import UserForm, UserProfileForm
-
+from django.contrib import messages
 
 def index(request):
     return HttpResponse("Index page")
@@ -59,9 +59,35 @@ def logout(request):
     return redirect(reverse('photoGraph:index'))
 
 
-#login_required
+#@login_required
 def my_account(request):
-    return HttpResponse("My Account page")
+    if request.user.is_authenticated:
+        user_profile = UserProfile.objects.get(user=request.user)
+        return render(request, 'photoGraph/my_account.html', {'user_profile': user_profile})
+ 
+        
+        
+    
+def update_profile(request):
+    form = PasswordResetForm()
+    if request.method == 'POST':
+        form.PasswordResetForm(request.POST)
+        form.save(commit = true)
+
+def password_change_view(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save
+            update_session_auth_hash(request, user)
+            messages.sucess(request, "Password Changed Sucessfully")
+            return redirect(reverse('photoGraph:my_account')) # should go back to the my account page
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'photoGraph/passwordChange.html', {'form': form})
+
 
 
 #@login_required

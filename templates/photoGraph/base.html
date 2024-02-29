@@ -16,23 +16,23 @@
         <div>
             <ul>
 			<!--
-			I don`t know what otehr peoples ideas are, but I was thinking the log in button be
+			I don`t know what other peoples ideas are, but I was thinking the log in button be
 			shifted to the far right of the nav bar, and changes to the my Account link once the user logs in
 			if you hover over the my account section, a dropdown should appear with links to: create post; logout
 			
 			logout could then pop up a messages asking if you are sure you want to log out, etc.
 			-->
-                {% if user.is_authenticated %}
+               <!--{% if user.is_authenticated %}-->
                     <!-- Show these links when the user is logged in -->
                     <li><a href="{% url 'main:logout' %}">Logout</a></li>
                     <li><a href="{% url 'main:add_category' %}">Add New Category</a></li>
                     <li><a href="{% url 'main:my_account' %}">My Account</a></li>
                     <li><a href="{% url 'main:create_post' %}">Create Post</a></li>
-                {% else %}
+                <!--{% else %}-->
                     <!-- Show these links when the user is NOT logged in -->
                     <li><a href="{% url 'main:signup' %}">Sign Up</a></li>
                     <li><a href="{% url 'main:login' %}">Login</a></li>
-                {% endif %}
+                <!--{% endif %}-->
                     <!-- Outside the conditional statements, ALWAYS show -->
                     <li><a href="{% url 'main:about' %}">About</a></li>
                     <li><a href="{% url 'main:index' %}">Index</a></li>
