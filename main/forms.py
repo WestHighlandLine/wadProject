@@ -15,15 +15,11 @@ class UserForm(forms.ModelForm):
 
 
 class UserProfileForm(forms.ModelForm):
-    MAX_LENGTH = 128
-    username = forms.CharField(max_length=128, help_text = "Username") # Matthew - is it possible to get data from the database and put it into the help text?
-    email = forms.EmailField(max_length=128, help_text = "Email")
-    
     picture = forms.ImageField() 
 
     class Meta:
         model = UserProfile
-        fields = ('username', 'email','picture',)
+        fields = ('picture',)
         
 
 class CustomPasswordChangeForm(PasswordChangeForm):
