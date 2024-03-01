@@ -131,7 +131,10 @@ def create_post(request):
 
 # will also need a cookie handler if we need cookies.
     
-
+# TODO:
+# This currently returns all the posts in the db - we'll want to
+# limit this to just the posts the user in the map area
+# the user is looking at
 def get_posts_json(request):
     result = []
     for post in Post.objects.all():
