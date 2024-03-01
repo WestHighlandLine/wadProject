@@ -21,14 +21,18 @@
 
 <!-- TODO: Move scripting to separate file -->
 <script>
-    var map = L.map('map').setView([55.87261821643929, -4.2900009], 20);
+    try {
+        var map = L.map('map').setView([55.87261821643929, -4.2900009], 20);
 
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
 
-    L.marker([55.87261821643929, -4.2900009]).addTo(map)
-        .bindPopup('<b>University of Glasgow Main Building</b>')
-        .openPopup();
+        L.marker([55.87261821643929, -4.2900009]).addTo(map)
+            .bindPopup('<b>University of Glasgow Main Building</b>')
+            .openPopup();
+    } catch (e) {
+        document.getElementById("map").innerHTML = "<h1 style='margin: 50px'>Unable to load map - check your internet connection.</h1>";
+    }
 </script>
 {% endblock %}
