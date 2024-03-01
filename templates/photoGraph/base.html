@@ -12,48 +12,8 @@
             {% endblock %}
         </title>
 
-        <!-- TODO: Move styling to separate file -->
-        <style>
-            html, body {
-                height: 100%;
-                padding: 0;
-                margin: 0;
-                overflow-y: scroll;
-            }
-            body {
-                font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-            }
-            .nav-bar {
-                display: flex;
-                padding: 10px;
-                background-color: #1b1b1b;
-                color: white;
-                height: 50px;
-            }
-            .nav-bar a {
-                color: white;
-                text-decoration: none;
-            }
-            .nav-bar .title {
-                color: #80ffb3;
-                margin: auto 0;
-                font-size: 20pt;
-            }
-            .nav-bar ul {
-                display: flex;
-                list-style-type: none;
-                margin-left: auto;
-                margin-top: auto;
-                margin-bottom: auto;
-            }
-            .nav-bar ul li {
-                margin: 0 0.5em;
-            }
-            #main-content {
-                height: calc(100% - 70px);
-                width: 100%;
-            }
-        </style>
+        <!-- CSS is now in photoGraph/static -->
+        <link rel="stylesheet" type="text/css" href="{% static 'stylesheet.css' %}">
 
         <!-- Leaflet mapping API imports -->
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -62,6 +22,9 @@
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
             integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
             crossorigin=""></script>
+
+        <!-- Not sure if we want all javascript in one file or multiple? -->
+        <script src="{% static 'navbar.js' %}"></script>
 
         {% block custom_head %}
         {% endblock %}
