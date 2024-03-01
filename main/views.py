@@ -3,9 +3,10 @@ from django.http import HttpResponse
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
 from main.forms import UserForm, UserProfileForm
 from django.contrib import messages
+from main.models import UserProfile
 
 def index(request):
     return render(request, 'photoGraph/index.html')
@@ -64,7 +65,7 @@ def update_profile(request):
     form = PasswordResetForm()
     if request.method == 'POST':
         form.PasswordResetForm(request.POST)
-        form.save(commit = true)
+        form.save(commit = True)
 
 def password_change_view(request):
     if request.method == 'POST':
