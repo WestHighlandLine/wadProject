@@ -6,5 +6,19 @@
 {% endblock %}
 
 {% block body_block %}
-<!--insert custom HTML here-->
+<h1>Register for photoGraph</h1>
+{% if registered %}
+    You are already registered. <strong>Thank you!</strong>
+    <a href="{% url 'main:index' %}">Home</a><br />
+{% else %}
+    <strong>Register here!</strong><br />
+    <form id="user_form" method="post" action="{% url 'main:signup' %}" enctype="multipart/form-data">
+
+        {% csrf_token %}
+        {{ user_form.as_p }}
+        {{ profile_form.as_p }}
+
+        <input type="submit" name="submit" value="Register" />
+    </form>
+{% endif %}
 {% endblock %}
