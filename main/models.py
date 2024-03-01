@@ -12,7 +12,7 @@ class UserProfile(models.Model):
     profile_picture = models.ImageField(upload_to="profile_pictures/")
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.username)
+        self.slug = slugify(self.username_slug)
         super(UserProfile, self).save(*args, **kwargs)
 
     def __str__(self):

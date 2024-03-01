@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
 from main.forms import UserForm, UserProfileForm
 from django.contrib import messages
-from main.models import UserProfile
+from main.models import UserProfile, Post
 
 def index(request):
     return render(request, 'photoGraph/index.html')
@@ -132,3 +132,13 @@ def create_post(request):
 # will also need a cookie handler if we need cookies.
     
 
+def get_posts_json(request):
+    result = []
+    for post in Post.objects.all():
+        result.append({
+            "lat": post.latitude,
+            "lon": post.longitude,
+            "caption": post.caption,
+            "photo_url": post.photo.url
+        })
+    return JsonResponse(result, safe=False)

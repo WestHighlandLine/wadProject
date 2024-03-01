@@ -23,6 +23,7 @@ urlpatterns = [
     path("my_account/", views.my_account, name="my_account"),
     path("my_posts/edit/", views.edit_post, name="edit_post"),
     # ^ may also need a slug
+    path("get_posts_json", views.get_posts_json, name="get_posts_json"),
     path("create_post/", views.create_post, name="create_post"),
     path("update_profile/", views.update_profile, name="update_profile"),
 ]
