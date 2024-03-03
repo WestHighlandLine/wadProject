@@ -141,6 +141,10 @@ def get_posts_json(request):
         result.append({
             "lat": post.latitude,
             "lon": post.longitude,
+            "user_name": post.user.username_slug,
+            "location_name": post.locationName,
+            "likes": post.likes,
+            "date": post.aboutTime,
             "caption": post.caption,
             "photo_url": post.photo.url
         })

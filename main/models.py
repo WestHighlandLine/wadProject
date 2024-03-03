@@ -2,6 +2,8 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 import datetime
+import http.client
+import json
 
 
 class UserProfile(models.Model):
@@ -28,11 +30,31 @@ class Post(models.Model):
     latitude = models.FloatField(blank=False)
     longitude = models.FloatField(blank=False)
 
+    locationName = models.CharField(max_length=100, editable=False, default="Unknown")
+
     aboutTime = models.DateField()
     postTime = models.DateTimeField(editable=False)
 
     def save(self, *args, **kwargs):
         self.postTime = datetime.datetime.now()
+
+        # Get a place name from OpenStreetMap API
+        try:
+            conn = http.client.HTTPSConnection("nominatim.openstreetmap.org")
+
+            # User agent is required so that they don't block us because they don't know what we're doing!
+            conn.request("GET", f"/reverse?lat={self.latitude}&lon={self.longitude}&format=json", 
+                         headers={"User-Agent": "PhotoGraph/1.0 (University of Glasgow student project)"})
+
+            response = json.loads(conn.getresponse().read())
+
+            self.locationName = response["name"]
+
+            print(response["name"])
+        except Exception as e:
+            print(e)
+            self.locationName = f"{self.latitude}, {self.longitude}"
+
         super(Post, self).save(*args, **kwargs)
 
 

@@ -16,9 +16,30 @@
     .leaflet-marker-icon {
         border-radius: 100%;
     }
-    .locDetail img {
+    .loc-detail img {
         padding-right: 20px;
         height: 200px;
+    }
+    .loc-detail span, a {
+        display: inline-block;
+    }
+    .loc-detail .post-location {
+        font-weight: bold;
+        font-size: 13pt;
+        margin-bottom: 10px;
+    }
+    .loc-detail .post-location a {
+        color: inherit;
+    }
+    .loc-detail .post-title {
+        font-weight: bold;
+    }
+    .loc-detail .post-info-secondary {
+        color: gray;
+    }
+    .post {
+        display: inline-flex;
+        flex-direction: column;
     }
 </style>
 {% endblock %}
@@ -47,19 +68,24 @@
     function addLocations(locations) {
         locations.forEach((location) => {
             let locationHTML = `
-                <div class="locDetail">
-                    <b>${location.title}</b><br/>
-                    <a href="#">View more...</a><br/>
-                    <img src="${location.iconUrl}"/>
+                <div class="loc-detail">
+                    <span class="post-location">&#128205; <a href="#">${location.location_name}</a></span><br/>
+                    <div class="post">
+                        <img src="${location.photo_url}"/><br/>
+                        <span class="post-title">&#128247; ${location.caption}</span>
+                        <span class="post-info-primary"><a href="#">${location.user_name}</a></span>
+                        <span class="post-info-secondary">${location.likes} likes, taken ${location.date}</span>
+                        <a href="#" class="post-link">View more...</a><br/>
+                    </div>
                 </div>`;
             
             let popup = L.popup({
                 maxWidth: 600
             }).setContent(locationHTML);
             
-            L.marker(location.coords, {
+            L.marker([location.lat, location.lon], {
                 icon: L.icon({
-                    iconUrl: location.iconUrl,
+                    iconUrl: location.photo_url,
                     iconSize: [70, 70],
                     iconAnchor: [35, 0],
                     popupAnchor: [0, 0]
@@ -74,17 +100,8 @@
     const req = new XMLHttpRequest();
     req.addEventListener("load", () => {
         var locationsBackend = JSON.parse(req.response);
-        var locationsFrontend = [];
 
-        locationsBackend.forEach((location) => {
-            locationsFrontend.push({
-                "coords": [location.lat, location.lon],
-                "title": location.caption,
-                "iconUrl": location.photo_url
-            })
-        })
-
-        addLocations(locationsFrontend);
+        addLocations(locationsBackend);
     });
     req.open("GET", "/photoGraph/get_posts_json");
     req.send();
