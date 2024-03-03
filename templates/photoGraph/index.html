@@ -13,12 +13,26 @@
         width: 100%;
         height: 100%;
     }
-    .leaflet-marker-icon {
+    .custom-marker-icon img {
         border-radius: 100%;
+        height: 70px !important;
+        width: 70px !important;
+    }
+    .custom-marker-icon span {
+        position: relative;
+        left: 60px;
+        bottom: 1.5em;
+        font-weight: bold;
+        font-size: 12pt;
+        color: white;
+        background: #1b1b1b;
+        padding: 5px;
+        border-radius: 10px;
     }
     .loc-detail img {
         padding-right: 20px;
-        height: 200px;
+        max-height: 250px;
+        max-width: 250px;
     }
     .loc-detail span, a {
         display: inline-block;
@@ -84,13 +98,13 @@
 
             locationHTML += "</div>"
             let popup = L.popup({
-                maxWidth: 600,
-                minWidth: 400
+                maxWidth: 600
             }).setContent(locationHTML);
             
             L.marker([locations[locationName][0].lat, locations[locationName][0].lon], {
-                icon: L.icon({
-                    iconUrl: locations[locationName][0].photo_url,
+                icon: new L.DivIcon({
+                    className: "custom-marker-icon",
+                    html: `<img src="${locations[locationName][0].photo_url}"/><span>${locations[locationName].length}</span>`,
                     iconSize: [70, 70],
                     iconAnchor: [35, 0],
                     popupAnchor: [0, 0]
@@ -104,18 +118,9 @@
 
     const req = new XMLHttpRequest();
     req.addEventListener("load", () => {
-        var postsBackend = JSON.parse(req.response);
-        var locationsFrontend = {};
+        var locationsBackend = JSON.parse(req.response);
 
-        postsBackend.forEach((post) => {
-            if (Object.hasOwn(locationsFrontend, post.location_name)) {
-                locationsFrontend[post.location_name].push(post);
-            } else {
-                locationsFrontend[post.location_name] = [post];
-            }
-        });
-
-        addLocations(locationsFrontend);
+        addLocations(locationsBackend);
     });
     req.open("GET", "/photoGraph/get_posts_json");
     req.send();

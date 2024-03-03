@@ -136,16 +136,21 @@ def create_post(request):
 # limit this to just the posts the user in the map area
 # the user is looking at
 def get_posts_json(request):
-    result = []
+    result = {}
     for post in Post.objects.all():
-        result.append({
-            "lat": post.latitude,
-            "lon": post.longitude,
-            "user_name": post.user.username_slug,
-            "location_name": post.locationName,
-            "likes": post.likes,
-            "date": post.aboutTime,
-            "caption": post.caption,
-            "photo_url": post.photo.url
-        })
+        postDict = {
+                "lat": post.latitude,
+                "lon": post.longitude,
+                "user_name": post.user.username_slug,
+                "location_name": post.locationName,
+                "likes": post.likes,
+                "date": post.aboutTime,
+                "caption": post.caption,
+                "photo_url": post.photo.url
+            }
+        if (post.locationName not in result.keys()):
+            result[post.locationName] = [postDict]
+        else:
+            result[post.locationName].append(postDict)
+    print(result)
     return JsonResponse(result, safe=False)

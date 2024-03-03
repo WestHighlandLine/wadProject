@@ -48,9 +48,9 @@ class Post(models.Model):
 
             response = json.loads(conn.getresponse().read())
 
-            self.locationName = response["name"]
+            self.locationName = response["display_name"]
 
-            print(response["name"])
+            print(response)
         except Exception as e:
             print(e)
             self.locationName = f"{self.latitude}, {self.longitude}"
