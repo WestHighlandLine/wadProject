@@ -66,26 +66,31 @@
     }
 
     function addLocations(locations) {
-        locations.forEach((location) => {
+        Object.keys(locations).forEach((locationName) => {
             let locationHTML = `
                 <div class="loc-detail">
-                    <span class="post-location">&#128205; <a href="#">${location.location_name}</a></span><br/>
+                    <span class="post-location">&#128205; <a href="#">${locationName}</a></span><br/>`
+
+            locations[locationName].forEach((post) => {
+                locationHTML += `
                     <div class="post">
-                        <img src="${location.photo_url}"/><br/>
-                        <span class="post-title">&#128247; ${location.caption}</span>
-                        <span class="post-info-primary"><a href="#">${location.user_name}</a></span>
-                        <span class="post-info-secondary">${location.likes} likes, taken ${location.date}</span>
+                        <img src="${post.photo_url}"/><br/>
+                        <span class="post-title">&#128247; ${post.caption}</span>
+                        <span class="post-info-primary"><a href="#">${post.user_name}</a></span>
+                        <span class="post-info-secondary">${post.likes} likes, taken ${post.date}</span>
                         <a href="#" class="post-link">View more...</a><br/>
-                    </div>
-                </div>`;
-            
+                    </div>`;
+            });
+
+            locationHTML += "</div>"
             let popup = L.popup({
-                maxWidth: 600
+                maxWidth: 600,
+                minWidth: 400
             }).setContent(locationHTML);
             
-            L.marker([location.lat, location.lon], {
+            L.marker([locations[locationName][0].lat, locations[locationName][0].lon], {
                 icon: L.icon({
-                    iconUrl: location.photo_url,
+                    iconUrl: locations[locationName][0].photo_url,
                     iconSize: [70, 70],
                     iconAnchor: [35, 0],
                     popupAnchor: [0, 0]
@@ -99,9 +104,18 @@
 
     const req = new XMLHttpRequest();
     req.addEventListener("load", () => {
-        var locationsBackend = JSON.parse(req.response);
+        var postsBackend = JSON.parse(req.response);
+        var locationsFrontend = {};
 
-        addLocations(locationsBackend);
+        postsBackend.forEach((post) => {
+            if (Object.hasOwn(locationsFrontend, post.location_name)) {
+                locationsFrontend[post.location_name].push(post);
+            } else {
+                locationsFrontend[post.location_name] = [post];
+            }
+        });
+
+        addLocations(locationsFrontend);
     });
     req.open("GET", "/photoGraph/get_posts_json");
     req.send();
