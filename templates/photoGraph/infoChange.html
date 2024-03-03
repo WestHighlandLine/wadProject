@@ -9,18 +9,18 @@
 
 <!-- User authetication removed for now -->
 <!-- { if user.is_authenticated } -->
+
 <div style="width:80%;padding-left:10%">
-<h2> Change your password </h2>
+<h2> Change your User information </h2>
 
 <!-- data is sent to URL specified in action-->
-<form id="passwordUpdateForm" method="post" action="">
+<form id="infoChange" method="post" action="">
 	{% csrf_token %}
 	{{ form.as_p}}
-	<button type='submit'>Change Password</button>
+	<button type='submit'>Change User Information</button>
 	<!--<input type="submit" name="submit" value="update_profile" /> -->
 </form>
 <p><a href="{% url 'main:my_account' %}">Back to User profile</a></p>
-
 </div>
 <!-- { endif } -->
 
