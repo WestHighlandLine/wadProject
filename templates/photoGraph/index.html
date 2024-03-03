@@ -88,7 +88,7 @@
             locations[locationName].forEach((post) => {
                 locationHTML += `
                     <div class="post">
-                        <img src="${post.photo_url}"/><br/>
+                        <a href="${post.photo_url}" target="_blank"><img src="${post.photo_url}"/></a><br/>
                         <span class="post-title">&#128247; ${post.caption}</span>
                         <span class="post-info-primary"><a href="#">${post.user_name}</a></span>
                         <span class="post-info-secondary">${post.likes} likes, taken ${post.date}</span>
@@ -108,8 +108,9 @@
                     iconSize: [70, 70],
                     iconAnchor: [35, 0],
                     popupAnchor: [0, 0]
-                })}
-            ).addTo(map)
+                }),
+                riseOnHover: true
+            }).addTo(map)
             .bindPopup(popup);
         });
     }
