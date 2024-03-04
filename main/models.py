@@ -71,3 +71,6 @@ class Comment(models.Model):
 
 class Group(models.Model):
     userOwner = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+
+class Report(models.Model):
+    pass

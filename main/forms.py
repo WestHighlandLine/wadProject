@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from main.models import UserProfile
+from main.models import UserProfile, Group, Comment, Post, Report
 from django.contrib.auth.forms import PasswordChangeForm
 
 
@@ -22,7 +22,6 @@ class UserForm(forms.ModelForm):
                 "Passwords do not match"
             )
 
-
 class UserProfileForm(forms.ModelForm):
     picture = forms.ImageField() 
 
@@ -30,9 +29,44 @@ class UserProfileForm(forms.ModelForm):
         model = UserProfile
         fields = ('picture',)
         
+class GroupForm(forms.ModelForm):
+    class Meta: 
+        model = Group
+        fields = ('name', 'owner', 'is_private', 'about',)
+
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ('caption', 'poster', 'group', 'likes', 'picture', 'location', 'time',)
+
+class CommentForm(forms.ModelForm):
+    class Meta: 
+        model = Comment
+        fields = ('commenter', 'post', 'comment', 'time', )
+        
+class ReportForm(forms.ModelForm):
+    class Meta: 
+        model = Report
+        fields = ('reporter', 'post_id', 'reason',)
 
 class CustomPasswordChangeForm(PasswordChangeForm):
-    pass
+    
+    input_new_password = forms.CharField(
+        label="Input New Password",
+        widget=forms.PasswordInput(),
+    )
+    new_password_confirm = forms.CharField(
+        label="Confirm New Password",
+        widget=forms.PasswordInput(),
+    )
+    def clean(self):
+        cleaned_data = super().clean()
+        new_password = cleaned_data.get("new_password")
+        new_password_confirm = cleaned_data.get("new_password_confirm")
+
+        if new_password != new_password_confirm:
+            raise forms.ValidationError("New passwords do not match")
+        return cleaned_data
     
     
     
