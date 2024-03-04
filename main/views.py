@@ -29,6 +29,9 @@ def view_post(request): # will also need to take in an ID_slug
 def report_post(request): # will also need to take in an ID_slug
     return render(request, 'photoGraph/report_post.html')
 
+@login_required
+def report_user(request):
+    return render(request, 'photoGraph/report_user.html')
 
 def signup(request):
     return render(request, 'photoGraph/signup.html')
@@ -86,10 +89,6 @@ def my_account(request):
     #if request.user.is_authenticated:
         user_profile = UserProfile.objects.get(user=request.user)
         return render(request, 'photoGraph/my_account.html', {'user_profile': user_profile})
- 
-      
-
-
 
 @login_required
 def edit_post(request): # needs a slug for post ID
