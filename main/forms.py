@@ -30,21 +30,43 @@ class UserProfileForm(forms.ModelForm):
         fields = ('picture',)
         
 class GroupForm(forms.ModelForm):
+
+    name = forms.CharField()
+    owner = forms.CharField()
+    is_private = forms.BooleanField()
+    about = forms.CharField()
+
     class Meta: 
         model = Group
         fields = ('name', 'owner', 'is_private', 'about',)
 
 class PostForm(forms.ModelForm):
+
+    caption = forms.CharField(label='Caption', max_length=255)
+    poster = forms.ModelChoiceField(queryset=User.objects.all(), label='Poster')
+    group = forms.ModelChoiceField(queryset=Group.objects.all(), label='Group')
+    likes = forms.IntegerField(initial=0)
+    picture = forms.ImageField(label='Picture')
+    location = forms.CharField(label='Location', max_length=128)
+    time = forms.DateTimeField(label='Time')
     class Meta:
         model = Post
         fields = ('caption', 'poster', 'group', 'likes', 'picture', 'location', 'time',)
 
 class CommentForm(forms.ModelForm):
+
+    commenter = forms.ModelChoiceField(queryset=User.objects.all(), label='Commenter')
+    time = forms.DateTimeField(label='Time')
     class Meta: 
         model = Comment
         fields = ('commenter', 'post', 'comment', 'time', )
         
 class ReportForm(forms.ModelForm):
+
+    reporter = forms.ModelChoiceField(queryset=User.objects.all(), label='Reporter')
+    post_id = forms.ModelChoiceField(queryset=Post.objects.all(), label='Post')
+    reason = forms.CharField(widget=forms.Textarea, label='Reason')
+
     class Meta: 
         model = Report
         fields = ('reporter', 'post_id', 'reason',)
