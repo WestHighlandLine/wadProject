@@ -6,24 +6,29 @@ from django.contrib.auth.forms import PasswordChangeForm
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
+    confirm_password=forms.CharField(widget=forms.PasswordInput())
 
     class Meta:
         model = User
         fields = ('username', 'email', 'password',)
 
+    def clean(self):
+        cleaned_data = super(UserForm, self).clean()
+        password = cleaned_data.get("password")
+        confirm_password = cleaned_data.get("confirm_password")
 
+        if password != confirm_password:
+            raise forms.ValidationError(
+                "Passwords do not match"
+            )
 
 
 class UserProfileForm(forms.ModelForm):
-    MAX_LENGTH = 128
-    username = forms.CharField(max_length=128, help_text = "Username") # Matthew - is it possible to get data from the database and put it into the help text?
-    email = forms.EmailField(max_length=128, help_text = "Email")
-    
     picture = forms.ImageField() 
 
     class Meta:
         model = UserProfile
-        fields = ('username', 'email','picture',)
+        fields = ('picture',)
         
 
 class CustomPasswordChangeForm(PasswordChangeForm):

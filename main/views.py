@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
 from main.forms import UserForm, UserProfileForm
 from django.contrib import messages
-from main.models import UserProfile
+from main.models import UserProfile, Post
 
 def index(request):
     return render(request, 'photoGraph/index.html')
@@ -34,7 +34,35 @@ def report_user(request):
     return render(request, 'photoGraph/report_user.html')
 
 def signup(request):
-    return render(request, 'photoGraph/signup.html')
+    registered = False
+
+    if request.method == 'POST':
+        user_form = UserForm(request.POST)
+        profile_form = UserProfileForm(request.POST)
+
+        if user_form.is_valid() and profile_form.is_valid():
+            user = user_form.save()
+            user.set_password(user.password)
+            user.save()
+            profile = profile_form.save(commit=False)
+            profile.user = user
+
+            if 'picture' in request.FILES:
+                profile.picture = request.FILES['picture']
+
+            profile.save()
+            registered = True
+        else:
+            print(user_form.errors, profile_form.errors)
+    else:
+        user_form = UserForm()
+        profile_form = UserProfileForm()
+
+    return render(request,
+                  'photoGraph/signup.html',
+                  context = {'user_form': user_form,
+                             'profile_form': profile_form,
+                             'registered': registered})
 
 
 def login(request):
@@ -84,11 +112,21 @@ def password_change_view(request):
         form = PasswordChangeForm(request.user)
     return render(request, 'photoGraph/passwordChange.html', {'form': form})
 
+def passwordChange(request):
+    return render(request,'photoGraph/passwordChange.html',{})
+
+def infoChange(request):
+    return render(request, 'photoGraph/infoChange.html',{})
+
 #@login_required
 def my_account(request):
     #if request.user.is_authenticated:
-        user_profile = UserProfile.objects.get(user=request.user)
-        return render(request, 'photoGraph/my_account.html', {'user_profile': user_profile})
+    #    user_profile = UserProfile.objects.get(user=request.user)
+        return render(request, 'photoGraph/my_account.html', {})
+ 
+      
+
+
 
 @login_required
 def edit_post(request): # needs a slug for post ID
@@ -102,4 +140,26 @@ def create_post(request):
 
 # will also need a cookie handler if we need cookies.
     
-
+# TODO:
+# This currently returns all the posts in the db - we'll want to
+# limit this to just the posts the user in the map area
+# the user is looking at
+def get_posts_json(request):
+    result = {}
+    for post in Post.objects.all():
+        postDict = {
+                "lat": post.latitude,
+                "lon": post.longitude,
+                "user_name": post.user.username_slug,
+                "location_name": post.locationName,
+                "likes": post.likes,
+                "date": post.aboutTime,
+                "caption": post.caption,
+                "photo_url": post.photo.url
+            }
+        if (post.locationName not in result.keys()):
+            result[post.locationName] = [postDict]
+        else:
+            result[post.locationName].append(postDict)
+    print(result)
+    return JsonResponse(result, safe=False)

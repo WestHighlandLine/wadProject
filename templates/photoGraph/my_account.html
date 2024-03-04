@@ -8,24 +8,35 @@
 {% block body_block %}
 
 <!-- Put some user authentication-->
-
-<h1> Your Profile </h1>
-
-<!-- data is sent to URL specified in action-->
-<form id="category_form" method="post" action="/main/update_profile/">
-	{% csrf_token %}
-	{% for hidden in form.hidden_fields %}
-		{{ hidden }}
-	{% endfor %}
-	{% for field in form.visible_fields %}
-		{{ field.errors }}
-		{{ field.help_text }}
-		{{ field }}
-	{% endfor %}
-	<input type="submit" name="submit" value="update_profile" />
-</form>
-
-<p><a href="{ photograph:passwordChange}" >Change Password</a></p>
-
-
+<div style="width:70%;padding-left:12.5%">
+	<h1> My Account </h1>
+	<div style="height:330px;background-color:#bbbb00">
+		<div style="float:right;border:5px;height:90%;width:30%;background-color:0fff00">
+			<p>User Image</p>
+		</div>
+		<div>
+			<h3>My Details</h3>
+			<p><b>Name:</b> username</p>
+			<p><b>Email:</b> Email</p>
+			<p><b>Description:</b> Hello this is some text describing this person.  Hello this is some text describing this person.  Hello this is some text describing this person.  Hello this is some text describing this person.  Hello this is some text describing this person.  Hello this is some text describing this person.  Hello this is some text describing this person.  Hello this is some text describing this person. </p>
+			<br>
+			<p id="passwordChangeLink"><a href="{% url 'main:passwordChange' %}"> Change password</a></p>
+			<p id="editInfo"><a href="{% url 'main:infoChange' %}"> Change User information</a></p>
+		</div>
+	</div>
+	<br>
+	<hr>
+	<div style="background-color:#ffffff;">
+		<h3>My Posts</h3>
+		<div style="border:5px;padding:0.5%;background-color:#00fff0; height:300px">
+			<div style="float:right;width:45%">
+				<h5>Image title?</h5>
+				<p>location: (x,y)</p>
+				<p>Description: some text describing the location?</p>
+			</div>
+			<div style="border:5px;background-color:blue;float:left;height:90%;width:45%"><p>Image</p></div>
+		</div>
+		<br>
+	</div>
+</div>
 {% endblock %}
