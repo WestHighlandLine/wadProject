@@ -28,11 +28,11 @@ class Post(models.Model):
     latitude = models.FloatField(blank=False)
     longitude = models.FloatField(blank=False)
 
-    aboutTime = models.DateField()
-    postTime = models.DateTimeField(editable=False)
+    about_time = models.DateField()
+    post_time = models.DateTimeField(editable=False)
 
     def save(self, *args, **kwargs):
-        self.postTime = datetime.datetime.now()
+        self.post_time = datetime.datetime.now()
         super(Post, self).save(*args, **kwargs)
 
 
@@ -40,12 +40,12 @@ class Comment(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     comment = models.CharField(max_length=100)
-    commentTime = models.DateTimeField(editable=False)
+    comment_time = models.DateTimeField(editable=False)
 
     def save(self, *args, **kwargs):
-        self.commentTime = datetime.datetime.now()
+        self.comment_time = datetime.datetime.now()
         super(Comment, self).save(*args, **kwargs)
 
 
 class Group(models.Model):
-    userOwner = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    user_owner = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
