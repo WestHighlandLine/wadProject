@@ -5,14 +5,18 @@
     My Account
 {% endblock %}
 
+
+{% block custom_head %}
+	<link rel="stylesheet" type="text/css" href="{% static 'matthewsStyleSheet.css' %}">
+{% endblock %}
+
 {% block body_block %}
 
-<!-- Put some user authentication-->
-<div style="width:70%;padding-left:12.5%">
+<!-- Put some user authentication -> and change the styling -->
 	<h1> My Account </h1>
-	<div style="height:330px;background-color:#bbbb00">
-		<div style="float:right;border:5px;height:90%;width:30%;background-color:0fff00">
-			<p>User Image</p>
+	<div id="detailsBox">
+		<div class="profileImageContainer">
+			<img src="" alt="Profile Picture">
 		</div>
 		<div>
 			<h3>My Details</h3>
@@ -26,17 +30,21 @@
 	</div>
 	<br>
 	<hr>
-	<div style="background-color:#ffffff;">
+	<div>
 		<h3>My Posts</h3>
-		<div style="border:5px;padding:0.5%;background-color:#00fff0; height:300px">
-			<div style="float:right;width:45%">
+		<div class="userPostsBoxAccountPage">
+		<!-- Loop the contents of this, or show no images to see	-->	
+			<div class="accountPageUserPostsDescription">
 				<h5>Image title?</h5>
 				<p>location: (x,y)</p>
 				<p>Description: some text describing the location?</p>
 			</div>
-			<div style="border:5px;background-color:blue;float:left;height:90%;width:45%"><p>Image</p></div>
+			<div class="userAccountPagePostImageContainer">
+				<img src="" alt="Image">
+			</div>
+			<br>
 		</div>
-		<br>
+		
 	</div>
-</div>
+
 {% endblock %}

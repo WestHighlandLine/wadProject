@@ -1,0 +1,27 @@
+/* For My Account Pages */
+
+
+.profileImageContainer{
+
+    float:right;
+    border:5px;
+    height:90%;
+    width:30%;
+
+}
+.userPostsBoxAccountPage{
+
+    border:5px;
+    padding:0.5%;
+    height:300px;
+}
+.accountPageUserPostsDescription{
+    float:right;
+    width:45%;
+}
+.userAccountPagePostImageContainer{
+    border:5px;
+    float:left;
+    height:90%;
+    width:45%"
+}
