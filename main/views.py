@@ -63,7 +63,7 @@ def signup(request):
 
 
 
-def login(request):
+def login_page(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -71,7 +71,7 @@ def login(request):
         if user:
             if user.is_active:
                 login(request, user)
-                return redirect(reverse('photoGraph:index'))
+                return redirect(reverse('main:index'))
                 # ^ could make this redirect to wherever user was looking to go to instead of just homepage.
             else:
                 return HttpResponse("Your photoGraph account is disabled.")
@@ -85,9 +85,9 @@ def login(request):
 
 
 @login_required
-def logout(request):
+def logout_page(request):
     logout(request)
-    return redirect(reverse('photoGraph:index'))
+    return redirect(reverse('main:index'))
 
     
     
