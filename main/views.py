@@ -154,16 +154,21 @@ def edit_post(request): # needs a slug for post ID
 def create_post(request):
     return render(request, 'photoGraph/create_post.html')
 
-
-# will also need a cookie handler if we need cookies.
-    
-# TODO:
-# This currently returns all the posts in the db - we'll want to
-# limit this to just the posts the user in the map area
-# the user is looking at
 def get_posts_json(request):
     result = {}
-    for post in Post.objects.all().order_by("-likes"):
+
+    # Find bounds
+    southEast = (float(request.GET.get("seLat")), float(request.GET.get("seLon")))
+    northWest = (float(request.GET.get("nwLat")), float(request.GET.get("nwLon")))
+
+    # Filter posts
+    for post in Post.objects.filter(
+        latitude__gte=southEast[0], 
+        latitude__lte=northWest[0],
+        longitude__gte=northWest[1],
+        longitude__lte=southEast[1]
+        ).order_by("-likes"):
+
         postDict = {
                 "lat": post.latitude,
                 "lon": post.longitude,
@@ -178,5 +183,5 @@ def get_posts_json(request):
             result[post.locationName] = [postDict]
         else:
             result[post.locationName].append(postDict)
-    print(result)
+
     return JsonResponse(result, safe=False)

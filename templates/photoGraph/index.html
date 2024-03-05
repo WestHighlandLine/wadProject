@@ -70,6 +70,10 @@
 <!-- TODO: Move scripting to separate file -->
 <script>
     var map;
+    var req;
+    var reqBusy = false;
+    var reqQueued = false;
+
     function setupMap() {
         try {
             map = L.map('map').setView([55.87261821643929, -4.2900009], 17);
@@ -121,15 +125,37 @@
         });
     }
 
+    function makeRequest() {
+        if (!reqBusy) {
+            req = new XMLHttpRequest();
+            req.addEventListener("load", () => {
+                var locationsBackend = JSON.parse(req.response);
+                addLocations(locationsBackend);
+                reqBusy = false;
+
+                if (reqQueued) {
+                    reqQueued = false;
+                    makeRequest();
+                }
+            });
+
+            // Get map bounds for parameter
+            let bounds = map.getBounds();
+            let northWest = bounds.getNorthWest();
+            let southEast = bounds.getSouthEast();
+
+            reqBusy = true;
+            req.open("GET", `/photoGraph/get_posts_json?nwLat=${northWest.lat}&nwLon=${northWest.lng}&seLat=${southEast.lat}&seLon=${southEast.lng}`);
+            req.send();
+        } else {
+            reqQueued = true;
+        }
+    }
+
     setupMap();
+    makeRequest();
 
-    const req = new XMLHttpRequest();
-    req.addEventListener("load", () => {
-        var locationsBackend = JSON.parse(req.response);
-
-        addLocations(locationsBackend);
-    });
-    req.open("GET", "/photoGraph/get_posts_json");
-    req.send();
+    map.on("zoomend", (e) => {makeRequest()});
+    map.on("moveend", (e) => {makeRequest()});
 </script>
 {% endblock %}
