@@ -25,11 +25,11 @@ class UserForm(forms.ModelForm):
 
 
 class UserProfileForm(forms.ModelForm):
-    picture = forms.ImageField() 
+    profile_picture = forms.ImageField() 
 
     class Meta:
         model = UserProfile
-        fields = ('picture',)
+        fields = ('profile_picture',)
 
 
 
