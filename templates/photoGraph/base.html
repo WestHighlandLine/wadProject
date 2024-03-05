@@ -32,7 +32,9 @@
     <body>
         <div class="nav-bar">
             <span class="title">
-                photoGraph
+                <a href="{% url 'main:index' %}">
+                    photoGraph
+                </a>
             </span>
 
             <ul>
@@ -43,22 +45,21 @@
 			
 			logout could then pop up a messages asking if you are sure you want to log out, etc.
 			-->
-			
-			   <!-- Django inputs seem to still work in comments, so percent signs have been removed for now -->
-               <!--{ if user.is_authenticated }-->
-                    <!-- Show these links when the user is logged in -->
-                    <li><a href="{% url 'main:logout' %}">Logout</a></li>
-                    <li><a href="{% url 'main:my_account' %}">My Account</a></li>
-                    <li><a href="{% url 'main:create_post' %}">Create Post</a></li>
-                <!--{ else }-->
-                    <!-- Show these links when the user is NOT logged in -->
-                    <li><a href="{% url 'main:signup' %}">Sign Up</a></li>
+
+                    <li><a href="{% url 'main:index' %}">Home</a></li>
+
+                    {% if user.is_authenticated %}
+
+                        <li><a href="{% url 'main:my_account' %}">Account</a></li>
+                        <li><a href="{% url 'main:create_post' %}">Create</a></li>
+                        <li><a href="{% url 'main:logout' %}">Logout</a></li>
+
+                    {% else %}
+
                     <li><a href="{% url 'main:login' %}">Login</a></li>
-                <!--{ endif }-->
-                    <!-- Outside the conditional statements, ALWAYS show -->
-                    <li><a href="{% url 'main:about' %}">About</a></li>
-                    <li><a href="{% url 'main:index' %}">Index</a></li>
-                    <li><a href="{% url 'main:contact_us' %}">Contact Us</a></li>
+                    <li><a href="{% url 'main:signup' %}">Sign Up</a></li>
+
+                    {% endif %}
 
             </ul>
         </div>
@@ -66,6 +67,25 @@
         <div id="main-content" >
         {% block body_block %}
         {% endblock %}
+        </div>
+
+        <div class="footer">
+            <ul>
+                <li><a href="{% url 'main:about' %}">About</a></li>
+                <li>&bull;</li>
+                <li><a href="{% url 'main:contact_us' %}">Contact Us</a></li>
+                <li>|</li>
+                <li class="testing-label">Testing:</li>
+                <li class="testing"><a href="{% url 'main:my_account' %}">Account</a></li>
+                <li class="testing">&bull;</li>
+                <li class="testing"><a href="{% url 'main:create_post' %}">Create</a></li>
+                <li class="testing">&bull;</li>
+                <li class="testing"><a href="{% url 'main:signup' %}">Sign Up</a></li>
+                <li class="testing">&bull;</li>
+                <li class="testing"><a href="{% url 'main:login' %}">Login</a></li>
+                <li class="testing">&bull;</li>
+                <li class="testing"><a href="{% url 'main:logout' %}">Logout</a></li>
+            </ul>
         </div>
     </body>
 </html>
