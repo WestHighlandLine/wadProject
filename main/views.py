@@ -122,7 +122,9 @@ def my_account(request):
         return render(request, 'photoGraph/my_account.html', {})
  
       
-
+@login_required
+def report_user(request):
+    return render(request, 'photoGraph/report_user.html')
 
 
 @login_required
