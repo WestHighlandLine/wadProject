@@ -133,9 +133,9 @@ def info_change_view(request):
 
 #@login_required
 def my_account(request):
-    #if request.user.is_authenticated:
-    #    user_profile = UserProfile.objects.get(user=request.user)
-        return render(request, 'photoGraph/my_account.html', {})
+    if request.user.is_authenticated:
+        user_profile = UserProfile.objects.get(user=request.user)
+        return render(request, 'photoGraph/my_account.html', {"user_profile": user_profile})
  
       
 @login_required
