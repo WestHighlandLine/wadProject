@@ -163,7 +163,7 @@ def create_post(request):
 # the user is looking at
 def get_posts_json(request):
     result = {}
-    for post in Post.objects.all():
+    for post in Post.objects.all().order_by("-likes"):
         postDict = {
                 "lat": post.latitude,
                 "lon": post.longitude,
