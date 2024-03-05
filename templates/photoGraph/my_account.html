@@ -7,7 +7,7 @@
 
 
 {% block custom_head %}
-	<link rel="stylesheet" type="text/css" href="{% static 'matthewsStyleSheet.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'my_account.css' %}">
 {% endblock %}
 
 {% block body_block %}
@@ -15,10 +15,7 @@
 <!-- Put some user authentication -> and change the styling -->
 	<h1> My Account </h1>
 	<div id="detailsBox">
-		<div class="profileImageContainer">
-			<img src="{{user_profile.profile_picture.url}}" alt="Profile Picture">
-		</div>
-		<div>
+		<div class="detailsContainer">
 			<h3>My Details</h3>
 			<p><b>Name:</b> {{user_profile.user.username}}</p>
 			<p><b>Email:</b> {{user_profile.user.email}}</p>
@@ -26,6 +23,9 @@
 			<br>
 			<p id="passwordChangeLink"><a href="{% url 'main:passwordChange' %}"> Change password</a></p>
 			<p id="editInfo"><a href="{% url 'main:infoChange' %}"> Change User information</a></p>
+		</div>
+		<div class="profileImageContainer">
+			<img src="{{user_profile.profile_picture.url}}" alt="Profile Picture">
 		</div>
 	</div>
 	<br>

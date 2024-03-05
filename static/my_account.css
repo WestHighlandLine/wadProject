@@ -1,27 +1,28 @@
 /* For My Account Pages */
 
-
+#detailsBox {
+    display: flex;
+    width: 100%;
+}
+.detailsContainer {
+    width :100%;
+}
 .profileImageContainer{
-
-    float:right;
     border:5px;
-    height:90%;
-    width:30%;
-
+    width: fit-content;
+}
+.profileImageContainer img {
+    max-width: 40%;
+    float: right;
 }
 .userPostsBoxAccountPage{
-
     border:5px;
     padding:0.5%;
     height:300px;
 }
 .accountPageUserPostsDescription{
     float:right;
-    width:45%;
 }
 .userAccountPagePostImageContainer{
     border:5px;
-    float:left;
-    height:90%;
-    width:45%"
 }
