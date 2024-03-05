@@ -6,22 +6,14 @@
 {% endblock %}
 
 {% block body_block %}
+<h1> Change your User information </h1>
 
-<!-- User authetication removed for now -->
-<!-- { if user.is_authenticated } -->
-
-<div style="width:80%;padding-left:10%">
-<h2> Change your User information </h2>
-
-<!-- data is sent to URL specified in action-->
-<form id="infoChange" method="post" action="">
+<form id="infoChange" method="post" action="{% url 'main:infoChange' %}" enctype="multipart/form-data">
 	{% csrf_token %}
 	{{ form.as_p}}
-	<button type='submit'>Change User Information</button>
-	<!--<input type="submit" name="submit" value="update_profile" /> -->
+	<input type="submit" name="submit" value="Change User Information" />
 </form>
 <p><a href="{% url 'main:my_account' %}">Back to User profile</a></p>
 </div>
-<!-- { endif } -->
 
 {% endblock %}

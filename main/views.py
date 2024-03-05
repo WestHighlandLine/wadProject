@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
-from main.forms import UserForm, UserProfileForm
+from main.forms import UserForm, UserProfileForm, CustomPasswordChangeForm, ChangeInfoForm
 from django.contrib import messages
 from main.models import UserProfile, Post
 
@@ -62,6 +62,7 @@ def signup(request):
                              'registered': registered})
 
 
+
 def login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -82,6 +83,7 @@ def login(request):
         return render(request, 'photoGraph/login.html')
 
 
+
 @login_required
 def logout(request):
     logout(request)
@@ -95,9 +97,11 @@ def update_profile(request):
         form.PasswordResetForm(request.POST)
         form.save(commit = True)
 
+
+
 def password_change_view(request):
     if request.method == 'POST':
-        form = PasswordChangeForm(request.user, request.POST)
+        form = CustomPasswordChangeForm(request.user, request.POST)
         if form.is_valid():
             user = form.save
             update_session_auth_hash(request, user)
@@ -106,14 +110,26 @@ def password_change_view(request):
         else:
             messages.error(request, 'Please correct the error below.')
     else:
-        form = PasswordChangeForm(request.user)
+        form = CustomPasswordChangeForm(request.user)
     return render(request, 'photoGraph/passwordChange.html', {'form': form})
 
-def passwordChange(request):
-    return render(request,'photoGraph/passwordChange.html',{})
 
-def infoChange(request):
-    return render(request, 'photoGraph/infoChange.html',{})
+
+def info_change_view(request):
+    if request.method == 'POST':
+        form = ChangeInfoForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save
+            update_session_auth_hash(request, user)
+            messages.sucess(request, "Information Changed Sucessfully")
+            return redirect(reverse('photoGraph:my_account')) # should go back to the my account page
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = ChangeInfoForm(request.user)
+    return render(request, 'photoGraph/infoChange.html', {'form': form})
+
+
 
 #@login_required
 def my_account(request):
