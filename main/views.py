@@ -122,7 +122,7 @@ def info_change_view(request):
             user = form.save
             update_session_auth_hash(request, user)
             messages.sucess(request, "Information Changed Sucessfully")
-            return redirect(reverse('photoGraph:my_account')) # should go back to the my account page
+            return redirect(reverse('main:my_account')) # should go back to the my account page
         else:
             messages.error(request, 'Please correct the error below.')
     else:
@@ -136,6 +136,8 @@ def my_account(request):
     if request.user.is_authenticated:
         user_profile = UserProfile.objects.get(user=request.user)
         return render(request, 'photoGraph/my_account.html', {"user_profile": user_profile})
+    else:
+        return redirect(reverse('main:login'))
  
       
 @login_required
