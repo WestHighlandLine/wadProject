@@ -7,6 +7,12 @@
 
 {% block custom_head %}
 <style>
+    #main-content {
+        height: calc(100% - 105px);
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
     #map {
         min-width: 100px;
         min-height: 100px;
@@ -28,6 +34,10 @@
         background: #1b1b1b;
         padding: 5px;
         border-radius: 10px;
+    }
+    .loc-detail {
+        max-height: 70vh;
+        max-width: 90vw;
     }
     .loc-detail img {
         padding-right: 20px;
@@ -55,7 +65,15 @@
         display: inline-flex;
         flex-direction: column;
     }
+    .leaflet-popup-content-wrapper {
+        overflow-y: scroll;
+    }
+    .leaflet-popup-close-button {
+        margin-right: 15px;
+    }
 </style>
+
+<style id="style-marker"></style>
 {% endblock %}
 
 {% block body_block %}
@@ -64,6 +82,11 @@
 <!-- TODO: Move scripting to separate file -->
 <script>
     var map;
+    var req;
+    var reqBusy = false;
+    var reqQueued = false;
+    var postSet = new Set();
+
     function setupMap() {
         try {
             map = L.map('map').setView([55.87261821643929, -4.2900009], 17);
@@ -80,50 +103,88 @@
     }
 
     function addLocations(locations) {
+        // Remove posts from dataset that are already on map
         Object.keys(locations).forEach((locationName) => {
-            let locationHTML = `
-                <div class="loc-detail">
-                    <span class="post-location">&#128205; <a href="#">${locationName}</a></span><br/>`
+            locations[locationName] = locations[locationName].filter((post) => !postSet.has(post.photo_url));
+        });
 
-            locations[locationName].forEach((post) => {
-                locationHTML += `
-                    <div class="post">
-                        <a href="${post.photo_url}" target="_blank"><img src="${post.photo_url}"/></a><br/>
-                        <span class="post-title">&#128247; ${post.caption}</span>
-                        <span class="post-info-primary"><a href="#">${post.user_name}</a></span>
-                        <span class="post-info-secondary">${post.likes} likes, taken ${post.date}</span>
-                        <a href="#" class="post-link">View more...</a><br/>
-                    </div>`;
-            });
+        Object.keys(locations).forEach((locationName) => {
+            if (locations[locationName].length > 0) {
+                let locationHTML = `
+                    <div class="loc-detail">
+                        <span class="post-location">&#128205; <a href="#">${locationName}</a></span><br/>`
 
-            locationHTML += "</div>"
-            let popup = L.popup({
-                maxWidth: 600
-            }).setContent(locationHTML);
-            
-            L.marker([locations[locationName][0].lat, locations[locationName][0].lon], {
-                icon: new L.DivIcon({
-                    className: "custom-marker-icon",
-                    html: `<img src="${locations[locationName][0].photo_url}"/><span>${locations[locationName].length}</span>`,
-                    iconSize: [70, 70],
-                    iconAnchor: [35, 0],
-                    popupAnchor: [0, 0]
-                }),
-                riseOnHover: true
-            }).addTo(map)
-            .bindPopup(popup);
+                locations[locationName].forEach((post) => {
+                    postSet.add(post.photo_url);
+                    locationHTML += `
+                        <div class="post">
+                            <a href="${post.photo_url}" target="_blank"><img src="${post.photo_url}"/></a><br/>
+                            <span class="post-title">&#128247; ${post.caption}</span>
+                            <span class="post-info-primary"><a href="#">${post.user_name}</a></span>
+                            <span class="post-info-secondary">${post.likes} likes, taken ${post.date}</span>
+                            <a href="#" class="post-link">View more...</a><br/>
+                        </div>`;
+                });
+
+                locationHTML += "</div>"
+                let popup = L.popup().setContent(locationHTML);
+                
+                L.marker([locations[locationName][0].lat, locations[locationName][0].lon], {
+                    icon: new L.DivIcon({
+                        className: "custom-marker-icon",
+                        html: `<img src="${locations[locationName][0].photo_url}"/><span>${locations[locationName].length}</span>`,
+                        iconSize: [70, 70],
+                        iconAnchor: [35, 0],
+                        popupAnchor: [0, 0]
+                    }),
+                    riseOnHover: true
+                }).addTo(map)
+                .bindPopup(popup);
+            }
         });
     }
 
+    function makeRequest() {
+        if (!reqBusy) {
+            req = new XMLHttpRequest();
+            req.addEventListener("load", () => {
+                var locationsBackend = JSON.parse(req.response);
+                addLocations(locationsBackend);
+                reqBusy = false;
+
+                if (reqQueued) {
+                    reqQueued = false;
+                    makeRequest();
+                }
+            });
+
+            // Get map bounds for parameter
+            let bounds = map.getBounds();
+            let northWest = bounds.getNorthWest();
+            let southEast = bounds.getSouthEast();
+
+            reqBusy = true;
+            req.open("GET", `/photoGraph/get_posts_json?nwLat=${northWest.lat}&nwLon=${northWest.lng}&seLat=${southEast.lat}&seLon=${southEast.lng}`);
+            req.send();
+        } else {
+            reqQueued = true;
+        }
+    }
+
+    // Hide markers and don't make requests when zoomed out too far
+    function onMapTransform(e) {
+        if (map.getZoom() >= 13) {
+            document.getElementById("style-marker").innerText = "";
+            makeRequest();
+        } else {
+            document.getElementById("style-marker").innerText = ".custom-marker-icon { display: none; }";
+        }
+    }
+
     setupMap();
+    makeRequest();
 
-    const req = new XMLHttpRequest();
-    req.addEventListener("load", () => {
-        var locationsBackend = JSON.parse(req.response);
-
-        addLocations(locationsBackend);
-    });
-    req.open("GET", "/photoGraph/get_posts_json");
-    req.send();
+    map.on("zoomend", onMapTransform);
+    map.on("moveend", onMapTransform);
 </script>
 {% endblock %}

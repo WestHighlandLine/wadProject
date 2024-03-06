@@ -5,38 +5,59 @@
     My Account
 {% endblock %}
 
+
+{% block custom_head %}
+	<link rel="stylesheet" type="text/css" href="{% static 'my_account.css' %}">
+{% endblock %}
+
 {% block body_block %}
 
-<!-- Put some user authentication-->
-<div style="width:70%;padding-left:12.5%">
+<!-- Put some user authentication -> and change the styling -->
 	<h1> My Account </h1>
-	<div style="height:330px;background-color:#bbbb00">
-		<div style="float:right;border:5px;height:90%;width:30%;background-color:0fff00">
-			<p>User Image</p>
-		</div>
-		<div>
+	<div id="detailsBox">
+		<div class="detailsContainer">
 			<h3>My Details</h3>
-			<p><b>Name:</b> username</p>
-			<p><b>Email:</b> Email</p>
-			<p><b>Description:</b> Hello this is some text describing this person.  Hello this is some text describing this person.  Hello this is some text describing this person.  Hello this is some text describing this person.  Hello this is some text describing this person.  Hello this is some text describing this person.  Hello this is some text describing this person.  Hello this is some text describing this person. </p>
+			<p><b>Name:</b> {{user_profile.user.username}}</p>
+			<p><b>Email:</b> {{user_profile.user.email}}</p>
+			<p><b>Description: </b>{{user_profile.biography}}</p>
 			<br>
 			<p id="passwordChangeLink"><a href="{% url 'main:passwordChange' %}"> Change password</a></p>
 			<p id="editInfo"><a href="{% url 'main:infoChange' %}"> Change User information</a></p>
 		</div>
+		<div class="profileImageContainer">
+			<img src="{{user_profile.profile_picture.url}}" alt="Profile Picture">
+		</div>
 	</div>
 	<br>
 	<hr>
-	<div style="background-color:#ffffff;">
+	<div id="mypostsGoHere">
 		<h3>My Posts</h3>
-		<div style="border:5px;padding:0.5%;background-color:#00fff0; height:300px">
-			<div style="float:right;width:45%">
-				<h5>Image title?</h5>
-				<p>location: (x,y)</p>
-				<p>Description: some text describing the location?</p>
-			</div>
-			<div style="border:5px;background-color:blue;float:left;height:90%;width:45%"><p>Image</p></div>
+		
+		{% if posts %}
+			{% for post in posts %}
+				<div class="userPostsBoxAccountPage">
+					<div class="accountPageUserPostsDescription">
+						<h5></h5>
+						<p>Location: {{post.locationName}} ({{post.latitude}} lat, {{post.longitude}} long)</p>
+						<p>Caption: {{post.caption}}</p>
+						<p>Time Taken: {{post.aboutTime}}</p>
+						<p>Posted at: {{post.postTime}}</p>
+						<p>Likes: {{post.likes}}</p>
+						<p><a href="">Edit Post</a></p>
+					</div>
+					<div class="userAccountPagePostImageContainer">
+						<img clas="userPostImage" src="{{post.photo.url}}" alt="Image">
+					</div>
+				</div>
+				<br>
+			{% endfor %}
+		{% else %}
+			<div><a href="" style="text-decoration: none;">
+				<h3>Create your first post Now</h3>
+			</a></div>
+		{% endif %}
 		</div>
-		<br>
+		
 	</div>
-</div>
+
 {% endblock %}

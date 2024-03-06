@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
-from main.forms import UserForm, UserProfileForm
+from main.forms import UserForm, UserProfileForm, CustomPasswordChangeForm, ChangeInfoForm
 from django.contrib import messages
 from main.models import UserProfile, Post, PostReport
 from django.views import View
@@ -64,7 +64,7 @@ def signup(request):
 
     if request.method == 'POST':
         user_form = UserForm(request.POST)
-        profile_form = UserProfileForm(request.POST)
+        profile_form = UserProfileForm(request.POST, request.FILES)
 
         if user_form.is_valid() and profile_form.is_valid():
             user = user_form.save()
@@ -91,7 +91,8 @@ def signup(request):
                              'registered': registered})
 
 
-def login(request):
+
+def login_page(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -99,7 +100,7 @@ def login(request):
         if user:
             if user.is_active:
                 login(request, user)
-                return redirect(reverse('photoGraph:index'))
+                return redirect(reverse('main:index'))
                 # ^ could make this redirect to wherever user was looking to go to instead of just homepage.
             else:
                 return HttpResponse("Your photoGraph account is disabled.")
@@ -111,10 +112,11 @@ def login(request):
         return render(request, 'photoGraph/login.html')
 
 
+
 @login_required
-def logout(request):
+def logout_page(request):
     logout(request)
-    return redirect(reverse('photoGraph:index'))
+    return redirect(reverse('main:index'))
 
     
     
@@ -124,9 +126,11 @@ def update_profile(request):
         form.PasswordResetForm(request.POST)
         form.save(commit = True)
 
+
+
 def password_change_view(request):
     if request.method == 'POST':
-        form = PasswordChangeForm(request.user, request.POST)
+        form = CustomPasswordChangeForm(request.user, request.POST)
         if form.is_valid():
             user = form.save
             update_session_auth_hash(request, user)
@@ -135,23 +139,40 @@ def password_change_view(request):
         else:
             messages.error(request, 'Please correct the error below.')
     else:
-        form = PasswordChangeForm(request.user)
+        form = CustomPasswordChangeForm(request.user)
     return render(request, 'photoGraph/passwordChange.html', {'form': form})
 
-def passwordChange(request):
-    return render(request,'photoGraph/passwordChange.html',{})
 
-def infoChange(request):
-    return render(request, 'photoGraph/infoChange.html',{})
 
-#@login_required
+def info_change_view(request):
+    if request.method == 'POST':
+        form = ChangeInfoForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save
+            update_session_auth_hash(request, user)
+            messages.sucess(request, "Information Changed Sucessfully")
+            return redirect(reverse('main:my_account')) # should go back to the my account page
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = ChangeInfoForm(request.user)
+    return render(request, 'photoGraph/infoChange.html', {'form': form})
+
+
+
+@login_required
 def my_account(request):
-    #if request.user.is_authenticated:
-    #    user_profile = UserProfile.objects.get(user=request.user)
-        return render(request, 'photoGraph/my_account.html', {})
+    if request.user.is_authenticated:
+        user_profile = UserProfile.objects.get(user=request.user)
+        user_posts = Post.objects.filter(user=request.user.userprofile)
+        return render(request, 'photoGraph/my_account.html', {"user_profile": user_profile,"posts":user_posts})
+    else:
+        return redirect(reverse('main:login'))
  
       
-
+@login_required
+def report_user(request):
+    return render(request, 'photoGraph/report_user.html')
 
 
 @login_required
@@ -164,15 +185,28 @@ def create_post(request):
     return render(request, 'photoGraph/create_post.html')
 
 
-# will also need a cookie handler if we need cookies.
-    
-# TODO:
-# This currently returns all the posts in the db - we'll want to
-# limit this to just the posts the user in the map area
-# the user is looking at
+POST_FILTER_ON = True
 def get_posts_json(request):
     result = {}
-    for post in Post.objects.all():
+
+    postObjects = []
+    # Find bounds
+    if POST_FILTER_ON:
+        southEast = (float(request.GET.get("seLat")), float(request.GET.get("seLon")))
+        northWest = (float(request.GET.get("nwLat")), float(request.GET.get("nwLon")))
+
+        postObjects = Post.objects.filter(
+            latitude__gte=southEast[0], 
+            latitude__lte=northWest[0],
+            longitude__gte=northWest[1],
+            longitude__lte=southEast[1]
+        ).order_by("-likes")
+    else:
+        postObjects = Post.objects.all().order_by("-likes")
+
+    # Filter posts
+    for post in postObjects:
+
         postDict = {
                 "lat": post.latitude,
                 "lon": post.longitude,
@@ -187,5 +221,5 @@ def get_posts_json(request):
             result[post.locationName] = [postDict]
         else:
             result[post.locationName].append(postDict)
-    print(result)
+
     return JsonResponse(result, safe=False)

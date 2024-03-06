@@ -25,11 +25,11 @@ urlpatterns = [
     path('admin/delete_post/<int:post_id>/', views.DeletePostView, name='delete_post'),
 
     path("signup/", views.signup, name="signup"),
-    path("login/", views.login, name="login"),
-    path("logout/", views.logout, name="logout"),
+    path("login/", views.login_page, name="login"),
+    path("logout/", views.logout_page, name="logout"),
     path("my_account/", views.my_account, name="my_account"),
-    path("password_Change/", views.passwordChange, name="passwordChange"),
-    path("infoChange/",views.infoChange, name="infoChange"),
+    path("password_Change/", views.password_change_view, name="passwordChange"),
+    path("infoChange/",views.info_change_view, name="infoChange"),
     path("my_posts/edit/", views.edit_post, name="edit_post"),
     # ^ may also need a slug
 
