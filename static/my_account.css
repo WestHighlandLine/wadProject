@@ -15,19 +15,26 @@
     max-width: 40%;
     float: right;
 }
+/*For the posts*/
 .userPostsBoxAccountPage{
-    border:soild black 5px;
-    padding:0.5%;
+    width:95%;
+    display:block;
     height:300px;
+    border:solid black 5px;
+    border-radius: 7px;
+    background-color: red;
 }
 .accountPageUserPostsDescription{
     float:right;
+    width:45%;
+    padding:5px;
 }
 .userAccountPagePostImageContainer{
-    border:5px;
-    max-width: 45%;
+    float:left;
+    width:45%;
+    margin:5px;
 }
-.userPostImage{
-    max-height: 100%;
-    max-width: 45%;
+#mypostsGoHere{
+    width:100%;
+
 }

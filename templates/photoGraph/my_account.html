@@ -19,7 +19,7 @@
 			<h3>My Details</h3>
 			<p><b>Name:</b> {{user_profile.user.username}}</p>
 			<p><b>Email:</b> {{user_profile.user.email}}</p>
-			<p><b>Description:</b>{{user_profile.user.biography}}</p>
+			<p><b>Description: </b>{{user_profile.biography}}</p>
 			<br>
 			<p id="passwordChangeLink"><a href="{% url 'main:passwordChange' %}"> Change password</a></p>
 			<p id="editInfo"><a href="{% url 'main:infoChange' %}"> Change User information</a></p>
@@ -30,16 +30,15 @@
 	</div>
 	<br>
 	<hr>
-	<div>
+	<div id="mypostsGoHere">
 		<h3>My Posts</h3>
 		
 		{% if posts %}
 			{% for post in posts %}
 				<div class="userPostsBoxAccountPage">
-					<!-- I am well aware of the images beign incorectly sized. Working on fixing it	-->	
 					<div class="accountPageUserPostsDescription">
 						<h5></h5>
-						<p>Location: {{post.locationName}} ({{post.latitude}},{{post.longitude}})</p>
+						<p>Location: {{post.locationName}} ({{post.latitude}} lat, {{post.longitude}} long)</p>
 						<p>Caption: {{post.caption}}</p>
 						<p>Time Taken: {{post.aboutTime}}</p>
 						<p>Posted at: {{post.postTime}}</p>
