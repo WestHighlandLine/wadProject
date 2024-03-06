@@ -35,6 +35,10 @@
         padding: 5px;
         border-radius: 10px;
     }
+    .loc-detail {
+        max-height: 70vh;
+        max-width: 90vw;
+    }
     .loc-detail img {
         padding-right: 20px;
         max-height: 250px;
@@ -60,6 +64,12 @@
     .post {
         display: inline-flex;
         flex-direction: column;
+    }
+    .leaflet-popup-content-wrapper {
+        overflow-y: scroll;
+    }
+    .leaflet-popup-close-button {
+        margin-right: 15px;
     }
 </style>
 
@@ -117,9 +127,7 @@
                 });
 
                 locationHTML += "</div>"
-                let popup = L.popup({
-                    maxWidth: 600
-                }).setContent(locationHTML);
+                let popup = L.popup().setContent(locationHTML);
                 
                 L.marker([locations[locationName][0].lat, locations[locationName][0].lon], {
                     icon: new L.DivIcon({

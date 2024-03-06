@@ -71,4 +71,11 @@ body {
     .testing, .testing-label, .testing-divider {
         display: none;
     }
+    .nav-bar ul {
+        font-size: 10pt;
+        padding-left: 20px;
+    }
+    .nav-bar ul li, .footer ul li {
+        margin: 0 4px;
+    }
 }
