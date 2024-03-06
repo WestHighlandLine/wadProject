@@ -8,6 +8,7 @@ from main.forms import UserForm, UserProfileForm, CustomPasswordChangeForm, Chan
 from django.contrib import messages
 from main.models import UserProfile, Post, PostReport
 from django.views import View
+from .forms import ReportForm
 
 def index(request):
     return render(request, 'photoGraph/index.html')
@@ -49,6 +50,25 @@ class ReportDetailView(View):
     def get(self, request, report_id):
         report = PostReport.objects.get(id=report_id)
         return render(request, self.template_name, {'report': report})
+
+@login_required
+class ReportPostView(View):
+    template_name = 'report_post.html'
+
+    def get(self, request, post_id):
+        post = get_object_or_404(Post, id=post_id)
+        form = ReportForm()
+        return render(request, self.template_name, {'post': post, 'form': form})
+
+    def post(self, request, post_id):
+        post = get_object_or_404(Post, id=post_id)
+        form = ReportForm(request.POST)
+        if form.is_valid():
+            reason = form.cleaned_data['reason']
+            user = request.user  
+            PostReport.objects.create(user=user, post=post, reason=reason)
+            return redirect('post_detail', post_id=post_id)
+        return render(request, self.template_name, {'post': post, 'form': form})
 
 @login_required
 class DeletePostView(View):

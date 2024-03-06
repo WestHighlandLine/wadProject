@@ -20,9 +20,10 @@ urlpatterns = [
     # ^ will probably need to be similar to this:
     # path('category/<slug:category_name_slug>/add_page/', views.add_page, name='add_page'),
 
-    path('admin/report_list/', views.ReportDetailView, name='report_list'),
+    path('admin/report_list/', views.ReportListView, name='report_list'),
     path('admin/report_detail/<int:report_id>/', views.ReportDetailView, name='report_detail'),
     path('admin/delete_post/<int:post_id>/', views.DeletePostView, name='delete_post'),
+    path('post/<int:post_id>/', views.ReportPostView, name='report_post'),
 
     path("signup/", views.signup, name="signup"),
     path("login/", views.login_page, name="login"),
