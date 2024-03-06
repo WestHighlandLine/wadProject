@@ -40,7 +40,7 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
 
     comment = models.CharField(max_length=100)

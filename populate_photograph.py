@@ -7,7 +7,7 @@ import django
 django.setup()
 
 from django.contrib.auth.models import User
-from main.models import UserProfile, Post
+from main.models import UserProfile, Post, Comment
 import datetime
 
 
@@ -18,50 +18,73 @@ def populate():
             "username": "JoDo",
             "email": "johnDoe@gmail.com",
             "password": "petname123",
+            "posts": [
+                {
+                    "username": "JoDo",
+                    "caption": "In Paesano Pizza!",
+                    "latitude": 0,
+                    "longitude": 0,
+                    "about_time": None,
+                    "comments": [
+                        {
+                            "username": "RupertH",
+                            "comment": "Looks delicious!",
+                        },
+                        {
+                            "username": "Gotham_Knight",
+                            "comment": "I'm batman.",
+                        },
+                        {
+                            "username": "RupertH",
+                            "comment": "On second thought...",
+                        },
+                    ],
+                },
+                {
+                    "username": "JoDo",
+                    "caption": "Walking by the Kelvin.",
+                    "latitude": 0,
+                    "longitude": 0,
+                    "about_time": None,
+                    "comments": [],
+                },
+            ],
         },
         {
             "username": "Gotham_Knight",
             "email": "batman_fan1@gmail.com",
             "password": "ilovechristianbale",
+            "posts": [
+                {
+                    "username": "Gotham_Knight",
+                    "caption": "me dressed up as Batman",
+                    "latitude": 0,
+                    "longitude": 0,
+                    "about_time": datetime.date(year=2024, month=1, day=1),
+                    "comments": [],
+                },
+            ],
         },
         {
             "username": "RupertH",
             "email": "rupert-humphries@outlook.com",
             "password": "joker-kilt-red",
-        },
-    ]
-
-    posts_data = [
-        {
-            "username": "JoDo",
-            "caption": "In Paesano Pizza!",
-            "latitude": 0,
-            "longitude": 0,
-        },
-        {
-            "username": "Gotham_Knight",
-            "caption": "me dressed up as Batman",
-            "latitude": 0,
-            "longitude": 0,
-            "about_time": datetime.date(year=2024, month=1, day=1),
-        },
-        {
-            "username": "JoDo",
-            "caption": "Walking by the Kelvin.",
-            "latitude": 0,
-            "longitude": 0,
+            "posts": [],
         },
     ]
 
     for user_data in users_data:
-        user = add_user(**user_data)
+        user = add_user(user_data)
         user_profile = add_user_profile(user)
+
+        for post_data in user_data["posts"]:
+            post = add_post(user_profile, post_data)
+
+            for comment_data in post_data["comments"]:
+                comment = add_comment(post, comment_data)
 
     for user_profile in UserProfile.objects.all():
         print(f"username: {user_profile}\nslug: {user_profile.slug}\n")
-
-    for post_data in posts_data:
-        post = add_post(**post_data)
 
     for post in Post.objects.all():
         print(
@@ -69,9 +92,11 @@ def populate():
         )
 
 
-def add_user(username, email, password):
+def add_user(user_data):
     user = User.objects.get_or_create(
-        username=username, email=email, password=password
+        username=user_data["username"],
+        email=user_data["email"],
+        password=user_data["password"],
     )[0]
     user.save()
     return user
@@ -83,18 +108,29 @@ def add_user_profile(user):
     return user_profile
 
 
-def add_post(username, latitude, longitude, caption=None, about_time=None):
-    user = User.objects.get(username=username)
-    user_profile = UserProfile.objects.get(user=user)
+def add_post(user_profile, post_data):
     post = Post.objects.get_or_create(
         user_profile=user_profile,
-        latitude=latitude,
-        longitude=longitude,
-        caption=caption,
-        about_time=about_time,
+        latitude=post_data["latitude"],
+        longitude=post_data["longitude"],
+        caption=post_data["caption"],
+        about_time=post_data["about_time"],
     )[0]
     post.save()
     return post
+
+
+def add_comment(post, comment_data):
+    user = User.objects.get(username=comment_data["username"])
+    user_profile = UserProfile.objects.get(user=user)
+
+    comment = Comment.objects.get_or_create(
+        user_profile=user_profile,
+        post=post,
+        comment=comment_data["comment"],
+    )
+    comment.save()
+    return comment
 
 
 if __name__ == "__main__":
