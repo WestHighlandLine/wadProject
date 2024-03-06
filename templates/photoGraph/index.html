@@ -62,6 +62,8 @@
         flex-direction: column;
     }
 </style>
+
+<style id="style-marker"></style>
 {% endblock %}
 
 {% block body_block %}
@@ -161,10 +163,20 @@
         }
     }
 
+    // Hide markers and don't make requests when zoomed out too far
+    function onMapTransform(e) {
+        if (map.getZoom() >= 13) {
+            document.getElementById("style-marker").innerText = "";
+            makeRequest();
+        } else {
+            document.getElementById("style-marker").innerText = ".custom-marker-icon { display: none; }";
+        }
+    }
+
     setupMap();
     makeRequest();
 
-    map.on("zoomend", (e) => {makeRequest()});
-    map.on("moveend", (e) => {makeRequest()});
+    map.on("zoomend", onMapTransform);
+    map.on("moveend", onMapTransform);
 </script>
 {% endblock %}
