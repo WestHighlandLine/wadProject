@@ -154,20 +154,27 @@ def edit_post(request): # needs a slug for post ID
 def create_post(request):
     return render(request, 'photoGraph/create_post.html')
 
+POST_FILTER_ON = False
 def get_posts_json(request):
     result = {}
 
+    postObjects = []
     # Find bounds
-    southEast = (float(request.GET.get("seLat")), float(request.GET.get("seLon")))
-    northWest = (float(request.GET.get("nwLat")), float(request.GET.get("nwLon")))
+    if POST_FILTER_ON:
+        southEast = (float(request.GET.get("seLat")), float(request.GET.get("seLon")))
+        northWest = (float(request.GET.get("nwLat")), float(request.GET.get("nwLon")))
+
+        postObjects = Post.objects.filter(
+            latitude__gte=southEast[0], 
+            latitude__lte=northWest[0],
+            longitude__gte=northWest[1],
+            longitude__lte=southEast[1]
+        ).order_by("-likes")
+    else:
+        postObjects = Post.objects.all().order_by("-likes")
 
     # Filter posts
-    for post in Post.objects.filter(
-        latitude__gte=southEast[0], 
-        latitude__lte=northWest[0],
-        longitude__gte=northWest[1],
-        longitude__lte=southEast[1]
-        ).order_by("-likes"):
+    for post in postObjects:
 
         postDict = {
                 "lat": post.latitude,
