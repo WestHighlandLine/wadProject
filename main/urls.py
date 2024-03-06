@@ -11,7 +11,7 @@ urlpatterns = [
     path("home", views.index, name="index"),
     path("about/", views.about, name="about"),
     path("about/contact_us/", views.contact_us, name="contact_us"),
-    path("view_post/", views.view_post, name="view_post"),
+    path("view_post/<slug:postSlug>/", views.view_post, name="view_post"),
     # ^ probably needs to be a name slug using a post ID of some sort, like category_name_slug in rango.
     # eg: path('category/<slug:category_name_slug>/', views.show_category, name='show_category'),
 

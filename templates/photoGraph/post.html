@@ -5,6 +5,26 @@
     Post
 {% endblock %}
 
+{% block custom_head %}
+	<link rel="stylesheet" type="text/css" href="{% static 'my_account.css' %}">
+{% endblock %}
+
 {% block body_block %}
 <!--insert custom HTML here-->
+    {% if post %}
+        <h1>View Post</h1>
+        <p>{{ post.caption}}</p>
+        <p>{{ post.likes}}</p>
+        <p>{{ post.latitude}}</p>
+        <p>{{ post.longitude}}</p>
+        <p>{{ post.locationName}}</p>
+        <p>{{ post.aboutTime}}</p>
+        <p>{{ post.postTime}}</p>
+
+    {% else %}
+        <p>
+            Sorry, but an error occured.
+        </p>
+    {% endif %}
+
 {% endblock %}

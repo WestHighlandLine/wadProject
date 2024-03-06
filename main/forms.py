@@ -102,7 +102,8 @@ class CustomPasswordChangeForm(PasswordChangeForm):
             raise forms.ValidationError("New passwords do not match")
         return cleaned_data
 
-
+class ChangePost(forms.ModelForm):
+    pass
 
 class ChangeInfoForm(forms.ModelForm):
     picture = forms.ImageField() 

@@ -21,9 +21,9 @@ def contact_us(request):
 
 
 @login_required
-def view_post(request): # will also need to take in an ID_slug
-    return render(request, 'photoGraph/post.html')
-
+def view_post(request, post_slug): # will also need to take in an ID_slug
+    post = Post.objects.get(slug=post_slug)  
+    return render(request, 'photoGraph/post.html', {'post':post})
 
 @login_required
 def report_post(request): # will also need to take in an ID_slug

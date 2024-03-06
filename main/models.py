@@ -26,7 +26,7 @@ class Post(models.Model):
     caption = models.CharField(max_length=100)
     likes = models.IntegerField(default=0)
     photo = models.ImageField(upload_to="post_photos/")
-
+    post_slug = models.SlugField(unique=True)
     latitude = models.FloatField(blank=False)
     longitude = models.FloatField(blank=False)
 
