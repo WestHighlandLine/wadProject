@@ -154,7 +154,7 @@ def edit_post(request): # needs a slug for post ID
 def create_post(request):
     return render(request, 'photoGraph/create_post.html')
 
-POST_FILTER_ON = False
+POST_FILTER_ON = True
 def get_posts_json(request):
     result = {}
 

@@ -164,7 +164,7 @@
     setupMap();
     makeRequest();
 
-    // map.on("zoomend", (e) => {makeRequest()});
-    // map.on("moveend", (e) => {makeRequest()});
+    map.on("zoomend", (e) => {makeRequest()});
+    map.on("moveend", (e) => {makeRequest()});
 </script>
 {% endblock %}
