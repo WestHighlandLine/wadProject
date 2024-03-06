@@ -131,11 +131,12 @@ def info_change_view(request):
 
 
 
-#@login_required
+@login_required
 def my_account(request):
     if request.user.is_authenticated:
         user_profile = UserProfile.objects.get(user=request.user)
-        return render(request, 'photoGraph/my_account.html', {"user_profile": user_profile})
+        user_posts = Post.objects.filter(user=request.user.userprofile)
+        return render(request, 'photoGraph/my_account.html', {"user_profile": user_profile,"posts":user_posts})
     else:
         return redirect(reverse('main:login'))
  
@@ -153,6 +154,7 @@ def edit_post(request): # needs a slug for post ID
 @login_required
 def create_post(request):
     return render(request, 'photoGraph/create_post.html')
+
 
 POST_FILTER_ON = True
 def get_posts_json(request):

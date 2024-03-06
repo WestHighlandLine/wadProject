@@ -16,7 +16,7 @@
     float: right;
 }
 .userPostsBoxAccountPage{
-    border:5px;
+    border:soild black 5px;
     padding:0.5%;
     height:300px;
 }
@@ -25,4 +25,9 @@
 }
 .userAccountPagePostImageContainer{
     border:5px;
+    max-width: 45%;
+}
+.userPostImage{
+    max-height: 100%;
+    max-width: 45%;
 }

@@ -32,17 +32,31 @@
 	<hr>
 	<div>
 		<h3>My Posts</h3>
-		<div class="userPostsBoxAccountPage">
-		<!-- Loop the contents of this, or show no images to see	-->	
-			<div class="accountPageUserPostsDescription">
-				<h5>Image title?</h5>
-				<p>location: (x,y)</p>
-				<p>Description: some text describing the location?</p>
-			</div>
-			<div class="userAccountPagePostImageContainer">
-				<img src="" alt="Image">
-			</div>
-			<br>
+		
+		{% if posts %}
+			{% for post in posts %}
+				<div class="userPostsBoxAccountPage">
+					<!-- I am well aware of the images beign incorectly sized. Working on fixing it	-->	
+					<div class="accountPageUserPostsDescription">
+						<h5></h5>
+						<p>Location: {{post.locationName}} ({{post.latitude}},{{post.longitude}})</p>
+						<p>Caption: {{post.caption}}</p>
+						<p>Time Taken: {{post.aboutTime}}</p>
+						<p>Posted at: {{post.postTime}}</p>
+						<p>Likes: {{post.likes}}</p>
+						<p><a href="">Edit Post</a></p>
+					</div>
+					<div class="userAccountPagePostImageContainer">
+						<img clas="userPostImage" src="{{post.photo.url}}" alt="Image">
+					</div>
+				</div>
+				<br>
+			{% endfor %}
+		{% else %}
+			<div><a href="" style="text-decoration: none;">
+				<h3>Create your first post Now</h3>
+			</a></div>
+		{% endif %}
 		</div>
 		
 	</div>
