@@ -2,10 +2,10 @@
 {% load staticfiles %}
 
 {% block title_block %}
-    {{ user_profile.user.username }}'s Profile
+    {{ user_profile }}'s Profile
 {% endblock %}
 
 {% block body_block %}
-    {{ user_profile.user.username }}
+    {{ user_profile }}
     {{ user_profile.user.email }}
 {% endblock %}

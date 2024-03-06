@@ -2,9 +2,13 @@
 {% load staticfiles %}
 
 {% block title_block %}
-    Post
+    {{ post.user_profile }}'s Post
 {% endblock %}
 
 {% block body_block %}
-<!--insert custom HTML here-->
+{{ post.user_profile }}<br>
+{{ post.caption }}<br>
+{{ post.latitude }}<br>
+{{ post.longitude }}<br>
+{{ post.about_time }}<br>
 {% endblock %}

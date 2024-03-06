@@ -1,7 +1,7 @@
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
-import datetime
+from django.utils import timezone
 
 
 class UserProfile(models.Model):
@@ -20,22 +20,22 @@ class UserProfile(models.Model):
 
 
 class Post(models.Model):
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
 
     slug = models.SlugField(unique=True)
-    caption = models.CharField(max_length=100)
+    caption = models.CharField(max_length=100, blank=True, null=True)
     likes = models.IntegerField(default=0)
     photo = models.ImageField(upload_to="post_photos/")
 
     latitude = models.FloatField(blank=False)
     longitude = models.FloatField(blank=False)
 
-    about_time = models.DateField()
+    about_time = models.DateField(blank=True, null=True)
     post_time = models.DateTimeField(editable=False)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.id)
-        self.post_time = datetime.datetime.now()
+        self.post_time = timezone.now()
         super(Post, self).save(*args, **kwargs)
 
 
@@ -47,7 +47,7 @@ class Comment(models.Model):
     comment_time = models.DateTimeField(editable=False)
 
     def save(self, *args, **kwargs):
-        self.comment_time = datetime.datetime.now()
+        self.comment_time = timezone.now()
         super(Comment, self).save(*args, **kwargs)
 
 

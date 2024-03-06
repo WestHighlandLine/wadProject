@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
 from main.forms import UserForm, UserProfileForm
 from django.contrib import messages
-from main.models import UserProfile
+from main.models import UserProfile, Post
 
 
 def index(request):
@@ -34,9 +34,18 @@ def show_user_profile(request, user_profile_slug):
     return render(request, "photoGraph/user_profile.html", context=context_dict)
 
 
-@login_required
-def view_post(request):  # will also need to take in an ID_slug
-    return render(request, "photoGraph/post.html")
+def view_post(request, user_profile_slug, post_slug):
+    context_dict = {}
+
+    try:
+        user_profile = UserProfile.objects.get(slug=user_profile_slug)
+        post = Post.objects.get(user_profile=user_profile, slug=post_slug)
+        context_dict["post"] = post
+
+    except (UserProfile.DoesNotExist, Post.DoesNotExist):
+        context_dict["post"] = None
+
+    return render(request, "photoGraph/post.html", context=context_dict)
 
 
 @login_required

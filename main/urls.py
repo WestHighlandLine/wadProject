@@ -7,15 +7,19 @@ app_name = "main"
 
 urlpatterns = [
     path("", views.index, name="index"),
-    path("index", views.index, name="index"),
-    path("home", views.index, name="index"),
+    path("index", views.index),
+    path("home", views.index),
     path("about/", views.about, name="about"),
     path("about/contact_us/", views.contact_us, name="contact_us"),
-    path("view_post/", views.view_post, name="view_post"),
     path(
         "user/<slug:user_profile_slug>/",
         views.show_user_profile,
         name="show_user_profile",
+    ),
+    path(
+        "user/<slug:user_profile_slug>/post/<slug:post_slug>",
+        views.view_post,
+        name="view_post",
     ),
     # ^ probably needs to be a name slug using a post ID of some sort, like category_name_slug in rango.
     # eg: path('category/<slug:category_name_slug>/', views.show_category, name='show_category'),
