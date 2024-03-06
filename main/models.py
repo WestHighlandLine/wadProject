@@ -71,3 +71,9 @@ class Comment(models.Model):
 
 class Group(models.Model):
     userOwner = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+
+class PostReport(models.Model):
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    reason = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
