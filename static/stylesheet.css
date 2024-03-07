@@ -107,8 +107,6 @@ body {
     .nav-bar ul li, .footer ul li {
         margin: 0 4px;
     }
-    height: calc(100% - 70px);
-    width: 100%;
 }
 
 /* Style for contact page */
@@ -140,12 +138,6 @@ body {
     margin-block-end: 1em;
     margin-inline-start: 0px;
     margin-inline-end: 0px;
-}
-.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
-    margin-top: 0;
-    margin-bottom: .5rem;
-    font-weight: 500;
-    line-height: 1.2;
 }
 .text-center {
     text-align: center;
