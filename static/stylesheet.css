@@ -36,3 +36,73 @@ body {
     height: calc(100% - 70px);
     width: 100%;
 }
+
+/* Style for contact page */
+.body-block {
+    margin-left: 1rem;
+    margin-top: 1rem;
+    width: auto;
+}
+.contact-container {
+    text-align: left;
+    margin-bottom: 20px;
+}
+.contact-item {
+    margin-bottom: 15px;
+}
+.contact-heading {
+    text-align: justify;
+    font-size: 2rem;
+    font-weight: bold;
+    text-decoration: underline;    
+}
+.contact-p {
+    text-align: justify;
+    font-size: x-large;
+}
+.p {
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    margin-top: 0;
+    margin-bottom: .5rem;
+    font-weight: 500;
+    line-height: 1.2;
+}
+.text-center {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.text-left {
+    text-align: left;
+}
+.hidden-box {
+    padding: 20px;
+    border: 0px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0);
+    margin: auto;
+    max-width: 800px;
+}
+.box-container {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: auto;
+    max-width: 800px;
+}
+.inner-link {
+    display: flex;
+    flex-direction: column;
+}
+.thin {
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-color: black;
+    text-decoration-thickness: 2px;
+}
