@@ -8,7 +8,62 @@
 
 {% block custom_head %}
 	<link rel="stylesheet" type="text/css" href="{% static 'my_account.css' %}">
-{% endblock %}
+<style>
+#detailsBox {
+    display: flex;
+    width: 100%;
+}
+.detailsContainer {
+    width :100%;
+}
+.profileImageContainer{
+    border:5px;
+    width: fit-content;
+}
+.profileImageContainer img {
+    max-width: 40%;
+    float: right;
+}
+
+
+/*For the posts*/
+.userPostsBoxAccountPage{
+    width:95%;
+    display:flex;
+    height:300px;
+    border:solid black 5px;
+    border-radius: 7px;
+    background-color: rgb(255, 0, 255);
+}
+.accountPageUserPostsDescription{
+    
+    width:45%;
+    padding:5px;
+}
+.userAccountPagePostImageContainer{
+   
+    width:45%;
+	height:96%;
+	padding:4px;
+    margin:5px;
+	display:block;
+	background-color:red;
+}
+.userPostImage{
+	margin-top:auto;
+	margin-bottom:auto;
+    
+}
+#mypostsGoHere{
+    width:100%;
+
+}
+
+
+
+</style>
+
+	{% endblock %}
 
 {% block body_block %}
 
@@ -43,16 +98,16 @@
 						<p>Time Taken: {{post.aboutTime}}</p>
 						<p>Posted at: {{post.postTime}}</p>
 						<p>Likes: {{post.likes}}</p>
-						<p><a href="">Edit Post</a></p>
+						<p><a href="{{post.post_slug}}">Edit Post</a></p>
 					</div>
 					<div class="userAccountPagePostImageContainer">
-						<img clas="userPostImage" src="{{post.photo.url}}" alt="Image">
+						<img clas="userPostImage" height="90%"  src="{{post.photo.url}}" alt="Image">
 					</div>
 				</div>
 				<br>
 			{% endfor %}
 		{% else %}
-			<div><a href="" style="text-decoration: none;">
+			<div><a href="" style="text-decoration: none;"><!-- link to create post page-->
 				<h3>Create your first post Now</h3>
 			</a></div>
 		{% endif %}

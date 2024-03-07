@@ -21,8 +21,8 @@ def contact_us(request):
 
 
 @login_required
-def view_post(request, post_slug): # will also need to take in an ID_slug
-    post = Post.objects.get(slug=post_slug)  
+def view_post(request, postSlug): # will also need to take in an ID_slug
+    post = Post.objects.get(slug=postSlug)  
     return render(request, 'photoGraph/post.html', {'post':post})
 
 @login_required
@@ -147,10 +147,11 @@ def report_user(request):
 
 
 @login_required
-def edit_post(request): # needs a slug for post ID
-    return render(request, 'photoGraph/edit_post.html')
-
-
+def edit_post(request,postSlug): # needs a slug for post ID
+    post = Post.objects.get(slug=postSlug)  
+    return render(request, 'photoGraph/edit_post.html',{'post':post})
+   
+   
 @login_required
 def create_post(request):
     return render(request, 'photoGraph/create_post.html')
