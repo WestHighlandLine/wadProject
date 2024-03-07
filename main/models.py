@@ -30,12 +30,10 @@ class Post(models.Model):
     latitude = models.FloatField(blank=False)
     longitude = models.FloatField(blank=False)
 
-    about_time = models.DateField(blank=True, null=True)
-    post_time = models.DateTimeField(editable=False)
+    creation_time = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.id)
-        self.post_time = timezone.now()
         super(Post, self).save(*args, **kwargs)
 
 
@@ -44,12 +42,27 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
 
     comment = models.CharField(max_length=100)
-    comment_time = models.DateTimeField(editable=False)
 
-    def save(self, *args, **kwargs):
-        self.comment_time = timezone.now()
-        super(Comment, self).save(*args, **kwargs)
+    creation_time = models.DateTimeField(auto_now_add=True)
 
 
 class Group(models.Model):
     user_owner = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+
+    name = models.CharField(unique=True, max_length=50)
+    slug = models.SlugField(unique=True)
+    about = models.CharField(max_length=100)
+    is_private = models.BooleanField(default=False)
+
+    creation_time = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Group, self).save(*args, **kwargs)
+
+
+class GroupMember(models.Model):
+    member = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+
+    join_time = models.DateTimeField(auto_now_add=True)
