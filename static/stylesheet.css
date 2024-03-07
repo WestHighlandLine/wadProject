@@ -57,7 +57,6 @@ body {
     margin: 0 0.5em;
 }
 #main-content {
-<<<<<<< HEAD
     width: 80%;   /*set to 80% and then moved to the right 10% should position it in the middle */
     margin: 0 auto;
     background-color: white;
@@ -108,7 +107,6 @@ body {
     .nav-bar ul li, .footer ul li {
         margin: 0 4px;
     }
-=======
     height: calc(100% - 70px);
     width: 100%;
 }
@@ -181,5 +179,4 @@ body {
     text-decoration-style: solid;
     text-decoration-color: black;
     text-decoration-thickness: 2px;
->>>>>>> scott
 }
