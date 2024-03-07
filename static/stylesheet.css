@@ -62,6 +62,38 @@ body {
     background-color: white;
     padding: 6px;
 }
+.posts-container {
+    text-align: center;
+}
+.post img {
+    padding-right: 20px;
+    max-height: 250px;
+    max-width: 250px;
+}
+.post span, a {
+    display: inline-block;
+}
+.post .post-location {
+    font-weight: bold;
+    font-size: 13pt;
+    margin-bottom: 10px;
+}
+.post .post-location a {
+    color: inherit;
+}
+.post .post-title {
+    font-weight: bold;
+    overflow-wrap: anywhere;
+}
+.post .post-info-secondary {
+    color: gray;
+}
+.post {
+    display: inline-flex;
+    flex-direction: column;
+    width: 260px;
+    padding: 20px;
+}
 
 /* Mobile formatting*/
 @media only screen and (max-width: 600px) {

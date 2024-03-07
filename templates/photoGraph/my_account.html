@@ -1,5 +1,6 @@
 {% extends 'photoGraph/base.html' %}
 {% load staticfiles %}
+{% load template_tags %}
 
 {% block title_block %}
     My Account
@@ -89,23 +90,7 @@
 		<h3>My Posts</h3>
 		
 		{% if posts %}
-			{% for post in posts %}
-				<div class="userPostsBoxAccountPage">
-					<div class="accountPageUserPostsDescription">
-						<h5></h5>
-						<p>Location: {{post.locationName}} ({{post.latitude}} lat, {{post.longitude}} long)</p>
-						<p>Caption: {{post.caption}}</p>
-						<p>Time Taken: {{post.aboutTime}}</p>
-						<p>Posted at: {{post.postTime}}</p>
-						<p>Likes: {{post.likes}}</p>
-						<p><a href="{{post.post_slug}}">Edit Post</a></p>
-					</div>
-					<div class="userAccountPagePostImageContainer">
-						<img clas="userPostImage" height="90%"  src="{{post.photo.url}}" alt="Image">
-					</div>
-				</div>
-				<br>
-			{% endfor %}
+			{% post_template posts %}
 		{% else %}
 			<div><a href="" style="text-decoration: none;"><!-- link to create post page-->
 				<h3>Create your first post Now</h3>
