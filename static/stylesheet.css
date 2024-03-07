@@ -79,7 +79,7 @@ body {
     /*set to 80% and then moved to the right 10% should position it in the middle */
     margin: 0 auto;
     background-color: white;
-    padding: 1em;
+    padding: 2em;
     min-height: calc(100vh - 120px);
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* From https://www.w3schools.com/css/css3_shadows_box.asp */
 }
