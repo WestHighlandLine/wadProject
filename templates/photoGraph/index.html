@@ -2,7 +2,7 @@
 {% load staticfiles %}
 
 {% block title_block %}
-    Home
+Home
 {% endblock %}
 
 {% block custom_head %}
@@ -13,17 +13,20 @@
         margin: 0;
         padding: 0;
     }
+
     #map {
         min-width: 100px;
         min-height: 100px;
         width: 100%;
         height: 100%;
     }
+
     .custom-marker-icon img {
         border-radius: 100%;
         height: 70px !important;
         width: 70px !important;
     }
+
     .custom-marker-icon span {
         position: relative;
         left: 60px;
@@ -35,13 +38,16 @@
         padding: 5px;
         border-radius: 10px;
     }
+
     .loc-detail {
         max-height: 70vh;
         max-width: 90vw;
     }
+
     .leaflet-popup-content-wrapper {
         overflow-y: scroll;
     }
+
     .leaflet-popup-close-button {
         margin-right: 15px;
     }
@@ -98,12 +104,12 @@
                             <span class="post-info-secondary">${post.likes} likes, taken ${post.date}</span>
                             <a href="#" class="post-link">View more...</a><br/>
                         </div>`;
-                      /*  { url 'main:view_post' post.post_slug }*/
+                    /*  { url 'main:view_post' post.post_slug }*/
                 });
 
                 locationHTML += "</div>"
                 let popup = L.popup().setContent(locationHTML);
-                
+
                 L.marker([locations[locationName][0].lat, locations[locationName][0].lon], {
                     icon: new L.DivIcon({
                         className: "custom-marker-icon",
@@ -114,7 +120,7 @@
                     }),
                     riseOnHover: true
                 }).addTo(map)
-                .bindPopup(popup);
+                    .bindPopup(popup);
             }
         });
     }
