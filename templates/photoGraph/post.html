@@ -6,9 +6,18 @@
 {% endblock %}
 
 {% block body_block %}
-{{ post.user_profile }}<br>
-{{ post.caption }}<br>
-{{ post.latitude }}<br>
-{{ post.longitude }}<br>
-{{ post.about_time }}<br>
+    {{ post.user_profile }}<br>
+    {{ post.caption }}<br>
+    {{ post.latitude }}<br>
+    {{ post.longitude }}<br>
+    {{ post.about_time }}<br>
+    {{ post.post_time }}<br>
+    <br>
+
+    {% for comment in comments %}
+        {{ comment.user_profile }} says:<br>
+        {{ comment.comment }}<br>
+        {{ comment.comment_time }}<br>
+        <br>
+    {% endfor %}
 {% endblock %}

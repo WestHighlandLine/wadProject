@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
 from main.forms import UserForm, UserProfileForm
 from django.contrib import messages
-from main.models import UserProfile, Post
+from main.models import UserProfile, Post, Comment
 
 
 def index(request):
@@ -41,6 +41,9 @@ def view_post(request, user_profile_slug, post_slug):
         user_profile = UserProfile.objects.get(slug=user_profile_slug)
         post = Post.objects.get(user_profile=user_profile, slug=post_slug)
         context_dict["post"] = post
+
+        comments = Comment.objects.filter(post=post)
+        context_dict["comments"] = comments
 
     except (UserProfile.DoesNotExist, Post.DoesNotExist):
         context_dict["post"] = None
