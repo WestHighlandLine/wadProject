@@ -5,6 +5,10 @@
     {{ post.user_profile }}'s Post
 {% endblock %}
 
+{% block custom_head %}
+	<link rel="stylesheet" type="text/css" href="{% static 'my_account.css' %}">
+{% endblock %}
+
 {% block body_block %}
     {{ post.user_profile }}<br>
     {{ post.caption }}<br>

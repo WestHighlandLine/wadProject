@@ -1,31 +1,108 @@
 {% extends 'photoGraph/base.html' %}
 {% load staticfiles %}
+{% load template_tags %}
 
 {% block title_block %}
-    My Account
+My Account
+{% endblock %}
+
+
+{% block custom_head %}
+<link rel="stylesheet" type="text/css" href="{% static 'my_account.css' %}">
+<style>
+	#detailsBox {
+		display: flex;
+		width: 100%;
+	}
+
+	.detailsContainer {
+		width: 100%;
+	}
+
+	.profileImageContainer {
+		border: 5px;
+		width: fit-content;
+	}
+
+	.profileImageContainer img {
+		max-width: 40vw;
+		max-height: 40vh;
+		float: right;
+	}
+
+
+	/*For the posts*/
+	.userPostsBoxAccountPage {
+		width: 95%;
+		display: flex;
+		height: 300px;
+		border: solid black 5px;
+		border-radius: 7px;
+		background-color: rgb(255, 0, 255);
+	}
+
+	.accountPageUserPostsDescription {
+
+		width: 45%;
+		padding: 5px;
+	}
+
+	.userAccountPagePostImageContainer {
+
+		width: 45%;
+		height: 96%;
+		padding: 4px;
+		margin: 5px;
+		display: block;
+		background-color: red;
+	}
+
+	.userPostImage {
+		margin-top: auto;
+		margin-bottom: auto;
+
+	}
+
+	#mypostsGoHere {
+		width: 100%;
+
+	}
+</style>
+
 {% endblock %}
 
 {% block body_block %}
 
-<!-- Put some user authentication-->
+<!-- Put some user authentication -> and change the styling -->
+<h1> My Account </h1>
+<div id="detailsBox">
+	<div class="detailsContainer">
+		<h3>My Details</h3>
+		<p><b>Name:</b> {{user_profile.user.username}}</p>
+		<p><b>Email:</b> {{user_profile.user.email}}</p>
+		<p><b>Description: </b>{{user_profile.biography}}</p>
+		<br>
+		<p id="passwordChangeLink"><a href="{% url 'main:passwordChange' %}"> Change password</a></p>
+		<p id="editInfo"><a href="{% url 'main:infoChange' %}"> Change User information</a></p>
+	</div>
+	<div class="profileImageContainer">
+		<img src="{{user_profile.profile_picture.url}}" alt="Profile Picture">
+	</div>
+</div>
+<br>
+<hr>
+<div id="mypostsGoHere">
+	<h3>My Posts</h3>
 
-<h1> Your Profile </h1>
+	{% if posts %}
+	{% post_template posts %}
+	{% else %}
+	<div><a href="" style="text-decoration: none;"><!-- link to create post page-->
+			<h3>Create your first post Now</h3>
+		</a></div>
+	{% endif %}
+</div>
 
-<!-- data is sent to URL specified in action-->
-<form id="category_form" method="post" action="/main/update_profile/">
-	{% csrf_token %}
-	{% for hidden in form.hidden_fields %}
-		{{ hidden }}
-	{% endfor %}
-	{% for field in form.visible_fields %}
-		{{ field.errors }}
-		{{ field.help_text }}
-		{{ field }}
-	{% endfor %}
-	<input type="submit" name="submit" value="update_profile" />
-</form>
-
-<p><a href="{ photograph:passwordChange}" >Change Password</a></p>
-
+</div>
 
 {% endblock %}
