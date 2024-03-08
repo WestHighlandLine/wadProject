@@ -8,7 +8,6 @@ django.setup()
 
 from django.contrib.auth.models import User
 from main.models import UserProfile, Post, Comment
-import datetime
 
 
 def populate():
@@ -24,7 +23,6 @@ def populate():
                     "caption": "In Paesano Pizza!",
                     "latitude": 0,
                     "longitude": 0,
-                    "about_time": None,
                     "comments": [
                         {
                             "username": "RupertH",
@@ -45,7 +43,6 @@ def populate():
                     "caption": "Walking by the Kelvin.",
                     "latitude": 0,
                     "longitude": 0,
-                    "about_time": None,
                     "comments": [],
                 },
             ],
@@ -60,7 +57,6 @@ def populate():
                     "caption": "me dressed up as Batman",
                     "latitude": 0,
                     "longitude": 0,
-                    "about_time": datetime.date(year=2024, month=1, day=1),
                     "comments": [],
                 },
             ],
@@ -91,12 +87,12 @@ def populate():
 
     for post in Post.objects.all():
         print(
-            f"username:{post.user_profile}\nslug: {post.slug}\ncaption: {post.caption}\ncoords: ({post.latitude},{post.longitude})\n"
+            f"username:{post.created_by}\nslug: {post.slug}\ncaption: {post.caption}\ncoords: ({post.latitude},{post.longitude})\ncreated_time: {post.created_time}\n"
         )
 
     for comment in Comment.objects.all():
         print(
-            f"username:{comment.user_profile}\ncomment: {comment.comment}\ncomment_time: {comment.comment_time}\n"
+            f"username:{comment.created_by}\ncomment: {comment.comment}\ncreated_time: {comment.created_time}\n"
         )
 
 
@@ -121,11 +117,10 @@ def add_post(post_data):
     user_profile = UserProfile.objects.get(user=user)
 
     post = Post.objects.get_or_create(
-        user_profile=user_profile,
+        created_by=user_profile,
         latitude=post_data["latitude"],
         longitude=post_data["longitude"],
         caption=post_data["caption"],
-        about_time=post_data["about_time"],
     )[0]
     post.save()
     return post
@@ -136,7 +131,7 @@ def add_comment(post, comment_data):
     user_profile = UserProfile.objects.get(user=user)
 
     comment = Comment.objects.get_or_create(
-        user_profile=user_profile,
+        created_by=user_profile,
         post=post,
         comment=comment_data["comment"],
     )[0]
@@ -145,5 +140,5 @@ def add_comment(post, comment_data):
 
 
 if __name__ == "__main__":
-    print("Starting photoGraph population script...")
+    print("Starting Gavin's photoGraph population script...")
     populate()

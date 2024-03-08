@@ -2,7 +2,7 @@
 {% load staticfiles %}
 
 {% block title_block %}
-    {{ post.user_profile }}'s Post
+    {{ post.created_by }}'s Post
 {% endblock %}
 
 {% block custom_head %}
@@ -10,18 +10,17 @@
 {% endblock %}
 
 {% block body_block %}
-    {{ post.user_profile }}<br>
+    {{ post.created_by }}<br>
     {{ post.caption }}<br>
     {{ post.latitude }}<br>
     {{ post.longitude }}<br>
-    {{ post.about_time }}<br>
-    {{ post.post_time }}<br>
+    {{ post.created_time }}<br>
     <br>
 
     {% for comment in comments %}
-        {{ comment.user_profile }} says:<br>
+        {{ comment.created_by }} says:<br>
         {{ comment.comment }}<br>
-        {{ comment.comment_time }}<br>
+        {{ comment.created_time }}<br>
         <br>
     {% endfor %}
 {% endblock %}
