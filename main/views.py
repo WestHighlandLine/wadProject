@@ -221,10 +221,10 @@ def get_posts_json(request):
         postDict = {
             "lat": post.latitude,
             "lon": post.longitude,
-            "user_name": post.user.username_slug,
+            "user_name": post.user_profile.slug,
             "location_name": post.locationName,
             "likes": post.likes,
-            "date": post.aboutTime,
+            "date": post.creation_time,
             "caption": post.caption,
             "photo_url": post.photo.url,
         }
