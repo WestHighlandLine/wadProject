@@ -39,13 +39,11 @@ def generatePosts(directory):
                             img.gps_longitude_ref))
                     
                     post = Post(
-                        user=UserProfile.objects.first(), 
+                        user_profile=UserProfile.objects.first(), 
                         caption=filename.split("/")[-1], 
-                        likes=0, 
                         photo=ImageFile(open(filename, "rb")), 
                         latitude=coords[0], 
-                        longitude=coords[1], 
-                        aboutTime=datetime.datetime.now()
+                        longitude=coords[1]
                     )
                     post.save()
                 except AttributeError:
