@@ -62,4 +62,4 @@ def generatePosts(directory):
 
 if __name__ == "__main__":
     print("Starting Peter's photoGraph population script...")
-    generatePosts()
+    generatePosts("media/post_photos/generatePosts-photos")
