@@ -221,16 +221,16 @@ def get_posts_json(request):
         postDict = {
             "lat": post.latitude,
             "lon": post.longitude,
-            "user_name": post.user_profile.slug,
-            "location_name": post.locationName,
+            "user_name": post.created_by.slug,
+            "location_name": post.location_name,
             "likes": post.likes,
-            "date": post.creation_time,
+            "date": post.created_time,
             "caption": post.caption,
             "photo_url": post.photo.url,
         }
-        if post.locationName not in result.keys():
-            result[post.locationName] = [postDict]
+        if post.location_name not in result.keys():
+            result[post.location_name] = [postDict]
         else:
-            result[post.locationName].append(postDict)
+            result[post.location_name].append(postDict)
 
     return JsonResponse(result, safe=False)

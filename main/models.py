@@ -5,6 +5,7 @@ from django.utils import timezone
 import datetime
 import http.client
 import json
+import uuid
 
 
 class UserProfile(models.Model):
@@ -38,7 +39,7 @@ class Post(models.Model):
     location_name = models.CharField(max_length=100, editable=False, default="Unknown")
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.id)
+        self.slug = slugify(uuid.uuid4().hex)
 
         # Get a place name from OpenStreetMap API
         try:
