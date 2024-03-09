@@ -168,7 +168,7 @@ def info_change_view(request):
 def my_account(request):
     if request.user.is_authenticated:
         user_profile = UserProfile.objects.get(user=request.user)
-        user_posts = Post.objects.filter(user=request.user.userprofile)
+        user_posts = Post.objects.filter(created_by=request.user.userprofile)
         return render(
             request,
             "photoGraph/my_account.html",
