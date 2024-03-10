@@ -40,6 +40,19 @@ def show_user_profile(request, user_profile_slug):
 
     return render(request, "photoGraph/user_profile.html", context=context_dict)
 
+def show_location(request):
+    location_name = request.GET.get('location_name', '')
+    context_dict = {"location_name": location_name}
+
+    try:
+        location_posts = Post.objects.filter(location_name=location_name)
+        context_dict["posts"] = location_posts
+
+    except Exception:
+        pass
+
+    return render(request, "photoGraph/location.html", context=context_dict)
+
 
 def view_post(request, user_profile_slug, post_slug):
     context_dict = {}
@@ -225,6 +238,7 @@ def get_posts_json(request):
             "lon": post.longitude,
             "user_name": post.created_by.slug,
             "location_name": post.location_name,
+            "location_url": reverse("main:show_location") + "?location_name=" + post.location_name,
             "likes": post.likes,
             "date": post.created_time,
             "caption": post.caption,

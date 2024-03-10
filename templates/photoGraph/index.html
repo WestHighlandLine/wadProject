@@ -74,7 +74,7 @@ Home
             if (locations[locationName].length > 0) {
                 let locationHTML = `
                     <div class="loc-detail">
-                        <span class="post-location">&#128205; <a href="#">${locationName}</a></span><br/>`
+                        <span class="post-location">&#128205; <a href="${locations[locationName][0].location_url}">${locationName}</a></span><br/>`
 
                 locations[locationName].forEach((post) => {
                     postSet.add(post.photo_url);

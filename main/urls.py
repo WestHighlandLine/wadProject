@@ -17,6 +17,11 @@ urlpatterns = [
         name="show_user_profile",
     ),
     path(
+        "location/",
+        views.show_location,
+        name="show_location",
+    ),
+    path(
         "user/<slug:user_profile_slug>/post/<slug:post_slug>",
         views.view_post,
         name="view_post",
