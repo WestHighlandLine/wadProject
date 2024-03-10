@@ -54,7 +54,6 @@
                     {% if user.is_authenticated %}
 
                         <li><a href="{% url 'main:my_account' %}">Account</a></li>
-                        <li><a href="{% url 'main:create_post' %}">Create</a></li>
                         <li><a href="{% url 'main:logout' %}">Logout</a></li>
 
                     {% else %}

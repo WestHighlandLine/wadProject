@@ -33,18 +33,28 @@ Home
     .leaflet-popup-close-button {
         margin-right: 15px;
     }
+
+    #create-button {
+        position: absolute;
+        right: 10px;
+        z-index: 999;
+        margin-top: 10px;
+    }
 </style>
 
 <style id="style-marker"></style>
 {% endblock %}
 
 {% block body_block %}
+<button id="create-button">Create post</button>
 <div id="map"></div>
 
 <!-- TODO: Move scripting to separate file -->
 <script>
     var map;
     var req;
+    var createMarker;
+    var createMode = false;
     var reqBusy = false;
     var reqQueued = false;
     var postSet = new Set();
@@ -144,10 +154,41 @@ Home
         }
     }
 
+    function onCreateClick(e) {
+        if (createMarker != undefined) {
+            createMarker.remove();
+        }
+
+        createMarker = L.marker(e.latlng).addTo(map)
+        .bindPopup(
+            L.popup().setContent(`<a href="/photoGraph/create_post?lat=${e.latlng.lat}&lng=${e.latlng.lng}"><button>Add post here</button></a>`)
+        )
+        .openPopup()
+        .on("popupclose", (e) => {createMarker.remove()});
+    }
+
+    function createOn() {
+        document.getElementById("create-button").onclick = (e) => createOff();
+        map.on("click", onCreateClick);
+        document.getElementById("create-button").innerHTML = "Select a location on the map";
+    }
+
+    function createOff() {
+        if (createMarker != undefined) {
+            createMarker.remove();
+        }
+
+        map.on("click", null);
+        document.getElementById("create-button").innerHTML = "Create post";
+        document.getElementById("create-button").onclick = (e) => createOn();
+    }
+
     setupMap();
     makeRequest();
 
     map.on("zoomend", onMapTransform);
     map.on("moveend", onMapTransform);
+
+    document.getElementById("create-button").onclick = (e) => createOn();
 </script>
 {% endblock %}
