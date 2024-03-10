@@ -227,6 +227,8 @@ def get_posts_json(request):
             "date": post.created_time,
             "caption": post.caption,
             "photo_url": post.photo.url,
+            "user_url": reverse("main:show_user_profile", args=[post.created_by.slug]),
+            "post_url": reverse("main:view_post", args=[post.created_by.slug, post.slug])
         }
         if post.location_name not in result.keys():
             result[post.location_name] = [postDict]
