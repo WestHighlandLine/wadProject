@@ -1,11 +1,21 @@
 {% extends 'photoGraph/base.html' %}
 {% load staticfiles %}
+{% load template_tags %}
 
 {% block title_block %}
     {{ user_profile }}'s Profile
 {% endblock %}
 
 {% block body_block %}
-    {{ user_profile }}
-    {{ user_profile.user.email }}
+    {% account_detail_template user_profile False %}
+    <br>
+    <hr>
+    <h3>{{ user_profile.slug}}'s Posts</h3>
+
+    {% if posts %}
+	{% post_template posts %}
+    {% else %}
+    <p>{{ user_profile.slug}} hasn't posted yet.</p>
+    {% endif %}
+    
 {% endblock %}

@@ -219,3 +219,23 @@ a {
     text-decoration-color: black;
     text-decoration-thickness: 2px;
 }
+
+#userDetails {
+    display: flex;
+    width: 100%;
+}
+
+#userDetails .detailsContainer {
+    width: 100%;
+}
+
+#userDetails .profileImageContainer {
+    border: 5px;
+    width: fit-content;
+}
+
+#userDetails .profileImageContainer img {
+    max-width: 40vw;
+    max-height: 40vh;
+    float: right;
+}
