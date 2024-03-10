@@ -84,11 +84,29 @@ body {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* From https://www.w3schools.com/css/css3_shadows_box.asp */
 }
 
+.custom-marker-icon img {
+    border-radius: 100%;
+    height: 70px !important;
+    width: 70px !important;
+}
+
+.custom-marker-icon span {
+    position: relative;
+    left: 60px;
+    bottom: 1.5em;
+    font-weight: bold;
+    font-size: 12pt;
+    color: white;
+    background: #1b1b1b;
+    padding: 5px;
+    border-radius: 10px;
+}
+
 .posts-container {
     text-align: center;
 }
 
-.post img {
+.post img, .post-photo {
     padding-right: 20px;
     max-height: 250px;
     max-width: 250px;
@@ -99,22 +117,26 @@ a {
     display: inline-block;
 }
 
-.post .post-location {
+.post-location {
     font-weight: bold;
     font-size: 13pt;
     margin-bottom: 10px;
 }
 
-.post .post-location a {
+.post-location a {
     color: inherit;
 }
 
-.post .post-title {
+.post-title {
     font-weight: bold;
     overflow-wrap: anywhere;
 }
 
-.post .post-info-secondary {
+.post-title-container {
+    font-size: larger;
+}
+
+.post-info-secondary {
     color: gray;
 }
 
