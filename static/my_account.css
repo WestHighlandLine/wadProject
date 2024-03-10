@@ -4,6 +4,7 @@
 
 #map {
     width: 50vw;
+    min-height: 300px;
 }
 
 .post-container {
@@ -18,6 +19,10 @@
 .post-container .post-photo {
     max-width: 50vw;
     max-height: 75vh;
+}
+
+.post-container a:has(> .post-photo) {
+    margin: auto 0;
 }
 
 /* Mobile formatting*/
