@@ -1,8 +1,6 @@
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
-from django.utils import timezone
-import datetime
 import http.client
 import json
 import uuid
@@ -27,6 +25,7 @@ class Post(models.Model):
     created_by = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
 
     slug = models.SlugField(unique=True)
+    slug_uuid = models.UUIDField(default=uuid.uuid4)
     caption = models.CharField(max_length=100, blank=True, null=True)
     likes = models.IntegerField(default=0)
     photo = models.ImageField(upload_to="post_photos/")
@@ -39,7 +38,7 @@ class Post(models.Model):
     location_name = models.CharField(max_length=100, editable=False, default="Unknown")
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(uuid.uuid4().hex)
+        self.slug = slugify(self.slug_uuid)
 
         # Get a place name from OpenStreetMap API
         try:

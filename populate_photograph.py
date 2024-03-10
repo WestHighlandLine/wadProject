@@ -83,16 +83,16 @@ def populate():
                 comment = add_comment(post, comment_data)
 
     for user_profile in UserProfile.objects.all():
-        print(f"username: {user_profile}\nslug: {user_profile.slug}\n")
+        print(f"user: {user_profile}\nslug: {user_profile.slug}\n")
 
     for post in Post.objects.all():
         print(
-            f"username:{post.created_by}\nslug: {post.slug}\ncaption: {post.caption}\ncoords: ({post.latitude},{post.longitude})\ncreated_time: {post.created_time}\n"
+            f"created_by:{post.created_by}\nslug: {post.slug}\ncaption: {post.caption}\ncoords: ({post.latitude},{post.longitude})\ncreated_time: {post.created_time}\n"
         )
 
     for comment in Comment.objects.all():
         print(
-            f"username:{comment.created_by}\ncomment: {comment.comment}\ncreated_time: {comment.created_time}\n"
+            f"created_by:{comment.created_by}\ncomment: {comment.comment}\ncreated_time: {comment.created_time}\n"
         )
 
 
@@ -102,13 +102,11 @@ def add_user(user_data):
         email=user_data["email"],
         password=user_data["password"],
     )[0]
-    user.save()
     return user
 
 
 def add_user_profile(user):
     user_profile = UserProfile.objects.get_or_create(user=user)[0]
-    user_profile.save()
     return user_profile
 
 
@@ -122,7 +120,6 @@ def add_post(post_data):
         longitude=post_data["longitude"],
         caption=post_data["caption"],
     )[0]
-    post.save()
     return post
 
 
@@ -135,7 +132,6 @@ def add_comment(post, comment_data):
         post=post,
         comment=comment_data["comment"],
     )[0]
-    comment.save()
     return comment
 
 

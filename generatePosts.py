@@ -13,7 +13,7 @@ import django
 django.setup()
 
 from django.db import models
-from main.models import Post, UserProfile
+from main.models import User, Post, UserProfile
 from exif import Image
 from django.core.files.images import ImageFile
 
@@ -27,9 +27,12 @@ def decimal_coords(coords, ref):
 
 
 def generatePosts(directory):
+    test_user = User.objects.get_or_create(username="generate_posts_test_user")[0]
+    test_user_profile = UserProfile.objects.get_or_create(user=test_user)[0]
+
     for filename in os.listdir(directory):
         try:
-            print(filename)
+            print("\n" + filename)
             filename = directory + "/" + filename
 
             # Based on https://stackoverflow.com/a/73267185
@@ -44,7 +47,7 @@ def generatePosts(directory):
                     )
 
                     post = Post(
-                        created_by=UserProfile.objects.first(),
+                        created_by=test_user_profile,
                         caption=filename.split("/")[-1],
                         photo=ImageFile(open(filename, "rb")),
                         latitude=coords[0],
@@ -62,4 +65,4 @@ def generatePosts(directory):
 
 if __name__ == "__main__":
     print("Starting Peter's photoGraph population script...")
-    generatePosts("media/post_photos/generatePosts-photos")
+    generatePosts("media/post_photos/glasgow-test")
