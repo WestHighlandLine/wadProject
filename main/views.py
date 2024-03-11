@@ -134,8 +134,8 @@ def login_page(request):
                 return HttpResponse("Your photoGraph account is disabled.")
 
         else:
-            print(f"Invalid login details: {username}, {password}")
-            return HttpResponse("Invalid login details supplied.")
+            messages.error(request, "Invalid login details supplied. Please try again.")
+            return render(request, 'photoGraph/login.html', {'username': username})
     else:
         return render(request, "photoGraph/login.html")
 
