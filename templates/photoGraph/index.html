@@ -155,30 +155,35 @@ Home
     }
 
     function onCreateClick(e) {
-        if (createMarker != undefined) {
-            createMarker.remove();
-        }
+        if (createMode) {
+            if (createMarker != undefined) {
+                createMarker.remove();
+            }
 
-        createMarker = L.marker(e.latlng).addTo(map)
-        .bindPopup(
-            L.popup().setContent(`<a href="/photoGraph/create_post?lat=${e.latlng.lat}&lng=${e.latlng.lng}"><button>Add post here</button></a>`)
-        )
-        .openPopup()
-        .on("popupclose", (e) => {createMarker.remove()});
+            createMarker = L.marker(e.latlng).addTo(map)
+            .bindPopup(
+                L.popup().setContent(`<a href="/photoGraph/create_post?lat=${e.latlng.lat}&lng=${e.latlng.lng}"><button>Add post here</button></a>`)
+            )
+            .openPopup()
+            .on("popupclose", (e) => {createMarker.remove()});
+        }
     }
 
     function createOn() {
+        createMode = true;
         document.getElementById("create-button").onclick = (e) => createOff();
         map.on("click", onCreateClick);
         document.getElementById("create-button").innerHTML = "Select a location on the map";
     }
 
     function createOff() {
+        createMode = false;
+        
         if (createMarker != undefined) {
             createMarker.remove();
         }
 
-        map.on("click", null);
+        map.on("click", (e) => {});
         document.getElementById("create-button").innerHTML = "Create post";
         document.getElementById("create-button").onclick = (e) => createOn();
     }
