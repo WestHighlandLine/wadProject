@@ -1,8 +1,6 @@
 from django.urls import path
 from django.conf.urls import url
 from main import views
-from .views import ReportDetailView, ReportListView, DeletePostView
-
 
 app_name = "main"
 
@@ -29,14 +27,14 @@ urlpatterns = [
     ),
     # ^ probably needs to be a name slug using a post ID of some sort, like category_name_slug in rango.
     # eg: path('category/<slug:category_name_slug>/', views.show_category, name='show_category'),
-    #path("report_post/", views.report_post, name="report_post"),
     # ^ will probably need to be similar to this:
     # path('category/<slug:category_name_slug>/add_page/', views.add_page, name='add_page'),
+ 
+    path("report_post/<int:post_id>/", views.report_post, name="report_post"),
 
-    path('admin/report_list/', views.ReportListView, name='report_list'),
-    path('admin/report_detail/<int:report_id>/', views.ReportDetailView, name='report_detail'),
-    path('admin/delete_post/<int:post_id>/', views.DeletePostView, name='delete_post'),
-    #path('view_post/<int:post_id>/', views.ReportPostView, name='report_post'),
+    path('admin/report_list/', views.report_list, name='report_list'),
+    path('admin/report_detail/<int:report_id>/', views.report_detail, name='report_detail'),
+    path('admin/delete_post/<int:post_id>/', views.delete_post_view, name='delete_post'),
 
     path("signup/", views.signup, name="signup"),
     path("login/", views.login_page, name="login"),

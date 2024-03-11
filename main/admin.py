@@ -62,12 +62,12 @@ class UserProfileAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
     
-#class PostAdmin(admin.ModelAdmin):
+class PostAdmin(admin.ModelAdmin):
 
-    #def has_add_permission(self, request):
-     #   return False
+    def has_add_permission(self, request):
+        return False
 
 
 admin.site.register(UserProfile, UserProfileAdmin)
-admin.site.register(Post)
+admin.site.register(Post, PostAdmin)
 admin.site.register(PostReport, PostReportAdmin)

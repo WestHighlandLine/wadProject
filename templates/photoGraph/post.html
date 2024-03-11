@@ -16,6 +16,8 @@
     <div class="post-inner">
         <span class="post-info-primary">Posted by: <a href="{% url 'main:show_user_profile' post.created_by.slug %}">{{ post.created_by.slug }}</a></span><br/>
         <span class="post-info-secondary">{{post.likes}} likes, taken {{post.created_time}}</span>
+        <br>
+        <a href="{% url 'main:report_post' post.id %}" class="report-link">Report this post</a>
     </div>
     <div class="post-container">
         <a href="{{post.photo.url}}" target="_blank" class="post-photo-link"><img src="{{post.photo.url}}" class="post-photo" /></a><br/>

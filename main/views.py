@@ -77,71 +77,48 @@ def view_post(request, user_profile_slug, post_slug):
     return render(request, "photoGraph/post.html", context=context_dict)
 
 
-#@login_required
-#def report_post(request, post_id): 
- #   post = get_object_or_404(Post, id=post_id)
+@login_required
+def report_post(request, post_id): 
+    post = get_object_or_404(Post, id=post_id)
 
-  #  if request.method == 'POST':
-   #     if form.is_valid():
-    #    form = ReportForm(request.POST)
-     #       reason = form.cleaned_data['reason']
-      #      user = request.user  
-       #     PostReport.objects.create(reporter=user, post_id=post, reason=reason)
-        #    return redirect('main:view_post') 
-    #else:
-     #   form = ReportForm
-    
-    #return render(request, 'photoGraph//report_post.html', {'post': post, 'form': form})
+    if request.method == 'POST':
+        form = ReportForm(request.POST, instance=PostReport(reporter=request.user.userprofile, post_id=post))
+        if form.is_valid():
+            form.save()
+            return redirect('main:view_post', user_profile_slug=post.created_by.slug, post_slug=post.slug)
+    else:
+        form = ReportForm()
+    return render(request, 'photoGraph/report_post.html', {'post': post, 'form': form})
+
 
 @login_required
 def report_user(request):
     return render(request, 'photoGraph/report_user.html')
 
 @login_required
-class ReportListView(View):
-    template_name = 'report_list.html'
-
-    def get(self, request):
-        reports = PostReport.objects.all()
-        return render(request, self.template_name, {'reports': reports})
+def report_list(request):
+    reports = PostReport.objects.all()
+    return render(request, 'report_list.html', {'reports': reports})
 
 @login_required
-class ReportDetailView(View):
-    template_name = 'report_detail.html'
-    
-    def get(self, request, report_id):
-        report = get_object_or_404(PostReport, id=report_id)
-        related_reports = PostReport.objects.filter(post_id=report.post_id).exclude(id=report_id)
-        reasons = [report.reason] + list(related_reports.values_list('reason', flat=True))
-        return render(request, self.template_name, {'report': report, 'reasons': reasons})
+def report_detail(request, report_id):
+    report = get_object_or_404(PostReport, id=report_id)
+    related_reports = PostReport.objects.filter(post_id=report.post_id).exclude(id=report_id)
+    reasons = [report.reason] + list(related_reports.values_list('reason', flat=True))
+    return render(request, 'report_detail.html', {'report': report, 'reasons': reasons})
 
 @login_required
-class ReportPostView(View):
-    template_name = 'report_post.html'
-
-    def get(self, request, post_id):
-        post = get_object_or_404(Post, id=post_id)
-        form = ReportForm()
-        return render(request, self.template_name, {'post': post, 'form': form})
-
-    def post(self, request, post_id):
-        post = get_object_or_404(Post, id=post_id)
-        form = ReportForm(request.POST)
-        if form.is_valid():
-            reason = form.cleaned_data['reason']
-            user = request.user  
-            PostReport.objects.create(user=user, post=post, reason=reason)
-            return redirect('post_detail', post_id=post_id)
-        return render(request, self.template_name, {'post': post, 'form': form})
+def report_post_view(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    form = ReportForm()
+    return render(request, 'report_post.html', {'post': post, 'form': form})
 
 @login_required
-class DeletePostView(View):
-    def post(self, request, post_id):
-        post = get_object_or_404(Post, id=post_id)
-        PostReport.objects.filter(post=post).delete()
-        post.delete()
-        return redirect('report_list')
-
+def delete_post_view(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    PostReport.objects.filter(post=post).delete()
+    post.delete()
+    return redirect('report_list.html')
 
 def signup(request):
     registered = False

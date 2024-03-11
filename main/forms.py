@@ -70,13 +70,11 @@ class CommentForm(forms.ModelForm):
 
 class ReportForm(forms.ModelForm):
 
-    reporter = forms.ModelChoiceField(queryset=User.objects.all(), label='Reporter')
-    post_id = forms.ModelChoiceField(queryset=Post.objects.all(), label='Post')
     reason = forms.CharField(widget=forms.Textarea, label='Reason')
 
     class Meta: 
         model = PostReport
-        fields = ('reporter', 'post_id', 'reason',)
+        fields = ('reason',)
 
 
 
