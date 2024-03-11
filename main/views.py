@@ -28,8 +28,20 @@ def view_post(request): # will also need to take in an ID_slug
 
 
 @login_required
-def report_post(request): # will also need to take in an ID_slug
-    return render(request, 'photoGraph/report_post.html')
+def report_post(request, post_id): 
+    post = get_object_or_404(Post, id=post_id)
+
+    if request.method == 'POST':
+        form = ReportForm(request.POST)
+        if form.is_valid():
+            reason = form.cleaned_data['reason']
+            user = request.user  
+            PostReport.objects.create(reporter=user, post_id=post, reason=reason)
+            return redirect('main:view_post') 
+    else:
+        form = ReportForm
+    
+    return render(request, 'photoGraph/report_post.html', {'post': post, 'form': form})
 
 @login_required
 def report_user(request):
@@ -46,10 +58,12 @@ class ReportListView(View):
 @login_required
 class ReportDetailView(View):
     template_name = 'report_detail.html'
-
+    
     def get(self, request, report_id):
-        report = PostReport.objects.get(id=report_id)
-        return render(request, self.template_name, {'report': report})
+        report = get_object_or_404(PostReport, id=report_id)
+        related_reports = PostReport.objects.filter(post_id=report.post_id).exclude(id=report_id)
+        reasons = [report.reason] + list(related_reports.values_list('reason', flat=True))
+        return render(request, self.template_name, {'report': report, 'reasons': reasons})
 
 @login_required
 class ReportPostView(View):

@@ -12,7 +12,8 @@ urlpatterns = [
     path("home", views.index, name="index"),
     path("about/", views.about, name="about"),
     path("about/contact_us/", views.contact_us, name="contact_us"),
-    path("view_post/", views.view_post, name="view_post"),
+    #path("view_post/", views.view_post, name="view_post"),
+    path('view_post/<int:post_id>/', views.view_post, name='view_post'),
     # ^ probably needs to be a name slug using a post ID of some sort, like category_name_slug in rango.
     # eg: path('category/<slug:category_name_slug>/', views.show_category, name='show_category'),
 
@@ -23,7 +24,7 @@ urlpatterns = [
     path('admin/report_list/', views.ReportListView, name='report_list'),
     path('admin/report_detail/<int:report_id>/', views.ReportDetailView, name='report_detail'),
     path('admin/delete_post/<int:post_id>/', views.DeletePostView, name='delete_post'),
-    path('post/<int:post_id>/', views.ReportPostView, name='report_post'),
+    #path('view_post/<int:post_id>/', views.ReportPostView, name='report_post'),
 
     path("signup/", views.signup, name="signup"),
     path("login/", views.login_page, name="login"),

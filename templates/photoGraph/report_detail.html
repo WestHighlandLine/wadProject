@@ -6,10 +6,15 @@
 {% endblock %}
 
 {% block body_block %}
-<p>User: {{ report.user.username }}</p>
-<p>Post: {{ report.post.title }}</p>
-<p>Reason: {{ report.reason }}</p>
-<p>Created At: {{ report.created_at }}</p>
-
-<a href="{% url 'report_list' %}">Back to Report List</a>
+<h1>Report Details</h1>
+  <p>Reporter: {{ report.reporter.username }}</p>
+  <p>Post ID: {{ report.post_id.id }}</p>
+  <p>Reasons:</p>
+  <ul>
+    {% for reason in reasons %}
+      <li>{{ reason }}</li>
+    {% endfor %}
+  </ul>
+  <p>Created At: {{ report.created_at }}</p>
+<a href="{% url 'main:report_list' %}">Back to Reports</a>
 {% endblock %}
