@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block custom_head %}
-	<link rel="stylesheet" type="text/css" href="{% static 'my_account.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'view_post.css' %}">
 {% endblock %}
 
 {% block body_block %}
@@ -18,7 +18,7 @@
         <span class="post-info-secondary">{{post.likes}} likes, taken {{post.created_time}}</span>
     </div>
     <div class="post-container">
-        <a href="{{post.photo.url}}" target="_blank"><img src="{{post.photo.url}}" class="post-photo" /></a><br/>
+        <a href="{{post.photo.url}}" target="_blank" class="post-photo-link"><img src="{{post.photo.url}}" class="post-photo" /></a><br/>
         <div id="map"></div>
     </div>
 
