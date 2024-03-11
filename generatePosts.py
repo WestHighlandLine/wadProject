@@ -4,26 +4,35 @@
 # 3. Run 'python manage.py shell'
 # 4. 'import generatePosts'
 # 5. 'generatePosts.generatePosts("media/post_photos/[FOLDER NAME]")'
+import os
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "photoGraph.settings")
+
+import django
+
+django.setup()
 
 from django.db import models
-from main.models import Post, UserProfile
+from main.models import User, Post, UserProfile
 from exif import Image
 from django.core.files.images import ImageFile
 
-import os
-import datetime
 
 # Based on https://stackoverflow.com/a/73267185
 def decimal_coords(coords, ref):
     decimal_degrees = coords[0] + coords[1] / 60 + coords[2] / 3600
-    if ref == "S" or ref =='W' :
+    if ref == "S" or ref == "W":
         decimal_degrees = -decimal_degrees
     return decimal_degrees
 
+
 def generatePosts(directory):
+    test_user = User.objects.get_or_create(username="generate_posts_test_user")[0]
+    test_user_profile = UserProfile.objects.get_or_create(user=test_user)[0]
+
     for filename in os.listdir(directory):
         try:
-            print(filename)
+            print("\n" + filename)
             filename = directory + "/" + filename
 
             # Based on https://stackoverflow.com/a/73267185
@@ -32,26 +41,28 @@ def generatePosts(directory):
 
             if img.has_exif:
                 try:
-                    img.gps_longitude
-                    coords = (decimal_coords(img.gps_latitude,
-                            img.gps_latitude_ref),
-                            decimal_coords(img.gps_longitude,
-                            img.gps_longitude_ref))
-                    
+                    coords = (
+                        decimal_coords(img.gps_latitude, img.gps_latitude_ref),
+                        decimal_coords(img.gps_longitude, img.gps_longitude_ref),
+                    )
+
                     post = Post(
-                        user=UserProfile.objects.first(), 
-                        caption=filename.split("/")[-1], 
-                        likes=0, 
-                        photo=ImageFile(open(filename, "rb")), 
-                        latitude=coords[0], 
-                        longitude=coords[1], 
-                        aboutTime=datetime.datetime.now()
+                        created_by=test_user_profile,
+                        caption=filename.split("/")[-1],
+                        photo=ImageFile(open(filename, "rb")),
+                        latitude=coords[0],
+                        longitude=coords[1],
                     )
                     post.save()
                 except AttributeError:
-                        print ('No Coordinates')
-                
+                    print("No Coordinates")
+
             else:
-                print ('The Image has no EXIF information')
+                print("The Image has no EXIF information")
         except Exception as e:
             print(e)
+
+
+if __name__ == "__main__":
+    print("Starting Peter's photoGraph population script...")
+    generatePosts("media/post_photos/glasgow-test")

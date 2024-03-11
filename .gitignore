@@ -162,3 +162,5 @@ cython_debug/
 media/
 /env.sh
 .DS_Store
+
+main/migrations/

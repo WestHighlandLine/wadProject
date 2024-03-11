@@ -1,0 +1,11 @@
+<div class="posts-container">
+    {% for post in posts %}
+        <div class="post">
+            <a href="{{post.photo.url}}" target="_blank"><img src="{{post.photo.url}}"/></a><br/>
+            <span class="post-title">&#128247; {{ post.caption }}</span>
+            <span class="post-info-primary"><a href="{% url 'main:show_user_profile' post.created_by.slug %}">{{ post.created_by.slug }}</a></span>
+            <span class="post-info-secondary">{{post.likes}} likes, taken {{post.created_time}}</span>
+            <a href="{% url 'main:view_post' post.created_by.slug post.slug %}" class="post-link">View more...</a><br/>
+        </div>
+    {% endfor %}
+</div>

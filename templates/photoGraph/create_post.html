@@ -5,6 +5,22 @@
     Create Post
 {% endblock %}
 
+{% block custom_head %}
+<style>
+    #main-content {
+        max-width: 500px;
+    }
+    #id_caption, #id_latitude, #id_longitude, #id_photo {
+        width:100%;
+    }
+</style>
+{% endblock %}
+
 {% block body_block %}
-<!--insert custom HTML here-->
+<h1>Create post</h1>
+<form id="createPostForm" method="post" action="{% url 'main:create_post' %}" enctype="multipart/form-data">
+	{% csrf_token %}
+	{{ form.as_p }}
+	<input type="submit" name="submit" value="Create post" />
+</form>
 {% endblock %}

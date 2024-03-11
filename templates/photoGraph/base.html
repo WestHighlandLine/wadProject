@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 {% load staticfiles %}
-<!-- May also need to load template_tags-->
+{% load template_tags %}
 
 <html>	
     <link rel="shortcut Icon" href="{% static 'favicon.ico' %}">
     <head lang="en">
         <meta charset="UTF-8" />
         <title>
-            PhotoGraph - 
+            photoGraph - 
             {% block title_block %}
-                PhotoGraph
             {% endblock %}
         </title>
 
@@ -55,7 +54,6 @@
                     {% if user.is_authenticated %}
 
                         <li><a href="{% url 'main:my_account' %}">Account</a></li>
-                        <li><a href="{% url 'main:create_post' %}">Create</a></li>
                         <li><a href="{% url 'main:logout' %}">Logout</a></li>
 
                     {% else %}
