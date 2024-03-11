@@ -32,6 +32,10 @@ def show_user_profile(request, user_profile_slug):
 
     try:
         user_profile = UserProfile.objects.get(slug=user_profile_slug)
+
+        if (request.user == user_profile.user):
+            return redirect(reverse("main:my_account"))
+
         user_posts = Post.objects.filter(created_by=user_profile)
         context_dict["user_profile"] = user_profile
         context_dict["posts"] = user_posts
