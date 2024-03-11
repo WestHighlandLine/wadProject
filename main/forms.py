@@ -90,17 +90,19 @@ class CustomPasswordChangeForm(PasswordChangeForm):
         label="Confirm New Password",
         widget=forms.PasswordInput(),
     )
-    def clean(self):
-        cleaned_data = super().clean()
-        new_password = cleaned_data.get("new_password")
-        new_password_confirm = cleaned_data.get("new_password_confirm")
-
-        if new_password != new_password_confirm:
-            raise forms.ValidationError("New passwords do not match")
-        return cleaned_data
 
 class ChangePost(forms.ModelForm):
-    pass
+
+    caption = forms.CharField(label='Caption', max_length=255)
+    photo = forms.ImageField(label='Photo')
+    
+    class Meta:
+        model = Post
+        fields = ('caption', 'photo', 'latitude', 'longitude',)
+    
+    def clean(self):
+        cleaned_data = super(self).clean()
+        return cleaned_data
 
 class ChangeInfoForm(forms.ModelForm):
     picture = forms.ImageField() 
