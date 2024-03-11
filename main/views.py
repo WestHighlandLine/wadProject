@@ -85,8 +85,6 @@ def report_post(request, post_id):
         form = ReportForm(request.POST, instance=PostReport(reporter=request.user.userprofile, post_id=post))
         if form.is_valid():
             form.save()
-            messages.success(request, 'Report submitted successfully!')
-            #return redirect('main:view_post', user_profile_slug=post.created_by.slug, post_slug=post.slug)
             return render(request, 'photoGraph/report_post.html', {'post': post, 'form': form, 'show_popup': True})
     else:
         form = ReportForm()
