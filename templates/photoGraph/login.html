@@ -5,6 +5,14 @@
     Login
 {% endblock %}
 
+{% block custom_head %}
+<style>
+    #main-content {
+        max-width: max-content;
+    }
+</style>
+{% endblock %}
+
 {% block body_block %}
 <h1>Login to photoGraph</h1>
 <form id="login_form" method="post" action="{% url 'main:login' %}">

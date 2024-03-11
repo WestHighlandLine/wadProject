@@ -80,7 +80,7 @@ body {
     margin: 0 auto;
     background-color: white;
     padding: 2em;
-    min-height: calc(100vh - 120px);
+    min-height: calc(100vh - 170px);
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* From https://www.w3schools.com/css/css3_shadows_box.asp */
 }
 
@@ -263,7 +263,7 @@ a {
     float: right;
 }
 
-button {
+button, input[type=submit], input::file-selector-button {
     background: #308ed6;
     border: solid 1px rgba(0, 0, 0, 0.2);
     background-clip: padding-box;

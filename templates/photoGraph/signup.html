@@ -5,6 +5,14 @@
     Sign Up
 {% endblock %}
 
+{% block custom_head %}
+<style>
+    #main-content {
+        max-width: max-content;
+    }
+</style>
+{% endblock %}
+
 {% block body_block %}
 <h1>Register for photoGraph</h1>
 {% if registered %}
