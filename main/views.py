@@ -121,8 +121,7 @@ def login_page(request):
         if user:
             if user.is_active:
                 login(request, user)
-                return redirect(reverse("main:index"))
-                # ^ could make this redirect to wherever user was looking to go to instead of just homepage.
+                return redirect(request.POST.get("next", reverse("main:index")))
             else:
                 return HttpResponse("Your photoGraph account is disabled.")
 
