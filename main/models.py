@@ -103,7 +103,7 @@ class PostReport(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Report by {self.reporter.username_slug} on {self.post_id}"
+        return f"Report by {self.reporter.user.username} on {self.post_id}"
     
     class Meta:
         verbose_name_plural = "Post Reports"
