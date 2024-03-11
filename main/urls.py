@@ -29,7 +29,7 @@ urlpatterns = [
     ),
     # ^ probably needs to be a name slug using a post ID of some sort, like category_name_slug in rango.
     # eg: path('category/<slug:category_name_slug>/', views.show_category, name='show_category'),
-    path("report_post/", views.report_post, name="report_post"),
+    #path("report_post/", views.report_post, name="report_post"),
     # ^ will probably need to be similar to this:
     # path('category/<slug:category_name_slug>/add_page/', views.add_page, name='add_page'),
 

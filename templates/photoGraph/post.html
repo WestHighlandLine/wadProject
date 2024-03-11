@@ -10,7 +10,6 @@
 {% endblock %}
 
 {% block body_block %}
-<a href="{% url 'report_post' post.id %}">Report Post</a>
     <div class="post-title-container">
         <span class="post-title">{{ post.caption }}</span> at <a href="{% url 'main:show_location' %}?location_name={{ post.location_name }}">{{ post.location_name }}</a>
     </div>

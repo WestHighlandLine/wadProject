@@ -77,21 +77,21 @@ def view_post(request, user_profile_slug, post_slug):
     return render(request, "photoGraph/post.html", context=context_dict)
 
 
-@login_required
-def report_post(request, post_id): 
-    post = get_object_or_404(Post, id=post_id)
+#@login_required
+#def report_post(request, post_id): 
+ #   post = get_object_or_404(Post, id=post_id)
 
-    if request.method == 'POST':
-        form = ReportForm(request.POST)
-        if form.is_valid():
-            reason = form.cleaned_data['reason']
-            user = request.user  
-            PostReport.objects.create(reporter=user, post_id=post, reason=reason)
-            return redirect('main:view_post') 
-    else:
-        form = ReportForm
+  #  if request.method == 'POST':
+   #     if form.is_valid():
+    #    form = ReportForm(request.POST)
+     #       reason = form.cleaned_data['reason']
+      #      user = request.user  
+       #     PostReport.objects.create(reporter=user, post_id=post, reason=reason)
+        #    return redirect('main:view_post') 
+    #else:
+     #   form = ReportForm
     
-    return render(request, 'photoGraph/report_post.html', {'post': post, 'form': form})
+    #return render(request, 'photoGraph//report_post.html', {'post': post, 'form': form})
 
 @login_required
 def report_user(request):
