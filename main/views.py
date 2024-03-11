@@ -121,7 +121,11 @@ def login_page(request):
         if user:
             if user.is_active:
                 login(request, user)
-                return redirect(request.POST.get("next", reverse("main:index")))
+                next = request.POST.get("next", None)
+                redirect_url = reverse("main:index")
+                if (next):
+                    redirect_url = next
+                return redirect(redirect_url)
             else:
                 return HttpResponse("Your photoGraph account is disabled.")
 
