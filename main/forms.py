@@ -47,17 +47,14 @@ class GroupForm(forms.ModelForm):
 
 
 class PostForm(forms.ModelForm):
-
     caption = forms.CharField(label='Caption', max_length=255)
-    poster = forms.ModelChoiceField(queryset=User.objects.all(), label='Poster')
-    group = forms.ModelChoiceField(queryset=Group.objects.all(), label='Group')
-    likes = forms.IntegerField(initial=0)
-    picture = forms.ImageField(label='Picture')
-    location = forms.CharField(label='Location', max_length=128)
-    time = forms.DateTimeField(label='Time')
+    photo = forms.ImageField(label='Photo')
+    latitude = forms.DecimalField(label="Latitude")
+    longitude = forms.DecimalField(label="Longitude")
+
     class Meta:
         model = Post
-        fields = ('caption', 'poster', 'group', 'likes', 'picture', 'location', 'time',)
+        fields = ("caption", "photo", "latitude", "longitude",)
 
 
 

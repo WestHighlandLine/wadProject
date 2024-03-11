@@ -9,6 +9,7 @@ from main.forms import (
     UserProfileForm,
     CustomPasswordChangeForm,
     ChangeInfoForm,
+    PostForm
 )
 from django.contrib import messages
 from main.models import UserProfile, Post, Comment
@@ -206,7 +207,27 @@ def edit_post(request, postSlug):  # needs a slug for post ID
 
 @login_required
 def create_post(request):
-    return render(request, "photoGraph/create_post.html")
+    if request.method == "POST":
+        form = PostForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.created_by = UserProfile.objects.get(user=request.user)
+            post.save()
+
+            return redirect(
+                reverse("main:index")
+            )
+        else:
+            print(form.errors)
+            messages.error(request, "Please correct the error below.")
+    else:
+        form = PostForm(initial={
+            "latitude": request.GET.get("lat", ""),
+            "longitude": request.GET.get("lng", "")
+        })
+
+    return render(request, "photoGraph/create_post.html", {"form": form})
 
 
 POST_FILTER_ON = True
