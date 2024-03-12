@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.http.request import HttpRequest
 from main.models import UserProfile, Post, PostReport
 from django.urls import reverse
 from django.utils.html import format_html
@@ -9,11 +10,7 @@ from django.shortcuts import render
 class PostReportAdmin(admin.ModelAdmin):
     list_display = ['post_id', 'reason', 'created_at', 'report_count', 'view_report']
     list_filter = ['post_id']
-
-    def post_id(self, obj):
-        post_id_url = reverse('main:view_post', args=[obj.post_id.id])
-        return format_html('<a href="{}">{}</a>', post_id_url, obj.post_id.id)
-    post_id.short_description = 'Post ID'
+    list_display_links = None 
 
     def report_count(self, obj):
         return obj.post_id.postreport_set.count()
@@ -21,7 +18,7 @@ class PostReportAdmin(admin.ModelAdmin):
 
     def view_report(self, obj):
         report_detail_url = reverse('main:report_detail', args=[obj.id])
-        return format_html('<a href="{}" class="button" target="_blank">View Report</a>', report_detail_url)
+        return format_html('<a href="{}" class="button" target="_self">View Report</a>', report_detail_url)
     view_report.short_description = 'View Report'
 
     def get_urls(self):
@@ -39,6 +36,9 @@ class PostReportAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
     
+    def has_change_permission(self, request):
+        return False
+
     def add_view(self, request, form_url='', extra_context=None):
         extra_context = extra_context or {}
         extra_context['title'] = 'View Post Reports'
@@ -52,7 +52,6 @@ class PostReportAdmin(admin.ModelAdmin):
         return super().change_view(request, object_id, form_url, extra_context)
     
     def get_queryset(self, request):
-        # Annotate the queryset with the count of reports for each post
         queryset = super().get_queryset(request)
         queryset = queryset.annotate(report_count=Count('post_id__postreport'))
         return queryset
@@ -61,10 +60,14 @@ class UserProfileAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         return False
+    def has_change_permission(self, request):
+        return False
     
 class PostAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request):
+        return False
+    def has_change_permission(self, request):
         return False
     
 

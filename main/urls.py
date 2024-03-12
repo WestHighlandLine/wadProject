@@ -31,10 +31,8 @@ urlpatterns = [
     # path('category/<slug:category_name_slug>/add_page/', views.add_page, name='add_page'),
  
     path("report_post/<int:post_id>/", views.report_post, name="report_post"),
-
-    path('admin/report_list/', views.report_list, name='report_list'),
     path('admin/report_detail/<int:report_id>/', views.report_detail, name='report_detail'),
-    path('admin/delete_post/<int:post_id>/', views.delete_post_view, name='delete_post'),
+    path('admin/delete_post_view/<int:post_id>/', views.delete_post_view, name='delete_post_view'),    
 
     path("signup/", views.signup, name="signup"),
     path("login/", views.login_page, name="login"),

@@ -1,0 +1,24 @@
+{% extends 'photoGraph/base.html' %}
+{% load staticfiles %}
+
+{% block title_block %}
+    Confirm Post Deletion
+{% endblock %}
+
+{% block custom_head %}
+<style>
+  #main-content {
+      max-width: 500px;
+  }
+</style>
+{% endblock %}
+
+{% block body_block %}
+<h1>Confirm Post Deletion</h1>
+  <p>Are you sure you want to delete the post and its reports?</p>
+  <form method="post" action="{% url 'main:delete_post_view' post.id %}">
+    {% csrf_token %}
+    <input type="submit" value="Delete Post and Reports">
+  </form>
+  <a href="{% url 'admin:main_postreport_changelist' %}">Cancel</a>
+{% endblock %}

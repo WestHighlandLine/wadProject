@@ -96,11 +96,6 @@ def report_user(request):
     return render(request, 'photoGraph/report_user.html')
 
 @login_required
-def report_list(request):
-    reports = PostReport.objects.all()
-    return render(request, 'photoGraph/report_list.html', {'reports': reports})
-
-@login_required
 def report_detail(request, report_id):
     report = get_object_or_404(PostReport, id=report_id)
     related_reports = PostReport.objects.filter(post_id=report.post_id).exclude(id=report_id)
@@ -116,9 +111,15 @@ def report_post_view(request, post_id):
 @login_required
 def delete_post_view(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    PostReport.objects.filter(post=post).delete()
-    post.delete()
-    return redirect('photoGraph/report_list.html')
+    post_reports = PostReport.objects.filter(post_id=post.id)
+
+    if request.method == 'POST':
+        post_reports.delete()
+        post.delete()
+        return redirect('admin:main_postreport_changelist')
+
+    return render(request, 'photoGraph/delete_post_report.html', {'post': post})
+
 
 def signup(request):
     registered = False
@@ -238,11 +239,6 @@ def my_account(request):
         )
     else:
         return redirect(reverse("main:login"))
-
-
-@login_required
-def report_user(request):
-    return render(request, "photoGraph/report_user.html")
 
 
 @login_required
