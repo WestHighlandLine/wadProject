@@ -13,6 +13,10 @@ body {
     background-attachment: fixed;
 }
 
+a {
+    color: #0078A8;
+}
+
 .nav-bar {
     display: flex;
     padding: 10px;
