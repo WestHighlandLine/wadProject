@@ -70,7 +70,7 @@ class CommentForm(forms.ModelForm):
 
 class ReportForm(forms.ModelForm):
 
-    reason = forms.CharField(widget=forms.Textarea, label='Reason')
+    reason = forms.CharField(widget=forms.Textarea(attrs={'class': 'custom-textarea', 'rows': 5}), label='Reason')
 
     class Meta: 
         model = PostReport

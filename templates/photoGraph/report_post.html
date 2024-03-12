@@ -3,21 +3,30 @@
 
 {% block custom_head %}
 <style>
-    #main-content {
-        max-width: 500px;
-    }
+  #main-content {
+      max-width: 500px;
+  }
+  .custom-textarea {
+    width: 100%; 
+    resize: none;
+  }
 </style>
 {% endblock %}
-
 
 {% block body_block %}
 <h2>Report Post</h2>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <p>Post Caption: {{ post.caption }}</p>
-<p>Post Content: {{ post.photo }}</p>
-<p>Post Location: {{ post.location_name }}</p>
+<div style="display: flex; margin-top: -10px;">
+    <div>
+        <p>Post Content: </p>
+        <br>
+    </div>
+    <img src="{{ post.photo.url }}" alt="{{ post.title }}" style="width: 300px; margin-left: 20px; margin-top: 20px;">    
+</div>
 
+<p>Post Location: {{ post.location_name }}</p>
 
 <form method="post" action="{% url 'main:report_post' post.id %}">
     {% csrf_token %}
