@@ -103,12 +103,6 @@ def report_detail(request, report_id):
     return render(request, 'photoGraph/report_detail.html', {'report': report, 'reasons': reasons})
 
 @login_required
-def report_post_view(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
-    form = ReportForm()
-    return render(request, 'photoGraph/report_post.html', {'post': post, 'form': form})
-
-@login_required
 def delete_post_view(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     post_reports = PostReport.objects.filter(post_id=post.id)
