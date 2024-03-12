@@ -5,6 +5,14 @@
     Report Details
 {% endblock %}
 
+{% block custom_head %}
+<style>
+    #main-content {
+        max-width: 500px;
+    }
+</style>
+{% endblock %}
+
 {% block body_block %}
 <h1>Report Details</h1>
   <p>Reporter: {{ report.reporter.username }}</p>

@@ -5,6 +5,14 @@
     Reported Posts
 {% endblock %}
 
+{% block custom_head %}
+<style>
+    #main-content {
+        max-width: 500px;
+    }
+</style>
+{% endblock %}
+
 {% block body_block %}
 <ul>
     {% for report in reports %}

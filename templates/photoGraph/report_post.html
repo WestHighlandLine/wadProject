@@ -1,6 +1,14 @@
 {% extends 'photoGraph/base.html' %}
 {% load staticfiles %}
 
+{% block custom_head %}
+<style>
+    #main-content {
+        max-width: 500px;
+    }
+</style>
+{% endblock %}
+
 
 {% block body_block %}
 <h2>Report Post</h2>
