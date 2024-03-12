@@ -107,3 +107,12 @@ class PostReport(models.Model):
     
     class Meta:
         verbose_name_plural = "Post Reports"
+
+class UserReport(models.Model):
+    reporter = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    user_id = models.OneToOneField(User, on_delete=models.CASCADE)
+    reason = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        verbose_name_plural = "User Reports"

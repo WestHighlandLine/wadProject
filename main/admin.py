@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.http.request import HttpRequest
-from main.models import UserProfile, Post, PostReport
+from main.models import UserProfile, Post, PostReport, UserReport
 from django.urls import reverse
 from django.utils.html import format_html
 from django.db.models import Count
@@ -70,6 +70,12 @@ class PostAdmin(admin.ModelAdmin):
     def has_change_permission(self, request):
         return False
     
+class UserReportAdmin(admin.ModelAdmin):
+    def has_add_permission(self, request):
+        return False
+    
+    def has_change_permission(self, request):
+        return False
 
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Post, PostAdmin)

@@ -10,9 +10,12 @@
 		    <p id="editInfo"><a href="{% url 'main:infoChange' %}"> Change User information</a></p>
         {% endif %}
     </div>
+    <div class="reportUserLinkContainer" style="white-space: nowrap;">
+        <p id="reportUserLink"><a href="{% url 'main:report_user' user_profile.user.id %}">Report User</a></p>
     {% if user_profile.profile_picture %}
         <div class="profileImageContainer">
             <img src="{{user_profile.profile_picture.url}}" alt="Profile Picture">
         </div>
     {% endif %}
+    </div>
 </div>

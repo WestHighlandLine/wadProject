@@ -5,6 +5,50 @@
     Report User
 {% endblock %}
 
+{% block custom_head %}
+<style>
+  #main-content {
+      max-width: 500px;
+  }
+  .custom-textarea {
+    width: 100%; 
+    resize: none;
+  }
+</style>
+{% endblock %}
+
 {% block body_block %}
-<!--insert custom HTML here-->
+<h2>Report User</h2>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<p>User Biography: {{ reported_user.biography }}</p>
+<div style="display: flex; margin-top: -10px;">
+    <div>
+        <p>Profile Photo: </p>
+        <br>
+    </div>
+    <img src="{{reported_user.profile_picture.url }}" alt="User Profile Picture" style="width: 300px; margin-left: 20px; margin-top: 20px;">    
+</div>
+
+<form method="post" action="{% url 'main:report_user' reported_user.id %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <br>
+    <button type="submit">Submit Report</button>
+</form>
+
+{% if show_popup %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        Swal.fire({
+            icon: 'success',
+            title: 'Report submitted successfully!',
+            showConfirmButton: false,
+            timer: 1500 
+        }).then(() => {
+            window.location.href = '{% url "main:show_user_profile" user_profile_slug=user.slug %}';
+        });
+    });
+</script>
+{% endif %}
 {% endblock %}
