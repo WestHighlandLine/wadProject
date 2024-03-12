@@ -98,27 +98,27 @@ def report_user(request):
 @login_required
 def report_list(request):
     reports = PostReport.objects.all()
-    return render(request, 'report_list.html', {'reports': reports})
+    return render(request, 'photoGraph/report_list.html', {'reports': reports})
 
 @login_required
 def report_detail(request, report_id):
     report = get_object_or_404(PostReport, id=report_id)
     related_reports = PostReport.objects.filter(post_id=report.post_id).exclude(id=report_id)
     reasons = [report.reason] + list(related_reports.values_list('reason', flat=True))
-    return render(request, 'report_detail.html', {'report': report, 'reasons': reasons})
+    return render(request, 'photoGraph/report_detail.html', {'report': report, 'reasons': reasons})
 
 @login_required
 def report_post_view(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     form = ReportForm()
-    return render(request, 'report_post.html', {'post': post, 'form': form})
+    return render(request, 'photoGraph/report_post.html', {'post': post, 'form': form})
 
 @login_required
 def delete_post_view(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     PostReport.objects.filter(post=post).delete()
     post.delete()
-    return redirect('report_list.html')
+    return redirect('photoGraph/report_list.html')
 
 def signup(request):
     registered = False
