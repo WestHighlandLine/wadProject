@@ -97,6 +97,9 @@ def report_user(request):
 
 @login_required
 def report_detail(request, report_id):
+    if not request.user.is_superuser:
+        return redirect('main:index')
+    
     report = get_object_or_404(PostReport, id=report_id)
     related_reports = PostReport.objects.filter(post_id=report.post_id).exclude(id=report_id)
     reasons = [report.reason] + list(related_reports.values_list('reason', flat=True))
