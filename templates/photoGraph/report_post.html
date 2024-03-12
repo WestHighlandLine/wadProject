@@ -1,10 +1,52 @@
 {% extends 'photoGraph/base.html' %}
 {% load staticfiles %}
 
-{% block title_block %}
-    Report Post
+{% block custom_head %}
+<style>
+  #main-content {
+      max-width: 500px;
+  }
+  .custom-textarea {
+    width: 100%; 
+    resize: none;
+  }
+</style>
 {% endblock %}
 
 {% block body_block %}
-<!--insert custom HTML here-->
+<h2>Report Post</h2>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<p>Post Caption: {{ post.caption }}</p>
+<div style="display: flex; margin-top: -10px;">
+    <div>
+        <p>Post Content: </p>
+        <br>
+    </div>
+    <img src="{{ post.photo.url }}" alt="{{ post.caption }}" style="width: 300px; margin-left: 20px; margin-top: 20px;">    
+</div>
+
+<p>Post Location: {{ post.location_name }}</p>
+
+<form method="post" action="{% url 'main:report_post' post.id %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <br>
+    <button type="submit">Submit Report</button>
+</form>
+
+{% if show_popup %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        Swal.fire({
+            icon: 'success',
+            title: 'Report submitted successfully!',
+            showConfirmButton: false,
+            timer: 1500 
+        }).then(() => {
+            window.location.href = '{% url "main:view_post" user_profile_slug=post.created_by.slug post_slug=post.slug %}';
+        });
+    });
+</script>
+{% endif %}
 {% endblock %}

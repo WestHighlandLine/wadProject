@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
@@ -12,8 +12,9 @@ from main.forms import (
     PostForm
 )
 from django.contrib import messages
-from main.models import UserProfile, Post, Comment
-
+from main.models import UserProfile, Post, Comment, PostReport
+from django.views import View
+from .forms import ReportForm
 
 def index(request):
     return render(request, "photoGraph/index.html")
@@ -77,8 +78,41 @@ def view_post(request, user_profile_slug, post_slug):
 
 
 @login_required
-def report_post(request):  # will also need to take in an ID_slug
-    return render(request, "photoGraph/report_post.html")
+def report_post(request, post_id): 
+    post = get_object_or_404(Post, id=post_id)
+
+    if request.method == 'POST':
+        form = ReportForm(request.POST, instance=PostReport(reporter=request.user.userprofile, post_id=post))
+        if form.is_valid():
+            form.save()
+            return render(request, 'photoGraph/report_post.html', {'post': post, 'form': form, 'show_popup': True})
+    else:
+        form = ReportForm()
+    return render(request, 'photoGraph/report_post.html', {'post': post, 'form': form})
+
+
+@login_required
+def report_user(request):
+    return render(request, 'photoGraph/report_user.html')
+
+@login_required
+def report_detail(request, report_id):
+    report = get_object_or_404(PostReport, id=report_id)
+    related_reports = PostReport.objects.filter(post_id=report.post_id).exclude(id=report_id)
+    reasons = [report.reason] + list(related_reports.values_list('reason', flat=True))
+    return render(request, 'photoGraph/report_detail.html', {'report': report, 'reasons': reasons})
+
+@login_required
+def delete_post_view(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    post_reports = PostReport.objects.filter(post_id=post.id)
+
+    if request.method == 'POST':
+        post_reports.delete()
+        post.delete()
+        return redirect('admin:main_postreport_changelist')
+
+    return render(request, 'photoGraph/delete_post_report.html', {'post': post})
 
 
 def signup(request):
@@ -199,11 +233,6 @@ def my_account(request):
         )
     else:
         return redirect(reverse("main:login"))
-
-
-@login_required
-def report_user(request):
-    return render(request, "photoGraph/report_user.html")
 
 
 @login_required
