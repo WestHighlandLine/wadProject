@@ -36,8 +36,8 @@ class PostReportAdmin(admin.ModelAdmin):
         context = {'report': report}
         return render(request, 'main/view_report_details.html', context)
 
-    #def has_add_permission(self, request):
-      #  return False
+    def has_add_permission(self, request):
+        return False
     
     def add_view(self, request, form_url='', extra_context=None):
         extra_context = extra_context or {}
@@ -66,7 +66,7 @@ class PostAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         return False
-
+    
 
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Post, PostAdmin)
