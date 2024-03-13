@@ -16,7 +16,7 @@
 {% block body_block %}
 <h1>Confirm User Deletion</h1>
   <p>Are you sure you want to delete this user and the associated reports?</p>
-  <form method="post" action="{% url 'main:delete_user_view' user.id %}">
+  <form method="post" action="{% url 'main:delete_user_view' reported_user.id %}">
     {% csrf_token %}
     <input type="submit" value="Delete User and Reports">
   </form>

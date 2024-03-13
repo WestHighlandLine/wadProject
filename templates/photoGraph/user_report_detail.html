@@ -19,7 +19,10 @@
     
     {% if report.user_id %}
         <p>User being reported: {{ report.user_id }}</p>
-        <p>{{ report.user_id }}'s description: {{ report.user_id.userprofile.biography }}</p>
+
+        {% if report.user_id.userprofile.biography %}
+        <p>{{ report.user_id }}'s profile description: {{ report.user_id.userprofile.biography }}</p>
+        {% endif %}
 
         {% if report.user_id %}
             <div style="display: flex; margin-top: -10px;">
@@ -45,7 +48,7 @@
 
     <p>Created At: {{ report.created_at }}</p>
   
-    <a href="{% url 'main:delete_user_view' report.id %}">Delete User Report</a>
+    <a href="{% url 'main:delete_user_view' report.user_id.id %}">Delete User and Report(s)</a>
     <br><br>
     <a href="{% url 'admin:main_userreport_changelist' %}">Back to User Reports</a>
 {% endblock %}

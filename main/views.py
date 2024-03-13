@@ -137,7 +137,7 @@ def user_report_detail(request, report_id):
     related_reports = UserReport.objects.filter(user_id=user_report.user_id).exclude(id=report_id)
     reasons = [user_report.reason] + list(related_reports.values_list('reason', flat=True))
 
-    context = {'report': user_report, 'user_profile': user_report.user_id, 'related_reports': related_reports, 'reasons': reasons}
+    context = {'report': user_report, 'reasons': reasons}
     return render(request, 'photograph/user_report_detail.html', context)
 
 @login_required
@@ -145,16 +145,16 @@ def delete_user_view(request, user_id):
     if not request.user.is_superuser:
         return redirect('main:index')
     
-    user_report = get_object_or_404(UserReport, user_id=user_id)
-    reported_user = user_report.user_id
+    reported_user = get_object_or_404(User, id=user_id)
+    user_reports = UserReport.objects.filter(user_id=reported_user.id)
 
     if request.method == 'POST':
+        user_reports.delete()
         reported_user.delete()
-        user_report.delete()
         return redirect('admin:main_userreport_changelist') 
 
-    context = {'report': user_report}
-    return render(request, 'main/delete_user_report.html', context)
+    context = {'reported_user': reported_user}
+    return render(request, 'photograph/delete_user_report.html', context)
 
 
 def signup(request):
