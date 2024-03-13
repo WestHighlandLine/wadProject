@@ -2,7 +2,7 @@
 {% load staticfiles %}
 
 {% block title_block %}
-    Report Details
+  Post Report Details
 {% endblock %}
 
 {% block custom_head %}
@@ -14,7 +14,7 @@
 {% endblock %}
 
 {% block body_block %}
-<h1>Report Details</h1>
+<h1>Post Report Details</h1>
   <p>This reporter: {{ report.reporter }}</p>
   <p>Post ID: {{ report.post_id }}</p>
   {% if report.post_id %}

@@ -1,0 +1,24 @@
+{% extends 'photoGraph/base.html' %}
+{% load staticfiles %}
+
+{% block title_block %}
+    Confirm User Deletion
+{% endblock %}
+
+{% block custom_head %}
+<style>
+  #main-content {
+      max-width: 500px;
+  }
+</style>
+{% endblock %}
+
+{% block body_block %}
+<h1>Confirm User Deletion</h1>
+  <p>Are you sure you want to delete this user and the associated reports?</p>
+  <form method="post" action="{% url 'main:delete_user_view' user.id %}">
+    {% csrf_token %}
+    <input type="submit" value="Delete User and Reports">
+  </form>
+  <a href="{% url 'admin:main_userreport_changelist' %}">Cancel</a>
+{% endblock %}

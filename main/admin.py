@@ -80,21 +80,21 @@ class UserReportAdmin(admin.ModelAdmin):
     report_count.short_description = 'Report Count'
 
     def view_report(self, obj):
-        report_detail_url = reverse('main:view_user_report', args=[obj.id])
+        report_detail_url = reverse('main:user_report_detail', args=[obj.id])
         return format_html('<a href="{}" class="button" target="_self">View Report</a>', report_detail_url)
     view_report.short_description = 'View Report'
 
     def get_urls(self):
         urls = super().get_urls()
         custom_urls = [
-            path('view_report/<int:report_id>/', self.admin_site.admin_view(self.view_report_details), name='view_user_report'),
+            path('view_report/<int:report_id>/', self.admin_site.admin_view(self.view_user_details), name='view_user_details'),
         ]
         return custom_urls + urls
 
-    def view_report_details(self, request, report_id):
+    def view_user_details(self, request, report_id):
         report = UserReport.objects.get(id=report_id)
         context = {'report': report}
-        return render(request, 'main/view_user_details.html', context)
+        return render(request, 'main/user_report_details.html', context)
 
     def has_add_permission(self, request):
         return False

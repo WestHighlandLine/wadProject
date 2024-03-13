@@ -1,0 +1,44 @@
+{% extends 'photoGraph/base.html' %}
+{% load staticfiles %}
+
+{% block title_block %}
+    User Report Details
+{% endblock %}
+
+{% block custom_head %}
+<style>
+  #main-content {
+      max-width: 500px;
+  }
+</style>
+{% endblock %}
+
+{% block body_block %}
+<h1>User Report Details</h1>
+  <p>Reporter: {{ report.reporter }}</p>
+  <p>Reported User: {{ report.user_id }}</p>
+  <p>Reason: {{ report.reason }}</p>
+
+  <div style="display: flex; margin-top: -10px;">
+    <div>
+        <p>Reported User Biography: </p>
+        <br>
+    </div>
+    <img src="{{ report.user_id.profile_picture.url }}" alt="User Profile Picture" style="width: 300px; margin-left: 20px; margin-top: 20px;">    
+  </div>
+
+  <p>Reported User Biography: {{ report.user_id.biography }}</p>
+
+  <h3>Related Reports:</h3>
+  <ul>
+    {% for related_report in related_reports %}
+      <li>{{ related_report.reason }}</li>
+    {% endfor %}
+  </ul>
+
+  <p>Created At: {{ report.created_at }}</p>
+  
+  <a href="{% url 'main:delete_user_view' report.user_id.id %}">Delete User and Reports</a>
+  <br><br>
+  <a href="{% url 'admin:main_userreport_changelist' %}">Back to User Reports</a>
+{% endblock %}
