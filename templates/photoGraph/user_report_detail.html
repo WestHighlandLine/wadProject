@@ -6,39 +6,46 @@
 {% endblock %}
 
 {% block custom_head %}
-<style>
-  #main-content {
-      max-width: 500px;
-  }
-</style>
+    <style>
+        #main-content {
+            max-width: 600px;
+        }
+    </style>
 {% endblock %}
 
 {% block body_block %}
-<h1>User Report Details</h1>
-  <p>Reporter: {{ report.reporter }}</p>
-  <p>Reported User: {{ report.user_id }}</p>
-  <p>Reason: {{ report.reason }}</p>
+    <h1>User Report Details</h1>
+    <p>This reporter: {{ report.reporter }}</p>
+    
+    {% if report.user_id %}
+        <p>User being reported: {{ report.user_id }}</p>
+        <p>{{ report.user_id }}'s description: {{ report.user_id.userprofile.biography }}</p>
 
-  <div style="display: flex; margin-top: -10px;">
-    <div>
-        <p>Reported User Biography: </p>
-        <br>
-    </div>
-    <img src="{{ report.user_id.profile_picture.url }}" alt="User Profile Picture" style="width: 300px; margin-left: 20px; margin-top: 20px;">    
-  </div>
+        {% if report.user_id %}
+            <div style="display: flex; margin-top: -10px;">
+                <div>
+                    <p>{{ report.user_id }}'s profile picture: </p>
+                    <br>
+                </div>
+                <img src="{{ report.user_id.userprofile.profile_picture.url }}" alt="User Profile Picture" style="width: 300px; margin-left: 20px; margin-top: 20px;">    
+            </div>
+        {% else %}
+            <p>No profile picture found.</p>
+        {% endif %}
+    {% else %}
+        <p>No associated user found.</p>
+    {% endif %}
 
-  <p>Reported User Biography: {{ report.user_id.biography }}</p>
+    <p>Reason(s):</p>
+    <ul>
+        {% for reason in reasons %}
+            <li>{{ reason }}</li>
+        {% endfor %}
+    </ul>
 
-  <h3>Related Reports:</h3>
-  <ul>
-    {% for related_report in related_reports %}
-      <li>{{ related_report.reason }}</li>
-    {% endfor %}
-  </ul>
-
-  <p>Created At: {{ report.created_at }}</p>
+    <p>Created At: {{ report.created_at }}</p>
   
-  <a href="{% url 'main:delete_user_view' report.user_id.id %}">Delete User and Reports</a>
-  <br><br>
-  <a href="{% url 'admin:main_userreport_changelist' %}">Back to User Reports</a>
+    <a href="{% url 'main:delete_user_view' report.id %}">Delete User Report</a>
+    <br><br>
+    <a href="{% url 'admin:main_userreport_changelist' %}">Back to User Reports</a>
 {% endblock %}

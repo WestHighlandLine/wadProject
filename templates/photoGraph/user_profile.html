@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block body_block %}
-<div class="reportUserLinkContainer" style="position: absolute; top: 60px; right: 100px;">
+<div class="reportUserLinkContainer">
     <p id="reportUserLink"><a href="{% url 'main:report_user' user_profile.user.id %}">Report User</a></p>
 </div>
     {% account_detail_template user_profile False %}

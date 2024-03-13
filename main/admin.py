@@ -94,7 +94,7 @@ class UserReportAdmin(admin.ModelAdmin):
     def view_user_details(self, request, report_id):
         report = UserReport.objects.get(id=report_id)
         context = {'report': report}
-        return render(request, 'main/user_report_details.html', context)
+        return render(request, 'main/user_report_detail.html', context)
 
     def has_add_permission(self, request):
         return False

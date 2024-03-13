@@ -8,7 +8,7 @@
 {% block custom_head %}
 <style>
   #main-content {
-      max-width: 500px;
+      max-width: 600px;
   }
   .custom-textarea {
     width: 100%; 
@@ -21,10 +21,10 @@
 <h2>Report User</h2>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-<p>User Biography: {{ reported_user.biography }}</p>
+<p>{{ reported_user }}'s description: {{ reported_user.biography }}</p>
 <div style="display: flex; margin-top: -10px;">
     <div>
-        <p>Profile Photo: </p>
+        <p>{{ reported_user }}'s profile photo: </p>
         <br>
     </div>
     <img src="{{reported_user.profile_picture.url }}" alt="User Profile Picture" style="width: 300px; margin-left: 20px; margin-top: 20px;">    

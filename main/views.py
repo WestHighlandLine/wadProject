@@ -137,15 +137,15 @@ def user_report_detail(request, report_id):
     related_reports = UserReport.objects.filter(user_id=user_report.user_id).exclude(id=report_id)
     reasons = [user_report.reason] + list(related_reports.values_list('reason', flat=True))
 
-    context = {'report': user_report, 'related_reports': related_reports, 'reasons': reasons}
-    return render(request, 'main/user_report_detail.html', context)
+    context = {'report': user_report, 'user_profile': user_report.user_id, 'related_reports': related_reports, 'reasons': reasons}
+    return render(request, 'photograph/user_report_detail.html', context)
 
 @login_required
 def delete_user_view(request, user_id):
     if not request.user.is_superuser:
         return redirect('main:index')
     
-    user_report = get_object_or_404(UserReport, id=user_id)
+    user_report = get_object_or_404(UserReport, user_id=user_id)
     reported_user = user_report.user_id
 
     if request.method == 'POST':
