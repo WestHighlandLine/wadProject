@@ -45,8 +45,8 @@
         Swal.fire({
             icon: 'success',
             title: 'Report submitted successfully!',
-            showConfirmButton: false,
-            timer: 1500 
+            showConfirmButton: true,
+            confirmButtonText: "OK" 
         }).then(() => {
             window.location.href = '{% url "main:view_post" user_profile_slug=post.created_by.slug post_slug=post.slug %}';
         });
