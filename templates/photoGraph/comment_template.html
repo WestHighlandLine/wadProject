@@ -1,0 +1,10 @@
+<div class="comments-container">
+    {% for comment in comments %}
+        <div class="comment">
+            <span class="post-info-primary">Commented by <a href="{% url 'main:show_user_profile' comment.created_by.slug %}">{{ comment.created_by }}</a></span><br/>
+            <span class="post-info-primary">{{ comment.comment }}</span><br/>
+            <span class="post-info-secondary">Posted {{ comment.created_time }}</span>
+        </div>
+        <br/>
+    {% endfor %}
+</div>

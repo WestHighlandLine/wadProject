@@ -1,10 +1,9 @@
 <div id="userDetails">
 	<div class="detailsContainer">
-		<h3>{{user_profile.user.username}}</h3>
-		<p><b>Name:</b> {{user_profile.user.username}}</p>
-		<p><b>Description: </b>{{user_profile.biography}}</p>
+		<h3>{{ user_profile }}</h3>
+		<p><b>Description: </b>{{ user_profile.biography }}</p>
         {% if show_edit_options %}
-            <p><b>Email:</b> {{user_profile.user.email}}</p>
+            <p><b>Email:</b> {{ user_profile.user.email }}</p>
 		    <br>
 		    <p id="passwordChangeLink"><a href="{% url 'main:passwordChange' %}"> Change password</a></p>
 		    <p id="editInfo"><a href="{% url 'main:infoChange' %}"> Change User information</a></p>
@@ -12,7 +11,7 @@
     </div>
     {% if user_profile.profile_picture %}
         <div class="profileImageContainer">
-            <img src="{{user_profile.profile_picture.url}}" alt="Profile Picture">
+            <img src="{{ user_profile.profile_picture.url }}" alt="Profile Picture">
         </div>
     {% endif %}
 </div>

@@ -12,7 +12,6 @@ import django
 
 django.setup()
 
-from django.db import models
 from main.models import User, Post, UserProfile
 from exif import Image
 from django.core.files.images import ImageFile
@@ -64,5 +63,5 @@ def generatePosts(directory):
 
 
 if __name__ == "__main__":
-    print("Starting Peter's photoGraph population script...")
+    print("Starting Peter's post population script...")
     generatePosts("media/post_photos/glasgow-test")

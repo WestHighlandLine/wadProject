@@ -10,12 +10,12 @@
     {% account_detail_template user_profile False %}
     <br>
     <hr>
-    <h3>{{ user_profile.slug}}'s Posts</h3>
+    <h3>{{ user_profile }}'s Posts</h3>
 
     {% if posts %}
-	{% post_template posts %}
+	    {% post_template posts %}
     {% else %}
-    <p>{{ user_profile.slug}} hasn't posted yet.</p>
+        <p>{{ user_profile }} hasn't posted yet.</p>
     {% endif %}
     
 {% endblock %}
