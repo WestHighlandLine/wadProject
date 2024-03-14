@@ -45,4 +45,8 @@ urlpatterns = [
     path("get_posts_json", views.get_posts_json, name="get_posts_json"),
     path("create_post/", views.create_post, name="create_post"),
     path("update_profile/", views.update_profile, name="update_profile"),
+
+
+    path('like_category/', views.LikePostView.as_view(), name='like_post'),
+
 ]

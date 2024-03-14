@@ -312,3 +312,25 @@ def get_posts_json(request):
             result[post.location_name].append(postDict)
 
     return JsonResponse(result, safe=False)
+
+def like_post(request):
+    rqID = request.get['post_id']
+    post = Post.objects.get(id=int(rqID))
+    post.likes = post.likes + 1
+    post.save()
+    return HttpResponse(post.likes)   
+
+
+class LikePostView(View):
+    def get(self, request):
+        post_id = request.GET['post_id']
+        try:
+            post = Post.objects.get(id=int(post_id))
+        except post.DoesNotExist:
+            return HttpResponse(-1)
+        except ValueError:
+            return HttpResponse(-1)
+        post.likes = post.likes + 1
+        post.save()
+        return HttpResponse(post.likes)
+
