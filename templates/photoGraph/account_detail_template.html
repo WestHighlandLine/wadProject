@@ -1,7 +1,9 @@
 <div id="userDetails">
 	<div class="detailsContainer">
 		<h3>{{ user_profile }}</h3>
-		<p><b>Description: </b>{{ user_profile.biography }}</p>
+        {% if user_profile.biography %}
+		    <p><b>Biography: </b>{{ user_profile.biography }}</p>
+        {% endif %}
         {% if show_edit_options %}
             <p><b>Email:</b> {{ user_profile.user.email }}</p>
 		    <br>

@@ -11,19 +11,23 @@ import random
 import lorem  # pip install lorem
 
 
-def generateComments():
-    test_user = User.objects.get_or_create(username="generate_posts_test_user")[0]
-    test_user_profile = UserProfile.objects.get_or_create(user=test_user)[0]
-
-    posts = Post.objects.filter(created_by=test_user_profile)
+def generate_comments():
+    test_user_profiles = UserProfile.objects.all()
+    posts = Post.objects.all()
 
     for post in posts:
-        for _ in range(random.randint(0, 3)):
+        for _ in range(random.randint(0, 5)):
+            test_user_profile = random.choice(test_user_profiles)
             Comment.objects.create(
                 created_by=test_user_profile, post=post, comment=lorem.sentence()
             )
 
 
-if __name__ == "__main__":
+def main():
     print("Starting Gavin's comment population script...")
-    generateComments()
+    generate_comments()
+    print("Completed Gavin's comment population script.")
+
+
+if __name__ == "__main__":
+    main()

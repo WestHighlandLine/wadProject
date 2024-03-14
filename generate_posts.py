@@ -3,7 +3,7 @@
 # 2. Place a folder of images with coordinate metadata in media/post_photos
 # 3. Run 'python manage.py shell'
 # 4. 'import generatePosts'
-# 5. 'generatePosts.generatePosts("media/post_photos/[FOLDER NAME]")'
+# 5. 'generate_posts.generate_posts("media/post_photos/[FOLDER NAME]")'
 import os
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "photoGraph.settings")
@@ -12,9 +12,10 @@ import django
 
 django.setup()
 
-from main.models import User, Post, UserProfile
+from main.models import Post, UserProfile
 from exif import Image
 from django.core.files.images import ImageFile
+import random
 
 
 # Based on https://stackoverflow.com/a/73267185
@@ -25,9 +26,8 @@ def decimal_coords(coords, ref):
     return decimal_degrees
 
 
-def generatePosts(directory):
-    test_user = User.objects.get_or_create(username="generate_posts_test_user")[0]
-    test_user_profile = UserProfile.objects.get_or_create(user=test_user)[0]
+def generate_posts(directory):
+    test_user_profiles = UserProfile.objects.all()
 
     for filename in os.listdir(directory):
         try:
@@ -45,14 +45,14 @@ def generatePosts(directory):
                         decimal_coords(img.gps_longitude, img.gps_longitude_ref),
                     )
 
-                    post = Post(
+                    test_user_profile = random.choice(test_user_profiles)
+                    Post.objects.create(
                         created_by=test_user_profile,
                         caption=filename.split("/")[-1],
                         photo=ImageFile(open(filename, "rb")),
                         latitude=coords[0],
                         longitude=coords[1],
                     )
-                    post.save()
                 except AttributeError:
                     print("No Coordinates")
 
@@ -62,6 +62,11 @@ def generatePosts(directory):
             print(e)
 
 
-if __name__ == "__main__":
+def main():
     print("Starting Peter's post population script...")
-    generatePosts("media/post_photos/glasgow-test")
+    generate_posts("media/post_photos/glasgow-test")
+    print("Completed Peter's post population script.")
+
+
+if __name__ == "__main__":
+    main()
