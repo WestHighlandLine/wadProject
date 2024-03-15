@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.http.request import HttpRequest
-from main.models import UserProfile, Post, PostReport, UserReport
+from main.models import UserProfile, Post, PostReport, UserReport, Like
 from django.urls import reverse
 from django.utils.html import format_html
 from django.db.models import Count
@@ -118,8 +118,12 @@ class UserReportAdmin(admin.ModelAdmin):
         queryset = super().get_queryset(request)
         queryset = queryset.annotate(report_count=Count('user_id__userreport'))
         return queryset
+    
+class LikeAdmin(admin.ModelAdmin):
+    pass
 
 admin.site.register(UserReport, UserReportAdmin)
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Post, PostAdmin)
 admin.site.register(PostReport, PostReportAdmin)
+admin.site.register(Like, LikeAdmin)

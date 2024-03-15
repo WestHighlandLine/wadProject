@@ -13,7 +13,7 @@ from main.forms import (
     ReportForm, UserReportForm
 )
 from django.contrib import messages
-from main.models import UserProfile, Post, Comment, PostReport, User, UserReport
+from main.models import UserProfile, Post, Comment, PostReport, User, UserReport, Like
 from django.views import View
 
 def index(request):
@@ -71,6 +71,12 @@ def view_post(request, user_profile_slug, post_slug):
         comments = Comment.objects.filter(post=post)
         context_dict["comments"] = comments
 
+        if (request.user):
+            has_user_liked = len(Like.objects.filter(post=post, user=UserProfile.objects.get(user=request.user))) > 0
+        else:
+            has_user_liked = False
+        
+        context_dict["has_user_liked"] = has_user_liked
     except (UserProfile.DoesNotExist, Post.DoesNotExist):
         context_dict["post"] = None
 
@@ -325,12 +331,15 @@ def get_posts_json(request):
             latitude__lte=northWest[0],
             longitude__gte=northWest[1],
             longitude__lte=southEast[1],
-        ).order_by("-likes")
+        )
+
+        postObjects = sorted(postObjects, key=lambda p: len(Like.objects.filter(post=p)), reverse=True)
     else:
-        postObjects = Post.objects.all().order_by("-likes")
+        postObjects = Post.objects.all()
 
     # Filter posts
     for post in postObjects:
+        likes = Like.objects.filter(post=post)
 
         postDict = {
             "lat": post.latitude,
@@ -338,7 +347,7 @@ def get_posts_json(request):
             "user_name": post.created_by.slug,
             "location_name": post.location_name,
             "location_url": reverse("main:show_location") + "?location_name=" + post.location_name,
-            "likes": post.likes,
+            "likes": len(likes),
             "date": post.created_time,
             "caption": post.caption,
             "photo_url": post.photo.url,
@@ -354,14 +363,20 @@ def get_posts_json(request):
 
 class LikePostView(View):
     def get(self, request):
-        post_id = request.GET['post_id']
-        try:
-            post = Post.objects.get(id=int(post_id))
-        except post.DoesNotExist:
-            return HttpResponseNotFound()
-        except ValueError:
-            return HttpResponseBadRequest()
-        post.likes = post.likes + 1
-        post.save()
-        return HttpResponse(post.likes)
+        if (request.user):
+            post_id = request.GET['post_id']
+            try:
+                post = Post.objects.get(id=int(post_id))
+            except post.DoesNotExist:
+                return HttpResponseNotFound()
+            except ValueError:
+                return HttpResponseBadRequest()
+            
+            user_profile = UserProfile.objects.get(user=request.user)
+
+            Like.objects.update_or_create(post=post, user=user_profile)
+
+        likes = Like.objects.filter(post=post)
+
+        return HttpResponse(len(likes))
 
