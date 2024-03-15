@@ -62,7 +62,6 @@ class UserProfileAdmin(admin.ModelAdmin):
         return False
     def has_change_permission(self, request):
         return False
-    
 class PostAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request):
@@ -120,7 +119,11 @@ class UserReportAdmin(admin.ModelAdmin):
         return queryset
     
 class LikeAdmin(admin.ModelAdmin):
-    pass
+    def has_add_permission(self, request):
+        return False
+    
+    def has_change_permission(self, request):
+        return False
 
 admin.site.register(UserReport, UserReportAdmin)
 admin.site.register(UserProfile, UserProfileAdmin)
