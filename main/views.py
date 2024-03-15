@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseNotFound, HttpResponseBadRequest
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
@@ -13,7 +13,7 @@ from main.forms import (
     ReportForm, UserReportForm
 )
 from django.contrib import messages
-from main.models import UserProfile, Post, Comment, PostReport, User, UserReport
+from main.models import UserProfile, Post, Comment, PostReport, User, UserReport, Like
 from django.views import View
 
 def index(request):
@@ -71,6 +71,12 @@ def view_post(request, user_profile_slug, post_slug):
         comments = Comment.objects.filter(post=post)
         context_dict["comments"] = comments
 
+        if (request.user):
+            has_user_liked = len(Like.objects.filter(post=post, user=UserProfile.objects.get(user=request.user))) > 0
+        else:
+            has_user_liked = False
+        
+        context_dict["has_user_liked"] = has_user_liked
     except (UserProfile.DoesNotExist, Post.DoesNotExist):
         context_dict["post"] = None
 
@@ -233,11 +239,11 @@ def password_change_view(request):
     if request.method == "POST":
         form = CustomPasswordChangeForm(request.user, request.POST)
         if form.is_valid():
-            user = form.save
+            user = form.save()
             update_session_auth_hash(request, user)
-            messages.sucess(request, "Password Changed Sucessfully")
+            #messages.sucess(request, "Password Changed Sucessfully")
             return redirect(
-                reverse("photoGraph:my_account")
+                reverse("main:my_account")
             )  # should go back to the my account page
         else:
             messages.error(request, "Please correct the error below.")
@@ -250,7 +256,7 @@ def info_change_view(request):
     if request.method == "POST":
         form = ChangeInfoForm(request.user, request.POST)
         if form.is_valid():
-            user = form.save
+            user = form.save()
             update_session_auth_hash(request, user)
             messages.sucess(request, "Information Changed Sucessfully")
             return redirect(
@@ -325,12 +331,15 @@ def get_posts_json(request):
             latitude__lte=northWest[0],
             longitude__gte=northWest[1],
             longitude__lte=southEast[1],
-        ).order_by("-likes")
+        )
+
+        postObjects = sorted(postObjects, key=lambda p: len(Like.objects.filter(post=p)), reverse=True)
     else:
-        postObjects = Post.objects.all().order_by("-likes")
+        postObjects = Post.objects.all()
 
     # Filter posts
     for post in postObjects:
+        likes = Like.objects.filter(post=post)
 
         postDict = {
             "lat": post.latitude,
@@ -338,7 +347,7 @@ def get_posts_json(request):
             "user_name": post.created_by.slug,
             "location_name": post.location_name,
             "location_url": reverse("main:show_location") + "?location_name=" + post.location_name,
-            "likes": post.likes,
+            "likes": len(likes),
             "date": post.created_time,
             "caption": post.caption,
             "photo_url": post.photo.url,
@@ -352,24 +361,28 @@ def get_posts_json(request):
 
     return JsonResponse(result, safe=False)
 
-def like_post(request):
-    rqID = request.get['post_id']
-    post = Post.objects.get(id=int(rqID))
-    post.likes = post.likes + 1
-    post.save()
-    return HttpResponse(post.likes)   
-
-
-class LikePostView(View):
-    def get(self, request):
+def like_toggle(request):
+    if (request.user):
         post_id = request.GET['post_id']
         try:
             post = Post.objects.get(id=int(post_id))
         except post.DoesNotExist:
-            return HttpResponse(-1)
+            return HttpResponseNotFound()
         except ValueError:
-            return HttpResponse(-1)
-        post.likes = post.likes + 1
-        post.save()
-        return HttpResponse(post.likes)
+            return HttpResponseBadRequest()
+        
+        user_profile = UserProfile.objects.get(user=request.user)
+
+        has_user_liked = len(Like.objects.filter(post=post, user=UserProfile.objects.get(user=request.user))) > 0
+
+        if (has_user_liked):
+            # Unlike
+            Like.objects.get(post=post, user=user_profile).delete()
+        else:
+            # Like
+            Like.objects.update_or_create(post=post, user=user_profile)
+
+    likes = Like.objects.filter(post=post)
+
+    return HttpResponse(len(likes))
 

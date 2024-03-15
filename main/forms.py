@@ -89,15 +89,7 @@ class UserReportForm(forms.ModelForm):
 
 
 class CustomPasswordChangeForm(PasswordChangeForm):
-    
-    input_new_password = forms.CharField(
-        label="Input New Password",
-        widget=forms.PasswordInput(),
-    )
-    new_password_confirm = forms.CharField(
-        label="Confirm New Password",
-        widget=forms.PasswordInput(),
-    )
+    pass
 
 class ChangePost(forms.ModelForm):
 

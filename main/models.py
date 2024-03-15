@@ -5,7 +5,6 @@ import http.client
 import json
 import uuid
 
-
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
@@ -27,7 +26,6 @@ class Post(models.Model):
     slug = models.SlugField(unique=True)
     slug_uuid = models.UUIDField(default=uuid.uuid4)
     caption = models.CharField(max_length=100, blank=True, null=True)
-    likes = models.IntegerField(default=0)
     photo = models.ImageField(upload_to="post_photos/")
 
     latitude = models.FloatField(blank=False)
@@ -117,3 +115,13 @@ class UserReport(models.Model):
     
     class Meta:
         verbose_name_plural = "User Reports"
+
+class Like(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.user.slug} likes {self.post.slug}"
+    
+    class Meta:
+        verbose_name_plural = "Likes"
