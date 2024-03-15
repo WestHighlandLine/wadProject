@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from main.models import UserProfile, Group, Comment, Post, PostReport
+from main.models import UserProfile, Group, Comment, Post, PostReport, UserReport
 from django.contrib.auth.forms import PasswordChangeForm
 
 
@@ -76,6 +76,16 @@ class ReportForm(forms.ModelForm):
         model = PostReport
         fields = ('reason',)
 
+
+
+class UserReportForm(forms.ModelForm):
+
+    reason = forms.CharField(widget=forms.Textarea(attrs={'class': 'custom-textarea', 'rows': 5}), label='Reason')
+
+    class Meta: 
+        model = UserReport
+        fields = ('reason',)
+    
 
 
 class CustomPasswordChangeForm(PasswordChangeForm):

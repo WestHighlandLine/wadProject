@@ -32,7 +32,11 @@ urlpatterns = [
  
     path("report_post/<int:post_id>/", views.report_post, name="report_post"),
     path('admin/report_detail/<int:report_id>/', views.report_detail, name='report_detail'),
-    path('admin/delete_post_view/<int:post_id>/', views.delete_post_view, name='delete_post_view'),    
+    path('admin/delete_post_view/<int:post_id>/', views.delete_post_view, name='delete_post_view'),  
+
+    path("report_user/<int:user_id>/", views.report_user, name="report_user"),
+    path('admin/user_report_detail/<int:report_id>/', views.user_report_detail, name='user_report_detail'),
+    path('admin/delete_user_view/<int:user_id>/', views.delete_user_view, name='delete_user_view'),  
 
     path("signup/", views.signup, name="signup"),
     path("login/", views.login_page, name="login"),

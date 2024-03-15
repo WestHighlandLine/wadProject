@@ -2,13 +2,13 @@
 {% load staticfiles %}
 
 {% block title_block %}
-    Report Details
+  Post Report Details
 {% endblock %}
 
 {% block custom_head %}
 <style>
   #main-content {
-      max-width: 500px;
+      max-width: 600px;
   }
 </style>
 {% endblock %}
@@ -16,7 +16,7 @@
 {% block body_block %}
 {% if request.user.is_superuser %}
 
-  <h1>Report Details</h1>
+  <h1>Post Report Details</h1>
     <p>This reporter: {{ report.reporter }}</p>
     <p>Post ID: {{ report.post_id }}</p>
     {% if report.post_id %}
