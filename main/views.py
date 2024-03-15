@@ -239,11 +239,11 @@ def password_change_view(request):
     if request.method == "POST":
         form = CustomPasswordChangeForm(request.user, request.POST)
         if form.is_valid():
-            user = form.save
+            user = form.save()
             update_session_auth_hash(request, user)
-            messages.sucess(request, "Password Changed Sucessfully")
+            #messages.sucess(request, "Password Changed Sucessfully")
             return redirect(
-                reverse("photoGraph:my_account")
+                reverse("main:my_account")
             )  # should go back to the my account page
         else:
             messages.error(request, "Please correct the error below.")
@@ -256,7 +256,7 @@ def info_change_view(request):
     if request.method == "POST":
         form = ChangeInfoForm(request.user, request.POST)
         if form.is_valid():
-            user = form.save
+            user = form.save()
             update_session_auth_hash(request, user)
             messages.sucess(request, "Information Changed Sucessfully")
             return redirect(
