@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from main.models import UserProfile, Group, Comment, Post, Report
+from main.models import UserProfile, Group, Comment, Post, PostReport, UserReport
 from django.contrib.auth.forms import PasswordChangeForm
 
 
@@ -70,14 +70,22 @@ class CommentForm(forms.ModelForm):
 
 class ReportForm(forms.ModelForm):
 
-    reporter = forms.ModelChoiceField(queryset=User.objects.all(), label='Reporter')
-    post_id = forms.ModelChoiceField(queryset=Post.objects.all(), label='Post')
-    reason = forms.CharField(widget=forms.Textarea, label='Reason')
+    reason = forms.CharField(widget=forms.Textarea(attrs={'class': 'custom-textarea', 'rows': 5}), label='Reason')
 
     class Meta: 
-        model = Report
-        fields = ('reporter', 'post_id', 'reason',)
+        model = PostReport
+        fields = ('reason',)
 
+
+
+class UserReportForm(forms.ModelForm):
+
+    reason = forms.CharField(widget=forms.Textarea(attrs={'class': 'custom-textarea', 'rows': 5}), label='Reason')
+
+    class Meta: 
+        model = UserReport
+        fields = ('reason',)
+    
 
 
 class CustomPasswordChangeForm(PasswordChangeForm):
@@ -90,17 +98,19 @@ class CustomPasswordChangeForm(PasswordChangeForm):
         label="Confirm New Password",
         widget=forms.PasswordInput(),
     )
-    def clean(self):
-        cleaned_data = super().clean()
-        new_password = cleaned_data.get("new_password")
-        new_password_confirm = cleaned_data.get("new_password_confirm")
-
-        if new_password != new_password_confirm:
-            raise forms.ValidationError("New passwords do not match")
-        return cleaned_data
 
 class ChangePost(forms.ModelForm):
-    pass
+
+    caption = forms.CharField(label='Caption', max_length=255)
+    photo = forms.ImageField(label='Photo')
+    
+    class Meta:
+        model = Post
+        fields = ('caption', 'photo', 'latitude', 'longitude',)
+    
+    def clean(self):
+        cleaned_data = super(self).clean()
+        return cleaned_data
 
 class ChangeInfoForm(forms.ModelForm):
     picture = forms.ImageField() 

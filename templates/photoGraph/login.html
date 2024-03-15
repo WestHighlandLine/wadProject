@@ -10,7 +10,18 @@
     #main-content {
         max-width: max-content;
     }
+
+    input[type=text], input[type=password]{
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
 </style>
+
 {% endblock %}
 
 {% block body_block %}
@@ -24,10 +35,13 @@
 {% endif %}
 <form id="login_form" method="post" action="{% url 'main:login' %}">
     {% csrf_token %}
-    Username: <input type="text" name="username" value="{{ username }}" size="50" />
+
+    
+    Username:<br> <input type="text" name="username" value="{{ username }}" size="50" placeholder="Username" />
     <br />
-    Password: <input type="password" name="password" value="" size="50" />
+    Password: <br><input type="password" name="password" value="" size="50" placeholder="Password"/>
     <br />
+    <br>
     <input type="hidden" name="next" value="" size="50" id="next"/>
     <input type="submit" value="submit" />
 </form><br/>

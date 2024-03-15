@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
@@ -9,11 +9,12 @@ from main.forms import (
     UserProfileForm,
     CustomPasswordChangeForm,
     ChangeInfoForm,
-    PostForm
+    PostForm, 
+    ReportForm, UserReportForm
 )
 from django.contrib import messages
-from main.models import UserProfile, Post, Comment
-
+from main.models import UserProfile, Post, Comment, PostReport, User, UserReport
+from django.views import View
 
 def index(request):
     return render(request, "photoGraph/index.html")
@@ -77,8 +78,83 @@ def view_post(request, user_profile_slug, post_slug):
 
 
 @login_required
-def report_post(request):  # will also need to take in an ID_slug
-    return render(request, "photoGraph/report_post.html")
+def report_post(request, post_id): 
+    post = get_object_or_404(Post, id=post_id)
+
+    if request.method == 'POST':
+        form = ReportForm(request.POST, instance=PostReport(reporter=request.user.userprofile, post_id=post))
+        if form.is_valid():
+            form.save()
+            return render(request, 'photoGraph/report_post.html', {'post': post, 'form': form, 'show_popup': True})
+    else:
+        form = ReportForm()
+    return render(request, 'photoGraph/report_post.html', {'post': post, 'form': form})
+
+@login_required
+def report_detail(request, report_id):
+    if not request.user.is_superuser:
+        return redirect('main:index')
+    
+    report = get_object_or_404(PostReport, id=report_id)
+    related_reports = PostReport.objects.filter(post_id=report.post_id).exclude(id=report_id)
+    reasons = [report.reason] + list(related_reports.values_list('reason', flat=True))
+    return render(request, 'photoGraph/report_detail.html', {'report': report, 'reasons': reasons})
+
+@login_required
+def delete_post_view(request, post_id):
+    if not request.user.is_superuser:
+        return redirect('main:index')
+    
+    post = get_object_or_404(Post, id=post_id)
+    post_reports = PostReport.objects.filter(post_id=post.id)
+
+    if request.method == 'POST':
+        post_reports.delete()
+        post.delete()
+        return redirect('admin:main_postreport_changelist')
+
+    return render(request, 'photoGraph/delete_post_report.html', {'post': post})
+
+@login_required
+def report_user(request, user_id):
+    reported_user = get_object_or_404(UserProfile, user_id=user_id)
+
+    if request.method == 'POST':
+        form = UserReportForm(request.POST, instance=UserReport(reporter=request.user.userprofile, user_id=reported_user.user))
+        if form.is_valid():
+            form.save()
+            return render(request, 'photoGraph/report_user.html', {'reported_user': reported_user, 'form': form, 'show_popup': True})
+    else:
+        form = UserReportForm()
+    return render(request, 'photoGraph/report_user.html', {'reported_user': reported_user, 'form': form})
+
+@login_required
+def user_report_detail(request, report_id):
+    if not request.user.is_superuser:
+        return redirect('main:index')
+
+    user_report = get_object_or_404(UserReport, id=report_id)
+    related_reports = UserReport.objects.filter(user_id=user_report.user_id).exclude(id=report_id)
+    reasons = [user_report.reason] + list(related_reports.values_list('reason', flat=True))
+
+    context = {'report': user_report, 'reasons': reasons}
+    return render(request, 'photograph/user_report_detail.html', context)
+
+@login_required
+def delete_user_view(request, user_id):
+    if not request.user.is_superuser:
+        return redirect('main:index')
+    
+    reported_user = get_object_or_404(User, id=user_id)
+    user_reports = UserReport.objects.filter(user_id=reported_user.id)
+
+    if request.method == 'POST':
+        user_reports.delete()
+        reported_user.delete()
+        return redirect('admin:main_userreport_changelist') 
+
+    context = {'reported_user': reported_user}
+    return render(request, 'photograph/delete_user_report.html', context)
 
 
 def signup(request):
@@ -202,11 +278,6 @@ def my_account(request):
 
 
 @login_required
-def report_user(request):
-    return render(request, "photoGraph/report_user.html")
-
-
-@login_required
 def edit_post(request, postSlug):  # needs a slug for post ID
     post = Post.objects.get(slug=postSlug)
     return render(request, "photoGraph/edit_post.html", {"post": post})
@@ -280,3 +351,25 @@ def get_posts_json(request):
             result[post.location_name].append(postDict)
 
     return JsonResponse(result, safe=False)
+
+def like_post(request):
+    rqID = request.get['post_id']
+    post = Post.objects.get(id=int(rqID))
+    post.likes = post.likes + 1
+    post.save()
+    return HttpResponse(post.likes)   
+
+
+class LikePostView(View):
+    def get(self, request):
+        post_id = request.GET['post_id']
+        try:
+            post = Post.objects.get(id=int(post_id))
+        except post.DoesNotExist:
+            return HttpResponse(-1)
+        except ValueError:
+            return HttpResponse(-1)
+        post.likes = post.likes + 1
+        post.save()
+        return HttpResponse(post.likes)
+

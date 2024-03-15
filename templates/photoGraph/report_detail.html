@@ -1,0 +1,47 @@
+{% extends 'photoGraph/base.html' %}
+{% load staticfiles %}
+
+{% block title_block %}
+  Post Report Details
+{% endblock %}
+
+{% block custom_head %}
+<style>
+  #main-content {
+      max-width: 600px;
+  }
+</style>
+{% endblock %}
+
+{% block body_block %}
+{% if request.user.is_superuser %}
+
+  <h1>Post Report Details</h1>
+    <p>This reporter: {{ report.reporter }}</p>
+    <p>Post ID: {{ report.post_id }}</p>
+    {% if report.post_id %}
+      <p>Post Caption: {{ report.post_id.caption }}</p>
+
+      <div style="display: flex; margin-top: -10px;">
+        <div>
+            <p>Post Content: </p>
+            <br>
+        </div>
+        <img src="{{ report.post_id.photo.url }}" alt="{{ report.post_id.caption }}" style="width: 300px; margin-left: 20px; margin-top: 20px;">    
+    </div>
+    {% else %}
+      <p>No associated post found.</p>
+    {% endif %}
+    <p>Reason(s):</p>
+    <ul>
+      {% for reason in reasons %}
+        <li>{{ reason }}</li>
+      {% endfor %}
+    </ul>
+    <p>Created At: {{ report.created_at }}</p>
+    
+    <a href="{% url 'main:delete_post_view' report.post_id.id %}">Delete Post and Reports</a>
+    <br><br>
+    <a href="{% url 'admin:main_postreport_changelist' %}">Back to Reports</a>
+  {% endif %}
+{% endblock %}

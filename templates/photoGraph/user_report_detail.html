@@ -1,0 +1,54 @@
+{% extends 'photoGraph/base.html' %}
+{% load staticfiles %}
+
+{% block title_block %}
+    User Report Details
+{% endblock %}
+
+{% block custom_head %}
+    <style>
+        #main-content {
+            max-width: 600px;
+        }
+    </style>
+{% endblock %}
+
+{% block body_block %}
+    <h1>User Report Details</h1>
+    <p>This reporter: {{ report.reporter }}</p>
+    
+    {% if report.user_id %}
+        <p>User being reported: {{ report.user_id }}</p>
+
+        {% if report.user_id.userprofile.biography %}
+        <p>{{ report.user_id }}'s profile description: {{ report.user_id.userprofile.biography }}</p>
+        {% endif %}
+
+        {% if report.user_id %}
+            <div style="display: flex; margin-top: -10px;">
+                <div>
+                    <p>{{ report.user_id }}'s profile picture: </p>
+                    <br>
+                </div>
+                <img src="{{ report.user_id.userprofile.profile_picture.url }}" alt="User Profile Picture" style="width: 300px; margin-left: 20px; margin-top: 20px;">    
+            </div>
+        {% else %}
+            <p>No profile picture found.</p>
+        {% endif %}
+    {% else %}
+        <p>No associated user found.</p>
+    {% endif %}
+
+    <p>Reason(s):</p>
+    <ul>
+        {% for reason in reasons %}
+            <li>{{ reason }}</li>
+        {% endfor %}
+    </ul>
+
+    <p>Created At: {{ report.created_at }}</p>
+  
+    <a href="{% url 'main:delete_user_view' report.user_id.id %}">Delete User and Report(s)</a>
+    <br><br>
+    <a href="{% url 'admin:main_userreport_changelist' %}">Back to User Reports</a>
+{% endblock %}

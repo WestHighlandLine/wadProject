@@ -8,6 +8,24 @@
 
 {% block custom_head %}
 	<link rel="stylesheet" type="text/css" href="{% static 'view_post.css' %}">
+
+
+    <script>   
+    $(document).ready(function() {
+        $('#like_btn').click(function() {
+            var postIDvar;
+            $('#like_btn').hide();
+            postIDvar = $(this).attr('data-postid');
+            $.get('/photoGraph/like_category/',
+            {'post_id': postIDvar},
+            function(data) {
+                $('#like_count').html(data);
+                
+            })
+            
+        });
+    });
+    </script>
 {% endblock %}
 
 {% block body_block %}
@@ -15,8 +33,16 @@
         <span class="post-title">{{ post.caption }}</span> at <a href="{% url 'main:show_location' %}?location_name={{ post.location_name }}">{{ post.location_name }}</a>
     </div>
     <div class="post-inner">
-        <span class="post-info-primary">Posted by: <a href="{% url 'main:show_user_profile' post.created_by.slug %}">{{ post.created_by }}</a></span><br/>
-        <span class="post-info-secondary">{{post.likes}} likes, posted {{ post.created_time }}</span>
+        <span class="post-info-primary">Posted by: <a href="{% url 'main:show_user_profile' post.created_by.slug %}">{{ post.created_by.slug }}</a></span><br/>
+        <span class="post-info-secondary"><span id="like_count">{{post.likes}}</span> likes, taken {{post.created_time}}</span>
+        <br>
+        {% if user.is_authenticated %}
+            <button id="like_btn" data-postid="{{ post.id }}" class="btn btn-primary btn-sm" type="button">
+                <span data-feather="thumbs-up"></span>
+                Like Category
+            </button>
+        {% endif %}
+        <a href="{% url 'main:report_post' post.id %}" class="report-link">Report this post</a>
     </div>
     <div class="post-container">
         <a href="{{ post.photo.url }}" target="_blank" class="post-photo-link"><img src="{{ post.photo.url }}" class="post-photo" /></a><br/>

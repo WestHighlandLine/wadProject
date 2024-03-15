@@ -2,7 +2,6 @@ from django.urls import path
 from django.conf.urls import url
 from main import views
 
-
 app_name = "main"
 
 urlpatterns = [
@@ -28,9 +27,17 @@ urlpatterns = [
     ),
     # ^ probably needs to be a name slug using a post ID of some sort, like category_name_slug in rango.
     # eg: path('category/<slug:category_name_slug>/', views.show_category, name='show_category'),
-    path("report_post/", views.report_post, name="report_post"),
     # ^ will probably need to be similar to this:
     # path('category/<slug:category_name_slug>/add_page/', views.add_page, name='add_page'),
+ 
+    path("report_post/<int:post_id>/", views.report_post, name="report_post"),
+    path('admin/report_detail/<int:report_id>/', views.report_detail, name='report_detail'),
+    path('admin/delete_post_view/<int:post_id>/', views.delete_post_view, name='delete_post_view'),  
+
+    path("report_user/<int:user_id>/", views.report_user, name="report_user"),
+    path('admin/user_report_detail/<int:report_id>/', views.user_report_detail, name='user_report_detail'),
+    path('admin/delete_user_view/<int:user_id>/', views.delete_user_view, name='delete_user_view'),  
+
     path("signup/", views.signup, name="signup"),
     path("login/", views.login_page, name="login"),
     path("logout/", views.logout_page, name="logout"),
@@ -42,4 +49,8 @@ urlpatterns = [
     path("get_posts_json", views.get_posts_json, name="get_posts_json"),
     path("create_post/", views.create_post, name="create_post"),
     path("update_profile/", views.update_profile, name="update_profile"),
+
+
+    path('like_category/', views.LikePostView.as_view(), name='like_post'),
+
 ]
