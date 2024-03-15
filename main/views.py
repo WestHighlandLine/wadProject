@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseNotFound, HttpResponseBadRequest
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
@@ -352,23 +352,15 @@ def get_posts_json(request):
 
     return JsonResponse(result, safe=False)
 
-def like_post(request):
-    rqID = request.get['post_id']
-    post = Post.objects.get(id=int(rqID))
-    post.likes = post.likes + 1
-    post.save()
-    return HttpResponse(post.likes)   
-
-
 class LikePostView(View):
     def get(self, request):
         post_id = request.GET['post_id']
         try:
             post = Post.objects.get(id=int(post_id))
         except post.DoesNotExist:
-            return HttpResponse(-1)
+            return HttpResponseNotFound()
         except ValueError:
-            return HttpResponse(-1)
+            return HttpResponseBadRequest()
         post.likes = post.likes + 1
         post.save()
         return HttpResponse(post.likes)
