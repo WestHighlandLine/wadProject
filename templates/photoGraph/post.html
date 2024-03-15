@@ -11,18 +11,26 @@
 
 
     <script>   
+    var reqOngoing = false;
     $(document).ready(function() {
-        $('#like_btn').click(function() {
-            var postIDvar;
-            $('#like_btn').hide();
-            postIDvar = $(this).attr('data-postid');
-            $.get('/photoGraph/like_category/',
-            {'post_id': postIDvar},
-            function(data) {
-                $('#like_count').html(data);
-                
-            })
-            
+        $('#like_toggle').click(function() {
+            if (!reqOngoing) {
+                let postIDvar = $(this).attr('data-postid');
+                $.get('/photoGraph/like_toggle/',
+                {'post_id': postIDvar},
+                function(data) {
+                    $('#like_count').html(data);
+                    if ($('#like_toggle').attr('data-has-user-liked') == "False") {
+                        $('#like_toggle').html("Unlike");
+                        $('#like_toggle').attr('data-has-user-liked', "True")
+                    } else {
+                        $('#like_toggle').html("Like");
+                        $('#like_toggle').attr('data-has-user-liked', "False")
+                    }
+                    reqOngoing = false;
+                });
+                reqOngoing = true;
+            }
         });
     });
     </script>
@@ -36,10 +44,14 @@
         <span class="post-info-primary">Posted by: <a href="{% url 'main:show_user_profile' post.created_by.slug %}">{{ post.created_by.slug }}</a></span><br/>
         <span class="post-info-secondary"><span id="like_count">{% get_likes post %}</span> likes, taken {{post.created_time}}</span>
         <br>
-        {% if user.is_authenticated and not has_user_liked %}
-            <button id="like_btn" data-postid="{{ post.id }}" class="btn btn-primary btn-sm" type="button">
+        {% if user.is_authenticated %}
+            <button id="like_toggle" data-has-user-liked="{{ has_user_liked }}" data-postid="{{ post.id }}" class="btn btn-primary btn-sm" type="button">
                 <span data-feather="thumbs-up"></span>
-                Like
+                {% if has_user_liked %}
+                    Unlike
+                {% else %}
+                    Like
+                {% endif %}
             </button>
         {% endif %}
         <a href="{% url 'main:report_post' post.id %}" class="report-link">Report this post</a>

@@ -51,6 +51,6 @@ urlpatterns = [
     path("update_profile/", views.update_profile, name="update_profile"),
 
 
-    path('like_category/', views.LikePostView.as_view(), name='like_post'),
+    path('like_toggle/', views.like_toggle, name='like_toggle'),
 
 ]

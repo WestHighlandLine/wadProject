@@ -361,22 +361,28 @@ def get_posts_json(request):
 
     return JsonResponse(result, safe=False)
 
-class LikePostView(View):
-    def get(self, request):
-        if (request.user):
-            post_id = request.GET['post_id']
-            try:
-                post = Post.objects.get(id=int(post_id))
-            except post.DoesNotExist:
-                return HttpResponseNotFound()
-            except ValueError:
-                return HttpResponseBadRequest()
-            
-            user_profile = UserProfile.objects.get(user=request.user)
+def like_toggle(request):
+    if (request.user):
+        post_id = request.GET['post_id']
+        try:
+            post = Post.objects.get(id=int(post_id))
+        except post.DoesNotExist:
+            return HttpResponseNotFound()
+        except ValueError:
+            return HttpResponseBadRequest()
+        
+        user_profile = UserProfile.objects.get(user=request.user)
 
+        has_user_liked = len(Like.objects.filter(post=post, user=UserProfile.objects.get(user=request.user))) > 0
+
+        if (has_user_liked):
+            # Unlike
+            Like.objects.get(post=post, user=user_profile).delete()
+        else:
+            # Like
             Like.objects.update_or_create(post=post, user=user_profile)
 
-        likes = Like.objects.filter(post=post)
+    likes = Like.objects.filter(post=post)
 
-        return HttpResponse(len(likes))
+    return HttpResponse(len(likes))
 
