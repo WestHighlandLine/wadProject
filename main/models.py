@@ -18,7 +18,9 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.user.username
-
+    
+    class Meta:
+        app_label = 'main'
 
 class Post(models.Model):
     created_by = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
@@ -61,7 +63,8 @@ class Post(models.Model):
             self.location_name = f"{self.latitude}, {self.longitude}"
 
         super(Post, self).save(*args, **kwargs)
-
+    class Meta:
+        app_label = 'main'
 
 class Comment(models.Model):
     created_by = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
@@ -70,7 +73,8 @@ class Comment(models.Model):
     comment = models.CharField(max_length=100)
 
     created_time = models.DateTimeField(auto_now_add=True)
-
+    class Meta:
+        app_label = 'main'
 
 class Group(models.Model):
     created_by = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
@@ -86,14 +90,16 @@ class Group(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         super(Group, self).save(*args, **kwargs)
-
+    class Meta:
+        app_label = 'main'
 
 class GroupMember(models.Model):
     member = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
 
     created_time = models.DateTimeField(auto_now_add=True)
-
+    class Meta:
+        app_label = 'main'
 
 class PostReport(models.Model):
     reporter = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
@@ -106,6 +112,7 @@ class PostReport(models.Model):
     
     class Meta:
         verbose_name_plural = "Post Reports"
+        app_label = 'main'
 
 class UserReport(models.Model):
     reporter = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
@@ -115,6 +122,8 @@ class UserReport(models.Model):
     
     class Meta:
         verbose_name_plural = "User Reports"
+        app_label = 'main'
+
 
 class Like(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
@@ -125,3 +134,4 @@ class Like(models.Model):
     
     class Meta:
         verbose_name_plural = "Likes"
+        app_label = 'main'
