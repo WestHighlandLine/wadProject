@@ -75,6 +75,10 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',
             ],
+        
+        'libraries':{
+            'template_tag': 'app.templatetags.my_templatetag',
+            },
         },
     },
 ]
