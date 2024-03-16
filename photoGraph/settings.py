@@ -77,7 +77,7 @@ TEMPLATES = [
             ],
         
         'libraries':{
-            'template_tag': 'app.templatetags.my_templatetag',
+            'template_tag': 'main.templatetags.template_tags',
             },
         },
     },
