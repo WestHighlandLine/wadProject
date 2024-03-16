@@ -78,6 +78,7 @@ TEMPLATES = [
         
         'libraries':{
             'template_tags': 'main.templatetags.template_tags',
+            'staticfiles': 'main.static',           
             },
         },
     },
