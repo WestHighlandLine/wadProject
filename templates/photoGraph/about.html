@@ -1,14 +1,38 @@
 {% extends 'photoGraph/base.html' %}
 {% load static %}
 
-
+{% block custom_head %}
+<style>
+    .about-container {
+        width: 80%;
+        max-width: 1200px; 
+        margin: auto; 
+        padding: 20px;
+        background-color: #f2f2f2;
+        border-radius: 5px;
+        padding-bottom: 40px;
+    }
+</style>
+{% endblock %}
 {% block title_block %}
     About
 {% endblock %}
 
 {% block body_block %}
-<!--insert custom HTML here-->
-    <h1>About</h1>
-    <p>This is the about page</p>
-    
+<div class = "about-container">
+    <h1>About photoGraph</h1>
+    <p>
+        Welcome to photoGraph, a digital meeting space with the intent to connect people through the power of shared experiences. Born out of a university group project, our platform is the culmination of collaborative efforts aimed at fostering a sense of community among users.
+    </p>
+    <p>
+        We understand that every individual has unique experiences in life that they would like to share with like minded people. We've designed our platform with those people in mind – a place where folks can share their journeys and form meaningful connections.
+    </p>
+    <p>
+        We invite you to join our community, share your perspective, and create meaningful relationships with our users.
+    </p>
+    <p>
+        Sincerely,<br>
+        The photoGraph Team
+    </p>
+</div>
 {% endblock %}
