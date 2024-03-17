@@ -42,7 +42,7 @@
     </div>
     <div class="post-inner">
         <span class="post-info-primary">Posted by: <a href="{% url 'main:show_user_profile' post.created_by.slug %}">{{ post.created_by }}</a></span><br/>
-        <span class="post-info-secondary"><span id="like_count">{{ post.likes }}</span> likes, posted {{ post.created_time }}</span>
+        <span class="post-info-secondary"><span id="like_count">{% get_likes post %}</span> likes, posted {{ post.created_time }}</span>
         <br>
         {% if user.is_authenticated %}
             <button id="like_toggle" data-has-user-liked="{{ has_user_liked }}" data-postid="{{ post.id }}" class="btn btn-primary btn-sm" type="button">

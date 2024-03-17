@@ -5,6 +5,7 @@ import http.client
 import json
 import uuid
 
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
@@ -103,25 +104,24 @@ class PostReport(models.Model):
 
     def __str__(self):
         return f"Report by {self.reporter.user.username} on {self.post_id}"
-    
+
     class Meta:
         verbose_name_plural = "Post Reports"
+
 
 class UserReport(models.Model):
     reporter = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     reason = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    
+
     class Meta:
         verbose_name_plural = "User Reports"
+
 
 class Like(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.user.slug} likes {self.post.slug}"
-    
-    class Meta:
-        verbose_name_plural = "Likes"
+        return f"{self.user} likes {self.post.slug}"
