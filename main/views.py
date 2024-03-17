@@ -386,3 +386,7 @@ def like_toggle(request):
 
     return HttpResponse(len(likes))
 
+def contact_view(request):
+    messages.success(request, 'Your message has been sent! Our admin team will be in touch with you shortly.')
+    return render(request, 'contact.html', {})
+

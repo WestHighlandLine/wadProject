@@ -52,4 +52,6 @@ urlpatterns = [
 
     path('like_toggle/', views.like_toggle, name='like_toggle'),
 
+     path('contact/', views.contact_us, name='contact_us'),
+
 ]

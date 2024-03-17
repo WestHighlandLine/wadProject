@@ -172,66 +172,124 @@ a {
 }
 
 /* Style for contact page */
-.body-block {
-    margin-left: 1rem;
-    margin-top: 1rem;
-    width: auto;
+.center-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #ecf0f1;
 }
 
-.contact-container {
-    text-align: left;
-    margin-bottom: 20px;
+.form-container {
+    background: #fff;
+    padding: 2em;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    margin: auto;
 }
 
-.contact-item {
-    margin-bottom: 15px;
-}
-
-.contact-heading {
-    text-align: justify;
-    font-size: 2rem;
-    font-weight: bold;
-    text-decoration: underline;
-}
-
-.contact-p {
-    text-align: justify;
-    font-size: x-large;
-}
-
-.p {
-    display: block;
-    margin-block-start: 1em;
-    margin-block-end: 1em;
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
-}
-
-.text-center {
+h2 {
+    color: #333;
     text-align: center;
     margin-bottom: 20px;
 }
 
-.text-left {
-    text-align: left;
+.form-group {
+    margin-bottom: 15px;
 }
 
-.hidden-box {
-    padding: 20px;
-    border: 0px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0);
-    margin: auto;
-    max-width: 800px;
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
 }
 
-.box-container {
-    padding: 20px;
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group textarea {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 10px;
     border: 1px solid #ccc;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin: auto;
-    max-width: 800px;
+    border-radius: 4px;
+}
+
+.form-group textarea {
+    height: 100px;
+    resize: none; 
+}
+
+button {
+    width: 100%;
+    padding: 10px 20px;
+    background-color: #3498db;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+.additional-info {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.additional-info p {
+    margin: 10px 0;
+}
+
+.additional-info a {
+    color: #3498db;
+    text-decoration: none;
+    margin: 0 5px;
+}
+
+.additional-info a:hover {
+    text-decoration: underline;
+}
+.contact-footer {
+    text-align: center;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.contact-footer .call-us,
+.contact-footer a {
+    margin: 0 10px; 
+    text-decoration: none;
+    color: #333; 
+}
+
+.contact-footer a:hover {
+    text-decoration: underline;
+}
+
+.call-us {
+    margin-bottom: 10px; 
+}
+
+.social-links {
+
+    display: grid;
+    grid-auto-flow: column;
+    gap: 20px; 
+    justify-content: center;
+}
+
+.social-links a {
+    text-decoration: none;
+    color: #333;
+}
+
+.social-links a:hover {
+    text-decoration: underline;
 }
 
 .inner-link {
