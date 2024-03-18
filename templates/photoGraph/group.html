@@ -1,0 +1,25 @@
+{% extends 'photoGraph/base.html' %}
+{% load staticfiles %}
+{% load template_tags %}
+
+{% block title_block %}
+    {{ group }}
+{% endblock %}
+
+{% block body_block %}
+    <div id="group-details">
+        <div class="detailsContainer">
+            <h3>{{ group }}</h3>
+            <p><b>Owned by </b><a href="{% url 'main:show_user_profile' group.created_by.slug %}">{{ group.created_by }}</a></p>
+            {% if group.about %}
+                <p><b>About: </b>{{ group.about }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if posts %}
+        {% post_template posts %}
+    {% else %}
+        <p>{{ group }} has no posts yet.</p>
+    {% endif %}
+{% endblock %}

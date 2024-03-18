@@ -6,8 +6,8 @@ app_name = "main"
 
 urlpatterns = [
     path("", views.index, name="index"),
-    path("index", views.index),
-    path("home", views.index),
+    path("index/", views.index),
+    path("home/", views.index),
     path("about/", views.about, name="about"),
     path("about/contact_us/", views.contact_us, name="contact_us"),
     path(
@@ -21,36 +21,42 @@ urlpatterns = [
         name="show_location",
     ),
     path(
-        "user/<slug:user_profile_slug>/post/<slug:post_slug>",
+        "user/<slug:user_profile_slug>/post/<slug:post_slug>/",
         views.view_post,
         name="view_post",
     ),
-    # ^ probably needs to be a name slug using a post ID of some sort, like category_name_slug in rango.
-    # eg: path('category/<slug:category_name_slug>/', views.show_category, name='show_category'),
-    # ^ will probably need to be similar to this:
-    # path('category/<slug:category_name_slug>/add_page/', views.add_page, name='add_page'),
- 
     path("report_post/<int:post_id>/", views.report_post, name="report_post"),
-    path('admin/report_detail/<int:report_id>/', views.report_detail, name='report_detail'),
-    path('admin/delete_post_view/<int:post_id>/', views.delete_post_view, name='delete_post_view'),  
-
+    path(
+        "admin/report_detail/<int:report_id>/",
+        views.report_detail,
+        name="report_detail",
+    ),
+    path(
+        "admin/delete_post_view/<int:post_id>/",
+        views.delete_post_view,
+        name="delete_post_view",
+    ),
     path("report_user/<int:user_id>/", views.report_user, name="report_user"),
-    path('admin/user_report_detail/<int:report_id>/', views.user_report_detail, name='user_report_detail'),
-    path('admin/delete_user_view/<int:user_id>/', views.delete_user_view, name='delete_user_view'),  
-
+    path(
+        "admin/user_report_detail/<int:report_id>/",
+        views.user_report_detail,
+        name="user_report_detail",
+    ),
+    path(
+        "admin/delete_user_view/<int:user_id>/",
+        views.delete_user_view,
+        name="delete_user_view",
+    ),
     path("signup/", views.signup, name="signup"),
     path("login/", views.login_page, name="login"),
     path("logout/", views.logout_page, name="logout"),
     path("my_account/", views.my_account, name="my_account"),
     path("password_Change/", views.password_change_view, name="passwordChange"),
     path("infoChange/", views.info_change_view, name="infoChange"),
-    path("my_posts/edit/<slug:postSlug>", views.edit_post, name="edit_post"),
-    # ^ may also need a slug
+    path("my_posts/edit/<slug:postSlug>/", views.edit_post, name="edit_post"),
     path("get_posts_json", views.get_posts_json, name="get_posts_json"),
     path("create_post/", views.create_post, name="create_post"),
     path("update_profile/", views.update_profile, name="update_profile"),
-
-
-    path('like_toggle/', views.like_toggle, name='like_toggle'),
-
+    path("like_toggle/", views.like_toggle, name="like_toggle"),
+    path("group/<slug:group_slug>/", views.show_group, name="show_group"),
 ]

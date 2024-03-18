@@ -21,8 +21,36 @@ class UserProfile(models.Model):
         return self.user.username
 
 
+class GroupMember(models.Model):
+    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    group = models.ForeignKey("Group", on_delete=models.CASCADE)
+
+    created_time = models.DateTimeField(auto_now_add=True)
+
+
+class Group(models.Model):
+    created_by = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+
+    name = models.CharField(unique=True, max_length=50)
+    slug = models.SlugField(unique=True)
+    about = models.CharField(max_length=100)
+    color = models.CharField(max_length=7)
+    # is_private = models.BooleanField(default=False)
+
+    created_time = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        GroupMember.objects.create(user_profile=self.created_by, group=self)
+        super(Group, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
+
+
 class Post(models.Model):
     created_by = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True)
 
     slug = models.SlugField(unique=True)
     slug_uuid = models.UUIDField(default=uuid.uuid4)
@@ -73,29 +101,6 @@ class Comment(models.Model):
     created_time = models.DateTimeField(auto_now_add=True)
 
 
-class Group(models.Model):
-    created_by = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-
-    name = models.CharField(unique=True, max_length=50)
-    slug = models.SlugField(unique=True)
-    about = models.CharField(max_length=100)
-    color = models.CharField(max_length=7)
-    # is_private = models.BooleanField(default=False)
-
-    created_time = models.DateTimeField(auto_now_add=True)
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
-        super(Group, self).save(*args, **kwargs)
-
-
-class GroupMember(models.Model):
-    member = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    group = models.ForeignKey(Group, on_delete=models.CASCADE)
-
-    created_time = models.DateTimeField(auto_now_add=True)
-
-
 class PostReport(models.Model):
     reporter = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
@@ -103,7 +108,7 @@ class PostReport(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Report by {self.reporter.user.username} on {self.post_id}"
+        return f"Report by {self.reporter} on {self.post_id}."
 
     class Meta:
         verbose_name_plural = "Post Reports"
