@@ -75,7 +75,7 @@
 
     {% else %}
         <form>
-            <p>You can <a href="{% url 'main:login' %}?next={{ request.path }}">login</a> to be able to comment on posts.</p>
+            <p>You must <a href="{% url 'main:login' %}?next={{ request.path }}">login</a> to be able to comment on posts.</p>
         </form>
     {% endif %}
 
