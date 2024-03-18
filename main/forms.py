@@ -25,11 +25,12 @@ class UserForm(forms.ModelForm):
 
 
 class UserProfileForm(forms.ModelForm):
-    profile_picture = forms.ImageField() 
+    profile_picture = forms.ImageField()
+    biography = forms.CharField(max_length=100, required=False)
 
     class Meta:
         model = UserProfile
-        fields = ('profile_picture',)
+        fields = ('profile_picture','biography',)
 
 
 
@@ -104,10 +105,4 @@ class ChangePost(forms.ModelForm):
         cleaned_data = super(self).clean()
         return cleaned_data
 
-class ChangeInfoForm(forms.ModelForm):
-    picture = forms.ImageField() 
-
-    class Meta:
-        model = UserProfile
-        fields = ('picture',)
 

@@ -8,7 +8,6 @@ from main.forms import (
     UserForm,
     UserProfileForm,
     CustomPasswordChangeForm,
-    ChangeInfoForm,
     PostForm, 
     ReportForm, UserReportForm
 )
@@ -242,9 +241,7 @@ def password_change_view(request):
             user = form.save()
             update_session_auth_hash(request, user)
             #messages.sucess(request, "Password Changed Sucessfully")
-            return redirect(
-                reverse("main:my_account")
-            )  # should go back to the my account page
+            return redirect(reverse("main:my_account"))  # should go back to the my account page
         else:
             messages.error(request, "Please correct the error below.")
     else:
@@ -253,19 +250,18 @@ def password_change_view(request):
 
 
 def info_change_view(request):
+    user_profile = UserProfile.objects.get(user=request.user)
+
     if request.method == "POST":
-        form = ChangeInfoForm(request.user, request.POST)
+        form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
         if form.is_valid():
-            user = form.save()
-            update_session_auth_hash(request, user)
-            messages.sucess(request, "Information Changed Sucessfully")
-            return redirect(
-                reverse("main:my_account")
-            )  # should go back to the my account page
+            form.save()
+            messages.success(request, "Information Changed Sucessfully")
+            return redirect(reverse("main:my_account"))  # should go back to the my account page
         else:
             messages.error(request, "Please correct the error below.")
     else:
-        form = ChangeInfoForm(request.user)
+        form = UserProfileForm(instance=user_profile)
     return render(request, "photoGraph/infoChange.html", {"form": form})
 
 
