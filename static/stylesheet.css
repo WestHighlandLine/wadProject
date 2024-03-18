@@ -334,7 +334,7 @@ form {
     padding: 20px;
 }
 
-form input[type=text], input[type=email], input[type=password] {
+form input[type=text], input[type=email], input[type=password], input[type=number] {
     width: 100%;
     padding: 12px 20px;
     margin: 8px 0;
