@@ -20,7 +20,6 @@
     You are registered. <strong>Thank you!</strong>
     <a href="{% url 'main:login' %}">Login</a><br />
 {% else %}
-    <strong>Register here!</strong><br />
     <form id="user_form" method="post" action="{% url 'main:signup' %}" enctype="multipart/form-data">
 
         {% csrf_token %}
