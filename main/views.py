@@ -73,7 +73,7 @@ def view_post(request, user_profile_slug, post_slug):
         comments = Comment.objects.filter(post=post)
         context_dict["comments"] = comments
 
-        if (request.user):
+        if (request.user.is_authenticated):
             has_user_liked = len(Like.objects.filter(post=post, user=UserProfile.objects.get(user=request.user))) > 0
         else:
             has_user_liked = False
