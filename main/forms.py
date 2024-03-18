@@ -60,12 +60,11 @@ class PostForm(forms.ModelForm):
 
 
 class CommentForm(forms.ModelForm):
-
-    commenter = forms.ModelChoiceField(queryset=User.objects.all(), label='Commenter')
-    time = forms.DateTimeField(label='Time')
+    comment = forms.CharField(widget=forms.Textarea(attrs={'class': 'comment-textarea', 'rows': 5, 'placeholder': "Write a comment..."}), label="")
+    
     class Meta: 
         model = Comment
-        fields = ('commenter', 'post', 'comment', 'time', )
+        fields = ('comment', )
 
 
 

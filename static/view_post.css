@@ -24,6 +24,10 @@
     margin: auto 0;
 }
 
+.comment-textarea {
+    width: 100%;
+}
+
 /* Mobile formatting*/
 @media only screen and (max-width: 600px) {
     .post-container .post-photo {

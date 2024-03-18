@@ -9,7 +9,8 @@ from main.forms import (
     UserProfileForm,
     CustomPasswordChangeForm,
     PostForm, 
-    ReportForm, UserReportForm
+    ReportForm, UserReportForm,
+    CommentForm
 )
 from django.contrib import messages
 from main.models import UserProfile, Post, Comment, PostReport, User, UserReport, Like
@@ -62,6 +63,8 @@ def show_location(request):
 def view_post(request, user_profile_slug, post_slug):
     context_dict = {}
 
+    context_dict["comment_form"] = CommentForm()
+
     try:
         user_profile = UserProfile.objects.get(slug=user_profile_slug)
         post = Post.objects.get(created_by=user_profile, slug=post_slug)
@@ -81,6 +84,21 @@ def view_post(request, user_profile_slug, post_slug):
 
     return render(request, "photoGraph/post.html", context=context_dict)
 
+@login_required
+def comment(request, postSlug):
+    current_user_profile = UserProfile.objects.get(user=request.user)
+    post = Post.objects.get(slug=postSlug)
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST, 
+            instance=Comment(
+                created_by=current_user_profile,
+                post=post
+            )
+        )
+        form.save()
+
+    return redirect('main:view_post', post.created_by, postSlug)
 
 @login_required
 def report_post(request, post_id): 
