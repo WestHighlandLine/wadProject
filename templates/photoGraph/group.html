@@ -19,8 +19,12 @@
         </div>
 
         {% for group_member in group_members %}
-            <p>{{ group_member.user_profile }}</p>
+            <p><a href="{% url 'main:show_user_profile' group_member.slug %}">{{ group_member }}</a></p>
         {% endfor %}
+
+        <br>
+        <hr>
+        <h3>{{ group }}'s Posts</h3>
 
         {% if posts %}
             {% post_template posts %}

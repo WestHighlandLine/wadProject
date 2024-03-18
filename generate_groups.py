@@ -6,13 +6,13 @@ import django
 
 django.setup()
 
-from main.models import UserProfile, Group, GroupMember
+from main.models import UserProfile, Group
 import random
 import lorem
 
 
 def generate_groups(n=5):
-    test_user_profiles = UserProfile.objects.all()
+    test_user_profiles = list(UserProfile.objects.all())
 
     for i in range(n):
         test_group = Group.objects.create(
@@ -21,15 +21,9 @@ def generate_groups(n=5):
             about=lorem.paragraph(),
         )
 
-        possible_group_members = list(test_user_profiles)
-        possible_group_members.remove(test_group.created_by)
-
-        for _ in range(random.randint(1, len(test_user_profiles))):
-            test_group_member = GroupMember.objects.create(
-                user_profile=random.choice(possible_group_members),
-                group=test_group,
-            )
-            possible_group_members.remove(test_group_member.user_profile)
+        n_members = random.randint(1, len(test_user_profiles))
+        for test_user_profile in random.sample(test_user_profiles, n_members):
+            test_group.members.add(test_user_profile)
 
 
 def main():

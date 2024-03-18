@@ -28,7 +28,6 @@ from main.models import (
     UserReport,
     Like,
     Group,
-    GroupMember,
 )
 from django.views import View
 
@@ -114,12 +113,8 @@ def show_group(request, group_slug):
     try:
         group = Group.objects.get(slug=group_slug)
         context_dict["group"] = group
-
-        group_members = GroupMember.objects.filter(group=group)
-        context_dict["group_members"] = group_members
-
-        posts = Post.objects.filter(group=group)
-        context_dict["posts"] = posts
+        context_dict["group_members"] = group.members.exclude(id=group.created_by.id)
+        context_dict["posts"] = Post.objects.filter(group=group)
 
     except Group.DoesNotExist:
         context_dict["group"] = None

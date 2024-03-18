@@ -23,15 +23,9 @@ class UserProfile(models.Model):
         return self.user.username
 
 
-class GroupMember(models.Model):
-    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    group = models.ForeignKey("Group", on_delete=models.CASCADE)
-
-    created_time = models.DateTimeField(auto_now_add=True)
-
-
 class Group(models.Model):
     created_by = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    members = models.ManyToManyField(UserProfile, related_name="groups")
 
     name = models.CharField(unique=True, max_length=50)
     slug = models.SlugField(unique=True)
@@ -50,8 +44,8 @@ class Group(models.Model):
 
 
 @receiver(post_save, sender=Group)
-def group_creator_is_owner(instance, **kwargs):
-    GroupMember.objects.create(user_profile=instance.created_by, group=instance)
+def group_creator_is_owner(instance: Group, **kwargs):
+    instance.members.add(instance.created_by)
 
 
 class Post(models.Model):
