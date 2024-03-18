@@ -18,13 +18,13 @@ def generate_groups(n=5):
         test_group = Group.objects.create(
             created_by=random.choice(test_user_profiles),
             name=f"generate_test_group_{i+1}",
-            about=lorem.paragraph,
+            about=lorem.paragraph(),
         )
 
-        possible_group_members = test_user_profiles.copy()
+        possible_group_members = list(test_user_profiles)
         possible_group_members.remove(test_group.created_by)
 
-        for j in range(random.randint(len(test_user_profiles))):
+        for _ in range(random.randint(1, len(test_user_profiles))):
             test_group_member = GroupMember.objects.create(
                 user_profile=random.choice(possible_group_members),
                 group=test_group,

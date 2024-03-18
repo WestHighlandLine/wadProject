@@ -115,10 +115,15 @@ def show_group(request, group_slug):
         group = Group.objects.get(slug=group_slug)
         context_dict["group"] = group
 
+        group_members = GroupMember.objects.filter(group=group)
+        context_dict["group_members"] = group_members
+
         posts = Post.objects.filter(group=group)
+        context_dict["posts"] = posts
 
     except Group.DoesNotExist:
         context_dict["group"] = None
+        context_dict["group_slug"] = group_slug
 
     return render(request, "photoGraph/group.html", context=context_dict)
 

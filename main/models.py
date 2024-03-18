@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 import http.client
@@ -41,11 +43,15 @@ class Group(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
-        GroupMember.objects.create(user_profile=self.created_by, group=self)
         super(Group, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.name
+
+
+@receiver(post_save, sender=Group)
+def group_creator_is_owner(instance, **kwargs):
+    GroupMember.objects.create(user_profile=instance.created_by, group=instance)
 
 
 class Post(models.Model):

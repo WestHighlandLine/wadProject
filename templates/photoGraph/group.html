@@ -7,19 +7,27 @@
 {% endblock %}
 
 {% block body_block %}
-    <div id="group-details">
-        <div class="detailsContainer">
-            <h3>{{ group }}</h3>
-            <p><b>Owned by </b><a href="{% url 'main:show_user_profile' group.created_by.slug %}">{{ group.created_by }}</a></p>
-            {% if group.about %}
-                <p><b>About: </b>{{ group.about }}</p>
-            {% endif %}
+    {% if group %}
+        <div id="group-details">
+            <div class="detailsContainer">
+                <h1>{{ group }}</h1>
+                <p><b>Owned by </b><a href="{% url 'main:show_user_profile' group.created_by.slug %}">{{ group.created_by }}</a></p>
+                {% if group.about %}
+                    <p><b>About: </b>{{ group.about }}</p>
+                {% endif %}
+            </div>
         </div>
-    </div>
 
-    {% if posts %}
-        {% post_template posts %}
+        {% for group_member in group_members %}
+            <p>{{ group_member.user_profile }}</p>
+        {% endfor %}
+
+        {% if posts %}
+            {% post_template posts %}
+        {% else %}
+            <p>{{ group }} has no posts yet.</p>
+        {% endif %}
     {% else %}
-        <p>{{ group }} has no posts yet.</p>
+        <p>No group with name '{{ group_slug }}' found. Why not create one?</p>
     {% endif %}
 {% endblock %}
