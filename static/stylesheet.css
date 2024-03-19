@@ -172,21 +172,8 @@ a {
 }
 
 /* Style for contact page */
-.center-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background: #ecf0f1;
-}
-
-.form-container {
-    background: #fff;
-    padding: 2em;
-    border-radius: 5px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    width: 400px;
-    margin: auto;
+.contact-container h1 {
+    text-align: center;
 }
 
 .form-group {
@@ -198,92 +185,46 @@ a {
     margin-bottom: 5px;
 }
 
-.form-group input[type="text"],
-.form-group input[type="email"],
-.form-group textarea {
-    width: calc(100% - 20px);
+.form-control {
+    width: 100%;
     padding: 10px;
-    margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
 }
 
-.form-group textarea {
-    height: 100px;
-    resize: none; 
-}
-
-button {
-    padding: 10px 20px;
-    background-color: #3498db;
+.btn-send {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
     border: none;
     border-radius: 4px;
     color: white;
+    font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s;
 }
 
-button:hover {
-    background-color: #2980b9;
+.btn-send:hover {
+    background-color: #45a049;
 }
 
-.additional-info {
+.contact-info {
     text-align: center;
     margin-top: 20px;
 }
 
-.additional-info p {
-    margin: 10px 0;
+.contact-info p {
+    margin-bottom: 5px;
 }
 
-.additional-info a {
-    color: #3498db;
-    text-decoration: none;
-    margin: 0 5px;
-}
-
-.additional-info a:hover {
-    text-decoration: underline;
-}
-.contact-footer {
-    text-align: center;
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.contact-footer .call-us,
-.contact-footer a {
-    margin: 0 10px; 
-    text-decoration: none;
-    color: #333; 
-}
-
-.contact-footer a:hover {
-    text-decoration: underline;
-}
-
-.call-us {
-    margin-bottom: 10px; 
-}
-
-.social-links {
-
-    display: grid;
-    grid-auto-flow: column;
-    gap: 20px; 
-    justify-content: center;
-}
-
-.social-links a {
-    text-decoration: none;
+.contact-info a {
     color: #333;
+    text-decoration: none;
 }
 
-.social-links a:hover {
+.contact-info a:hover {
     text-decoration: underline;
 }
+/* end of contact us css */
 
 .inner-link {
     display: flex;

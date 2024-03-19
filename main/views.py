@@ -10,10 +10,11 @@ from main.forms import (
     CustomPasswordChangeForm,
     PostForm, 
     ReportForm, UserReportForm,
-    CommentForm
+    CommentForm,
+    ContactUsForm,
 )
 from django.contrib import messages
-from main.models import UserProfile, Post, Comment, PostReport, User, UserReport, Like
+from main.models import UserProfile, Post, Comment, PostReport, User, UserReport, Like, ContactUs
 from django.views import View
 
 def index(request):
@@ -401,6 +402,13 @@ def like_toggle(request):
     return HttpResponse(len(likes))
 
 def contact_view(request):
-    messages.success(request, 'Your message has been sent! Our admin team will be in touch with you shortly.')
-    return render(request, 'contact.html', {})
+    if request.method == 'POST':
+        form = ContactUsForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your message has now been sent to our admin team.')
+            return redirect(reverse('main:contact_us'))
+    else: 
+        form = ContactUsForm()
+    return render(request, 'photoGraph/contact_us.html', {'contact_form': form})
 

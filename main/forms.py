@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from main.models import UserProfile, Group, Comment, Post, PostReport, UserReport
+from main.models import UserProfile, Group, Comment, Post, PostReport, UserReport, ContactUs
 from django.contrib.auth.forms import PasswordChangeForm
 
 
@@ -103,5 +103,16 @@ class ChangePost(forms.ModelForm):
     def clean(self):
         cleaned_data = super(self).clean()
         return cleaned_data
+    
+class ContactUsForm(forms.ModelForm):
+    name = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Your name'}))
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Your email'}))
+    subject = forms.CharField(max_length=200, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Subject'}))
+    message = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Your message'}))
+
+    class Meta:
+        model = ContactUs
+        fields = ('name', 'email', 'subject', 'message',)
+
 
 

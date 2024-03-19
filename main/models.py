@@ -135,3 +135,12 @@ class Like(models.Model):
     class Meta:
         verbose_name_plural = "Likes"
         app_label = 'main'
+
+class ContactUs(models.Model):
+    name = models.CharField(max_length = 100)
+    email = models.EmailField()
+    subject = models.CharField(max_length = 200)
+    message = models.TextField()
+
+    def __str__(self) -> str:
+        return f"Message from {self.name}"
