@@ -31,7 +31,7 @@ SECRET_KEY = "37qhulm-i9e+%761o6_kz(g@1fv*!as0i9sd+27v46h$z2_(j*"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 # remove the 127.0.0.1 host once finished
-ALLOWED_HOSTS = ["WAD9D.pythonanywhere.com", "127.0.0.1"]
+ALLOWED_HOSTS = ["WAD9D.pythonanywhere.com", "127.0.0.1", "localhost"]
 
 
 # Application definition

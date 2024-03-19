@@ -13,10 +13,10 @@ from main.forms import (
     UserForm,
     UserProfileForm,
     CustomPasswordChangeForm,
-    ChangeInfoForm,
     PostForm,
     ReportForm,
     UserReportForm,
+    CommentForm,
 )
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -29,7 +29,6 @@ from main.models import (
     Like,
     Group,
 )
-from django.views import View
 
 
 def index(request):
@@ -80,6 +79,8 @@ def show_location(request):
 def view_post(request, user_profile_slug, post_slug):
     context_dict = {}
 
+    context_dict["comment_form"] = CommentForm()
+
     try:
         post = Post.objects.get(slug=post_slug)
         context_dict["post"] = post
@@ -104,6 +105,20 @@ def view_post(request, user_profile_slug, post_slug):
         context_dict["post"] = None
 
     return render(request, "photoGraph/post.html", context=context_dict)
+
+
+@login_required
+def comment(request, postSlug):
+    current_user_profile = UserProfile.objects.get(user=request.user)
+    post = Post.objects.get(slug=postSlug)
+
+    if request.method == "POST":
+        form = CommentForm(
+            request.POST, instance=Comment(created_by=current_user_profile, post=post)
+        )
+        form.save()
+
+    return redirect("main:view_post", post.created_by, postSlug)
 
 
 def show_group(request, group_slug):
@@ -325,19 +340,20 @@ def password_change_view(request):
 
 
 def info_change_view(request):
+    user_profile = UserProfile.objects.get(user=request.user)
+
     if request.method == "POST":
-        form = ChangeInfoForm(request.user, request.POST)
+        form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
         if form.is_valid():
-            user = form.save()
-            update_session_auth_hash(request, user)
-            messages.sucess(request, "Information Changed Sucessfully")
+            form.save()
+            messages.success(request, "Information Changed Sucessfully")
             return redirect(
                 reverse("main:my_account")
             )  # should go back to the my account page
         else:
             messages.error(request, "Please correct the error below.")
     else:
-        form = ChangeInfoForm(request.user)
+        form = UserProfileForm(instance=user_profile)
     return render(request, "photoGraph/infoChange.html", {"form": form})
 
 
@@ -471,3 +487,11 @@ def like_toggle(request):
     likes = Like.objects.filter(post=post)
 
     return HttpResponse(len(likes))
+
+
+def contact_view(request):
+    messages.success(
+        request,
+        "Your message has been sent! Our admin team will be in touch with you shortly.",
+    )
+    return render(request, "contact.html", {})

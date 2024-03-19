@@ -25,11 +25,12 @@ class UserForm(forms.ModelForm):
 
 
 class UserProfileForm(forms.ModelForm):
-    profile_picture = forms.ImageField() 
+    profile_picture = forms.ImageField()
+    biography = forms.CharField(max_length=100, required=False)
 
     class Meta:
         model = UserProfile
-        fields = ('profile_picture',)
+        fields = ('profile_picture','biography',)
 
 
 
@@ -59,12 +60,11 @@ class PostForm(forms.ModelForm):
 
 
 class CommentForm(forms.ModelForm):
-
-    commenter = forms.ModelChoiceField(queryset=User.objects.all(), label='Commenter')
-    time = forms.DateTimeField(label='Time')
+    comment = forms.CharField(widget=forms.Textarea(attrs={'class': 'comment-textarea', 'rows': 5, 'placeholder': "Write a comment..."}), label="")
+    
     class Meta: 
         model = Comment
-        fields = ('commenter', 'post', 'comment', 'time', )
+        fields = ('comment', )
 
 
 
@@ -104,10 +104,4 @@ class ChangePost(forms.ModelForm):
         cleaned_data = super(self).clean()
         return cleaned_data
 
-class ChangeInfoForm(forms.ModelForm):
-    picture = forms.ImageField() 
-
-    class Meta:
-        model = UserProfile
-        fields = ('picture',)
 
