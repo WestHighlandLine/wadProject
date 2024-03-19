@@ -48,13 +48,15 @@ def generate_posts(directory):
                     test_user_profile = random.choice(test_user_profiles)
                     Post.objects.create(
                         created_by=test_user_profile,
+                        group=random.choice(test_user_profile.groups.all()),
                         caption=filename.split("/")[-1],
                         photo=ImageFile(open(filename, "rb")),
                         latitude=coords[0],
                         longitude=coords[1],
                     )
-                except AttributeError:
+                except AttributeError as e:
                     print("No Coordinates")
+                    print(e)
 
             else:
                 print("The Image has no EXIF information")

@@ -81,8 +81,7 @@ def view_post(request, user_profile_slug, post_slug):
     context_dict = {}
 
     try:
-        user_profile = UserProfile.objects.get(slug=user_profile_slug)
-        post = Post.objects.get(created_by=user_profile, slug=post_slug)
+        post = Post.objects.get(slug=post_slug)
         context_dict["post"] = post
 
         comments = Comment.objects.filter(post=post)

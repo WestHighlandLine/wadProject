@@ -6,7 +6,7 @@ import django
 
 django.setup()
 
-from main.models import User, Post, UserProfile, Comment
+from main.models import Post, UserProfile, Comment
 import random
 import lorem  # pip install lorem
 
