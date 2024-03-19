@@ -140,3 +140,11 @@ class ContactUs(models.Model):
 
     def __str__(self) -> str:
         return f"Message from {self.name}"
+    
+    def get_details(self):
+        return (
+            f"Name: {self.name}\n"
+            f"Email: {self.email}\n"
+            f"Subject: {self.subject}\n"
+            f"Message: {self.message}\n"
+        )

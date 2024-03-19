@@ -29,10 +29,6 @@ def about(request):
     return render(request, "photoGraph/about.html")
 
 
-def contact_us(request):
-    return render(request, "photoGraph/contact_us.html")
-
-
 def show_user_profile(request, user_profile_slug):
     context_dict = {}
 
@@ -479,7 +475,7 @@ def like_toggle(request):
     return HttpResponse(len(likes))
 
 
-def contact_view(request):
+def contact_us_view(request):
     if request.method == 'POST':
         form = ContactUsForm(request.POST)
         if form.is_valid():
