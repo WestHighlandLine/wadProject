@@ -9,7 +9,7 @@ import uuid
 
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="created_by")
 
     slug = models.SlugField(unique=True)
     biography = models.CharField(max_length=100, blank=True, null=True)
@@ -49,8 +49,9 @@ def group_creator_is_owner(instance: Group, **kwargs):
 
 
 class Post(models.Model):
-    created_by = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True)
+    created_by = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="posts")
+    liked_by = models.ManyToManyField(UserProfile, related_name="liked_posts")
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True, related_name="posts")
 
     slug = models.SlugField(unique=True)
     slug_uuid = models.UUIDField(default=uuid.uuid4)
@@ -75,9 +76,7 @@ class Post(models.Model):
             conn.request(
                 "GET",
                 f"/reverse?lat={self.latitude}&lon={self.longitude}&format=json",
-                headers={
-                    "User-Agent": "PhotoGraph/1.0 (University of Glasgow student project)"
-                },
+                headers={"User-Agent": "PhotoGraph/1.0 (University of Glasgow student project)"},
             )
 
             response = json.loads(conn.getresponse().read())
@@ -94,7 +93,7 @@ class Post(models.Model):
 
 class Comment(models.Model):
     created_by = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
 
     comment = models.CharField(max_length=100)
 
