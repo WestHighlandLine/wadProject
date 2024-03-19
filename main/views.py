@@ -19,12 +19,12 @@ from main.forms import (
     UserReportForm,
 )
 from django.contrib import messages
+from django.contrib.auth.models import User
 from main.models import (
     UserProfile,
     Post,
     Comment,
     PostReport,
-    User,
     UserReport,
     Like,
     Group,
@@ -87,7 +87,7 @@ def view_post(request, user_profile_slug, post_slug):
         comments = Comment.objects.filter(post=post)
         context_dict["comments"] = comments
 
-        if request.user:
+        if request.user.is_authenticated:
             has_user_liked = (
                 len(
                     Like.objects.filter(
