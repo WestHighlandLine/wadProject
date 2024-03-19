@@ -15,7 +15,7 @@
     <h3>{{ user_profile }}'s Posts</h3>
 
     {% if posts %}
-	    {% post_template posts %}
+	    {% post_template posts False %}
     {% else %}
         <p>{{ user_profile }} hasn't posted yet.</p>
     {% endif %}
