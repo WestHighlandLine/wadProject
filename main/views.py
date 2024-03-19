@@ -12,7 +12,6 @@ from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
 from main.forms import (
     UserForm,
     UserProfileForm,
-    CustomPasswordChangeForm,
     PostForm,
     ReportForm,
     UserReportForm,
@@ -324,7 +323,7 @@ def update_profile(request):
 
 def password_change_view(request):
     if request.method == "POST":
-        form = CustomPasswordChangeForm(request.user, request.POST)
+        form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)
@@ -335,7 +334,7 @@ def password_change_view(request):
         else:
             messages.error(request, "Please correct the error below.")
     else:
-        form = CustomPasswordChangeForm(request.user)
+        form = PasswordChangeForm(request.user)
     return render(request, "photoGraph/passwordChange.html", {"form": form})
 
 
