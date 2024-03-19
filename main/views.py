@@ -107,9 +107,9 @@ def view_post(request, user_profile_slug, post_slug):
 
 
 @login_required
-def comment(request, postSlug):
+def comment(request, post_slug):
     current_user_profile = UserProfile.objects.get(user=request.user)
-    post = Post.objects.get(slug=postSlug)
+    post = Post.objects.get(slug=post_slug)
 
     if request.method == "POST":
         form = CommentForm(
@@ -117,7 +117,7 @@ def comment(request, postSlug):
         )
         form.save()
 
-    return redirect("main:view_post", post.created_by, postSlug)
+    return redirect("main:view_post", post.created_by, post_slug)
 
 
 def show_group(request, group_slug):
@@ -371,8 +371,8 @@ def my_account(request):
 
 
 @login_required
-def edit_post(request, postSlug):  # needs a slug for post ID
-    post = Post.objects.get(slug=postSlug)
+def edit_post(request, post_slug):
+    post = Post.objects.get(slug=post_slug)
     return render(request, "photoGraph/edit_post.html", {"post": post})
 
 
