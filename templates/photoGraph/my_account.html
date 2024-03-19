@@ -61,11 +61,11 @@ My Account
 	<h3>My Posts</h3>
 
 	{% if posts %}
-	{% post_template posts %}
+		{% post_template posts %}
 	{% else %}
-	<div><a href="" style="text-decoration: none;"><!-- link to create post page-->
-			<h3>Create your first post Now</h3>
-		</a></div>
+		<div>
+			<a href="{% url 'main:index' %}" style="text-decoration: none;"><!-- link to create post page--><h3>Create your first post now</h3></a>
+		</div>
 	{% endif %}
 </div>
 

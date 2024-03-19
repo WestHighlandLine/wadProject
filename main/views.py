@@ -314,7 +314,7 @@ def password_change_view(request):
 
 
 def info_change_view(request):
-    user_profile = UserProfile.objects.get(user=request.user)
+    user_profile = request.user.created_by
 
     if request.method == "POST":
         form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
@@ -356,7 +356,7 @@ def create_post(request):
 
         if form.is_valid():
             post = form.save(commit=False)
-            post.created_by = UserProfile.objects.get(user=request.user)
+            post.created_by = request.user.created_by
             post.save()
 
             return redirect(reverse("main:index"))
@@ -432,9 +432,9 @@ def like_toggle(request):
         except ValueError:
             return HttpResponseBadRequest()
 
-        user_profile = UserProfile.objects.get(user=request.user)
+        user_profile = request.user.created_by
 
-        has_user_liked = len(Like.objects.filter(post=post, user=UserProfile.objects.get(user=request.user))) > 0
+        has_user_liked = len(Like.objects.filter(post=post, user=user_profile)) > 0
 
         if has_user_liked:
             # Unlike

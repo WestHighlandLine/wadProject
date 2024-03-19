@@ -13,7 +13,7 @@ class UserProfile(models.Model):
 
     slug = models.SlugField(unique=True)
     biography = models.CharField(max_length=100, blank=True, null=True)
-    profile_picture = models.ImageField(upload_to="profile_pictures/")
+    profile_picture = models.ImageField(upload_to="profile_pictures/", default="../static/default.jpg")
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.user.username)

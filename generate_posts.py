@@ -44,7 +44,10 @@ def generate_posts(directory):
                         decimal_coords(img.gps_latitude, img.gps_latitude_ref),
                         decimal_coords(img.gps_longitude, img.gps_longitude_ref),
                     )
-
+                except AttributeError as e:
+                    print("No Coordinates")
+                    print(e)
+                else:
                     test_user_profile = random.choice(test_user_profiles)
                     Post.objects.create(
                         created_by=test_user_profile,
@@ -54,10 +57,6 @@ def generate_posts(directory):
                         latitude=coords[0],
                         longitude=coords[1],
                     )
-                except AttributeError as e:
-                    print("No Coordinates")
-                    print(e)
-
             else:
                 print("The Image has no EXIF information")
         except Exception as e:
