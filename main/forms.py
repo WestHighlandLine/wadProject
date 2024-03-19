@@ -1,16 +1,19 @@
 from django import forms
 from django.contrib.auth.models import User
 from main.models import UserProfile, Group, Comment, Post, PostReport, UserReport, ContactUs
-from django.contrib.auth.forms import PasswordChangeForm
 
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
-    confirm_password=forms.CharField(widget=forms.PasswordInput())
+    confirm_password = forms.CharField(widget=forms.PasswordInput())
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password',)
+        fields = (
+            "username",
+            "email",
+            "password",
+        )
 
     def clean(self):
         cleaned_data = super(UserForm, self).clean()
@@ -18,10 +21,7 @@ class UserForm(forms.ModelForm):
         confirm_password = cleaned_data.get("confirm_password")
 
         if password != confirm_password:
-            raise forms.ValidationError(
-                "Passwords do not match"
-            )
-
+            raise forms.ValidationError("Passwords do not match")
 
 
 class UserProfileForm(forms.ModelForm):
@@ -30,8 +30,10 @@ class UserProfileForm(forms.ModelForm):
 
     class Meta:
         model = UserProfile
-        fields = ('profile_picture','biography',)
-
+        fields = (
+            "profile_picture",
+            "biography",
+        )
 
 
 class GroupForm(forms.ModelForm):
@@ -41,65 +43,87 @@ class GroupForm(forms.ModelForm):
     is_private = forms.BooleanField()
     about = forms.CharField()
 
-    class Meta: 
+    class Meta:
         model = Group
-        fields = ('name', 'owner', 'is_private', 'about',)
-
+        fields = (
+            "name",
+            "owner",
+            "is_private",
+            "about",
+        )
 
 
 class PostForm(forms.ModelForm):
-    caption = forms.CharField(label='Caption', max_length=255)
-    photo = forms.ImageField(label='Photo')
+    caption = forms.CharField(label="Caption", max_length=255)
+    photo = forms.ImageField(label="Photo")
     latitude = forms.DecimalField(label="Latitude")
     longitude = forms.DecimalField(label="Longitude")
 
     class Meta:
         model = Post
-        fields = ("caption", "photo", "latitude", "longitude",)
-
+        fields = (
+            "caption",
+            "photo",
+            "latitude",
+            "longitude",
+        )
 
 
 class CommentForm(forms.ModelForm):
-    comment = forms.CharField(widget=forms.Textarea(attrs={'class': 'comment-textarea', 'rows': 5, 'placeholder': "Write a comment..."}), label="")
-    
-    class Meta: 
-        model = Comment
-        fields = ('comment', )
+    comment = forms.CharField(
+        widget=forms.Textarea(
+            attrs={
+                "class": "comment-textarea",
+                "rows": 5,
+                "placeholder": "Write a comment...",
+            }
+        ),
+        label="",
+    )
 
+    class Meta:
+        model = Comment
+        fields = ("comment",)
 
 
 class ReportForm(forms.ModelForm):
 
-    reason = forms.CharField(widget=forms.Textarea(attrs={'class': 'custom-textarea', 'rows': 5}), label='Reason')
+    reason = forms.CharField(
+        widget=forms.Textarea(attrs={"class": "custom-textarea", "rows": 5}),
+        label="Reason",
+    )
 
-    class Meta: 
+    class Meta:
         model = PostReport
-        fields = ('reason',)
-
+        fields = ("reason",)
 
 
 class UserReportForm(forms.ModelForm):
 
-    reason = forms.CharField(widget=forms.Textarea(attrs={'class': 'custom-textarea', 'rows': 5}), label='Reason')
+    reason = forms.CharField(
+        widget=forms.Textarea(attrs={"class": "custom-textarea", "rows": 5}),
+        label="Reason",
+    )
 
-    class Meta: 
+    class Meta:
         model = UserReport
-        fields = ('reason',)
-    
+        fields = ("reason",)
 
-
-class CustomPasswordChangeForm(PasswordChangeForm):
-    pass
 
 class ChangePost(forms.ModelForm):
 
-    caption = forms.CharField(label='Caption', max_length=255)
-    photo = forms.ImageField(label='Photo')
-    
+    caption = forms.CharField(label="Caption", max_length=255)
+    photo = forms.ImageField(label="Photo")
+
     class Meta:
         model = Post
-        fields = ('caption', 'photo', 'latitude', 'longitude',)
-    
+        fields = (
+            "caption",
+            "photo",
+            "latitude",
+            "longitude",
+        )
+
     def clean(self):
         cleaned_data = super(self).clean()
         return cleaned_data
@@ -113,6 +137,4 @@ class ContactUsForm(forms.ModelForm):
     class Meta:
         model = ContactUs
         fields = ('name', 'email', 'subject', 'message',)
-
-
 

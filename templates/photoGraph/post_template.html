@@ -4,7 +4,9 @@
         <div class="post">
             <a href="{% url 'main:view_post' post.created_by.slug post.slug %}" target="_blank"><img src="{{ post.photo.url }}"/></a><br/>
             <span class="post-title">&#128247; {{ post.caption }}</span>
-            <span class="post-info-primary"><a href="{% url 'main:show_user_profile' post.created_by.slug %}">{{ post.created_by }}</a></span>
+            {% if show_user_url %}
+                <span class="post-info-primary"><a href="{% url 'main:show_user_profile' post.created_by.slug %}">{{ post.created_by }}</a></span>
+            {% endif %}
             <span class="post-info-secondary">{% get_likes post %} likes, posted {{ post.created_time }}</span>
             <a href="{% url 'main:view_post' post.created_by.slug post.slug %}" class="post-link">View more...</a><br/>
         </div>

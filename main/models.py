@@ -1,9 +1,12 @@
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 import http.client
 import json
 import uuid
+
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -18,12 +21,36 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.user.username
-    
-    class Meta:
-        app_label = 'main'
+
+
+class Group(models.Model):
+    created_by = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    members = models.ManyToManyField(UserProfile, related_name="groups")
+
+    name = models.CharField(unique=True, max_length=50)
+    slug = models.SlugField(unique=True)
+    about = models.CharField(max_length=100)
+    color = models.CharField(max_length=7)
+    # is_private = models.BooleanField(default=False)
+
+    created_time = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Group, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
+
+
+@receiver(post_save, sender=Group)
+def group_creator_is_owner(instance: Group, **kwargs):
+    instance.members.add(instance.created_by)
+
 
 class Post(models.Model):
     created_by = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True)
 
     slug = models.SlugField(unique=True)
     slug_uuid = models.UUIDField(default=uuid.uuid4)
@@ -63,8 +90,7 @@ class Post(models.Model):
             self.location_name = f"{self.latitude}, {self.longitude}"
 
         super(Post, self).save(*args, **kwargs)
-    class Meta:
-        app_label = 'main'
+
 
 class Comment(models.Model):
     created_by = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
@@ -73,33 +99,7 @@ class Comment(models.Model):
     comment = models.CharField(max_length=100)
 
     created_time = models.DateTimeField(auto_now_add=True)
-    class Meta:
-        app_label = 'main'
 
-class Group(models.Model):
-    created_by = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-
-    name = models.CharField(unique=True, max_length=50)
-    slug = models.SlugField(unique=True)
-    about = models.CharField(max_length=100)
-    color = models.CharField(max_length=7)
-    # is_private = models.BooleanField(default=False)
-
-    created_time = models.DateTimeField(auto_now_add=True)
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
-        super(Group, self).save(*args, **kwargs)
-    class Meta:
-        app_label = 'main'
-
-class GroupMember(models.Model):
-    member = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    group = models.ForeignKey(Group, on_delete=models.CASCADE)
-
-    created_time = models.DateTimeField(auto_now_add=True)
-    class Meta:
-        app_label = 'main'
 
 class PostReport(models.Model):
     reporter = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
@@ -108,21 +108,20 @@ class PostReport(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Report by {self.reporter.user.username} on {self.post_id}"
-    
+        return f"Report by {self.reporter} on {self.post_id}."
+
     class Meta:
         verbose_name_plural = "Post Reports"
-        app_label = 'main'
+
 
 class UserReport(models.Model):
     reporter = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     reason = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    
+
     class Meta:
         verbose_name_plural = "User Reports"
-        app_label = 'main'
 
 
 class Like(models.Model):
@@ -130,11 +129,8 @@ class Like(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.user.slug} likes {self.post.slug}"
-    
-    class Meta:
-        verbose_name_plural = "Likes"
-        app_label = 'main'
+        return f"{self.user} likes {self.post.slug}"
+
 
 class ContactUs(models.Model):
     name = models.CharField(max_length = 100)
