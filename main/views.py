@@ -12,7 +12,6 @@ from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
 from main.forms import (
     UserForm,
     UserProfileForm,
-    CustomPasswordChangeForm,
     PostForm, 
     ReportForm, UserReportForm,
     CommentForm,
