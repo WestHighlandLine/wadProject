@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
 from django.contrib.auth.models import User
 from main.models import UserProfile, Group, Comment, Post, PostReport, UserReport
 from main.forms import (
@@ -13,7 +13,6 @@ from main.forms import (
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-    
 class FormsTestCase(TestCase):
 
     def test_user_profile_form_valid(self):
@@ -124,6 +123,10 @@ class FormsTestCase(TestCase):
     def test_post_form_valid(self):
         user = User.objects.create_user('testuser2', 'test2@example.com', 'password1234!')
         user_profile = UserProfile.objects.create(user=user)
+
+        request_factory = RequestFactory()
+        request = request_factory.get('dummypath/to/view')
+        request.user = user
         
         with open('tests/photoGraph/test_images/test_image.jpg', 'rb') as image_file:
             file_data = {
@@ -134,36 +137,36 @@ class FormsTestCase(TestCase):
             'latitude':0.0,
             'longitude':0.0,
         }
-        form = PostForm(data=form_data, files=file_data)
+        form = PostForm(data=form_data, files=file_data, request = request)
         self.assertTrue(form.is_valid(), msg=form.errors)
 
     def test_post_form_invalid(self):
+
+        user = User.objects.create_user('testuser2', 'test2@example.com', 'password1234!')
+        user_profile = UserProfile.objects.create(user=user)
+
+        request_factory = RequestFactory()
+        request = request_factory.get('dummypath/to/view')
+        request.user = user
         form_data = {
             'caption': 'Test Post',
             'latitude': '0.0',
             'longitude': '0.0',
         }
-        form = PostForm(data=form_data)
+        form = PostForm(data=form_data, request = request)
         self.assertFalse(form.is_valid())
-    
-    # def test_group_form_valid(self):
-    #     user = User.objects.create_user('testuser', 'test@example.com', 'password123')
-    #     user_profile = UserProfile.objects.create(user=user)
-        
-    #     form_data = {
-    #         'name': 'Test Group',
-    #         'owner': user_profile.pk,  
-    #         # 'is_private': False,
-    #         'about': 'This is a test group',
-    #     }
-    #     form = GroupForm(data=form_data)
-    #     self.assertTrue(form.is_valid(), msg=form.errors)
 
-    def test_group_form_invalid(self):
+    def test_group_form_valid(self):
         form_data = {
-            'owner': 'user',
-            'is_private': False,
+            'name': 'New Unique Group', 
             'about': 'This is a test group',
         }
         form = GroupForm(data=form_data)
-        self.assertFalse(form.is_valid())
+        self.assertTrue(form.is_valid(), msg=form.errors)
+
+    def test_group_form_invalid(self):
+        form_data = {
+            
+        }
+        form = GroupForm(data=form_data)
+        self.assertFalse(form.is_valid(), msg=form.errors)
