@@ -20,7 +20,7 @@
 
 {% block body_block %}
     {% if groups %}
-        <li><a href="{% url 'main:create_group' %}">Create a new group</a></li>
+        <p><a href="{% url 'main:create_group' %}">Create a new group</a></p>
         <h1>All groups</h1>
         {% for group in groups %}
             <hr>
@@ -32,6 +32,6 @@
             </ul>
         {% endfor %}
     {% else %}
-        <li>There are currently no groups. <a href="{% url 'main:create_group' %}">Why not create one?</a></li>
+        <p>There are currently no groups. <a href="{% url 'main:create_group' %}">Why not create one?</a></p>
     {% endif %}
 {% endblock %}
