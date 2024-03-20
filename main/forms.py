@@ -37,7 +37,6 @@ class UserProfileForm(forms.ModelForm):
 
 
 class GroupForm(forms.ModelForm):
-
     name = forms.CharField()
     owner = forms.CharField()
     is_private = forms.BooleanField()
@@ -56,14 +55,21 @@ class GroupForm(forms.ModelForm):
 class PostForm(forms.ModelForm):
     caption = forms.CharField(label="Caption", max_length=255)
     photo = forms.ImageField(label="Photo")
+    group = forms.ModelChoiceField(label="Group (optional)", queryset=None, required=False)
     latitude = forms.DecimalField(label="Latitude")
     longitude = forms.DecimalField(label="Longitude")
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        super(PostForm, self).__init__(*args, **kwargs)
+        self.fields["group"].queryset = self.request.user.created_by.groups.all()
 
     class Meta:
         model = Post
         fields = (
             "caption",
             "photo",
+            "group",
             "latitude",
             "longitude",
         )

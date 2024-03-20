@@ -51,17 +51,17 @@
 			-->
 
                     <li><a href="{% url 'main:index' %}">Home</a></li>
-
+                    <li>&bull;</li>
+                    <li><a href="{% url 'main:show_group_list' %}">Groups</a></li>
+                    <li>&bull;</li>
                     {% if user.is_authenticated %}
-
                         <li><a href="{% url 'main:my_account' %}">Account</a></li>
+                        <li>&bull;</li>
                         <li><a href="{% url 'main:logout' %}">Logout</a></li>
-
                     {% else %}
-
-                    <li><a href="{% url 'main:login' %}">Login</a></li>
-                    <li><a href="{% url 'main:signup' %}">Sign Up</a></li>
-
+                        <li><a href="{% url 'main:login' %}">Login</a></li>
+                        <li>&bull;</li>
+                        <li><a href="{% url 'main:signup' %}">Sign Up</a></li>
                     {% endif %}
 
             </ul>

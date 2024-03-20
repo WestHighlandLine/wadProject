@@ -31,7 +31,7 @@
 
     <p><b>Post location:</b> {{ post.location_name }}</p>
 
-    <form method="post" action="{% url 'main:report_post' post.id %}">
+    <form method="post" action="{% url 'main:report_post' post.slug %}">
         {% csrf_token %}
         {{ form.as_p }}
         <br>
@@ -47,7 +47,7 @@
                 showConfirmButton: true,
                 confirmButtonText: "OK" 
             }).then(() => {
-                window.location.href = '{% url "main:view_post" user_profile_slug=post.created_by.slug post_slug=post.slug %}';
+                window.location.href = '{% url "main:view_post" post.created_by.slug post.slug %}';
             });
         });
     </script>

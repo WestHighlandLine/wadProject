@@ -123,14 +123,20 @@ def show_group(request, group_slug):
     return render(request, "photoGraph/group.html", context=context_dict)
 
 
+def show_group_list(request):
+    context_dict = {}
+    context_dict["groups"] = sorted(Group.objects.all(), key=lambda x: x.members.count(), reverse=True)
+    return render(request, "photoGraph/group_list.html", context=context_dict)
+
+
 @login_required
-def report_post(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
+def report_post(request, post_slug):
+    post = Post.objects.get(slug=post_slug)
 
     if request.method == "POST":
         form = ReportForm(
             request.POST,
-            instance=PostReport(reporter=request.user.userprofile, post_id=post),
+            instance=PostReport(reporter=request.user.created_by, post_id=post),
         )
         if form.is_valid():
             form.save()
@@ -172,27 +178,27 @@ def delete_post_view(request, post_id):
 
 
 @login_required
-def report_user(request, user_id):
-    reported_user = get_object_or_404(UserProfile, user_id=user_id)
+def report_user(request, user_profile_slug):
+    reported_user_profile = UserProfile.objects.get(slug=user_profile_slug)
 
     if request.method == "POST":
         form = UserReportForm(
             request.POST,
-            instance=UserReport(reporter=request.user.userprofile, user_id=reported_user.user),
+            instance=UserReport(reporter=request.user.created_by, user_id=reported_user_profile.user),
         )
         if form.is_valid():
             form.save()
             return render(
                 request,
                 "photoGraph/report_user.html",
-                {"reported_user": reported_user, "form": form, "show_popup": True},
+                {"reported_user_profile": reported_user_profile, "form": form, "show_popup": True},
             )
     else:
         form = UserReportForm()
     return render(
         request,
         "photoGraph/report_user.html",
-        {"reported_user": reported_user, "form": form},
+        {"reported_user_profile": reported_user_profile, "form": form},
     )
 
 
@@ -295,7 +301,7 @@ def update_profile(request):
     form = PasswordResetForm()
     if request.method == "POST":
         form.PasswordResetForm(request.POST)
-        form.save(commit=True)
+        form.save()
 
 
 def password_change_view(request):
@@ -352,7 +358,7 @@ def edit_post(request, post_slug):
 @login_required
 def create_post(request):
     if request.method == "POST":
-        form = PostForm(request.POST, request.FILES)
+        form = PostForm(request.POST, request.FILES, request=request)
 
         if form.is_valid():
             post = form.save(commit=False)
@@ -365,10 +371,11 @@ def create_post(request):
             messages.error(request, "Please correct the error below.")
     else:
         form = PostForm(
+            request=request,
             initial={
                 "latitude": request.GET.get("lat", ""),
                 "longitude": request.GET.get("lng", ""),
-            }
+            },
         )
 
     return render(request, "photoGraph/create_post.html", {"form": form})

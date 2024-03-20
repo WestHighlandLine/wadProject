@@ -1,0 +1,23 @@
+{% extends 'photoGraph/base.html' %}
+{% load staticfiles %}
+{% load template_tags %}
+
+{% block title_block %}
+    All Groups
+{% endblock %}
+
+{% block body_block %}
+    {% if groups %}
+        {% for group in groups %}
+            <div style="display: grid; grid-template-columns: auto auto auto auto;">
+                <p><a href="{% url 'main:show_group' group.slug %}">{{ group }}</a></p>
+                <p><b>Members:</b> {{ group.members.count }}</p>
+                <p><b>Posts:</b> {{ group.posts.count }}</p>
+                <p><b>Created by:</b> <a href="{% url 'main:show_user_profile' group.created_by.slug %}">{{ group.created_by }}</a></p>
+            </div>
+            <hr>
+        {% endfor %}
+    {% else %}
+        <p>There are currently no groups. Why not create one?</p>
+    {% endif %}
+{% endblock %}

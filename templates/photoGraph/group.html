@@ -11,16 +11,20 @@
         <div id="group-details">
             <div class="detailsContainer">
                 <h1>{{ group }}</h1>
-                <p><b>Created by </b><a href="{% url 'main:show_user_profile' group.created_by.slug %}">{{ group.created_by }}</a></p>
+                <p><b>Created by: </b><a href="{% url 'main:show_user_profile' group.created_by.slug %}">{{ group.created_by }}</a></p>
                 {% if group.about %}
                     <p><b>About: </b>{{ group.about }}</p>
                 {% endif %}
+                <p><b>Members:</b> {{ group.members.count }}</p>
+                <p><b>Posts:</b> {{ group.posts.count }}</p>
             </div>
         </div>
 
+        <!--
         {% for group_member in group_members %}
             <p><a href="{% url 'main:show_user_profile' group_member.slug %}">{{ group_member }}</a></p>
         {% endfor %}
+        -->
 
         <br>
         <hr>
