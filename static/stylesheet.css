@@ -31,6 +31,9 @@ a {
     background-color: #1b1b1b;
     color: white;
     height: 30px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
 }
 
 .nav-bar a {
