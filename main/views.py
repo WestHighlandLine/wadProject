@@ -132,6 +132,27 @@ def create_group(request):
     return render(request, "photoGraph/create_group.html", {"form": form})
 
 
+def join_group(request):
+    if request.user.is_authenticated:
+        group_slug = request.GET["group_slug"]
+        try:
+            group = Group.objects.get(slug=group_slug)
+        except Group.DoesNotExist:
+            return HttpResponseNotFound()
+        except ValueError:
+            return HttpResponseBadRequest()
+
+        user_profile = request.user.created_by
+        user_in_group = user_profile.groups.filter(slug=group_slug).exists()
+
+        if user_in_group:
+            user_profile.groups.remove(group)
+        else:
+            user_profile.groups.add(group)
+
+    return HttpResponse(not user_in_group)
+
+
 def show_group_list(request):
     context_dict = {}
     context_dict["groups"] = sorted(Group.objects.all(), key=lambda x: x.members.count(), reverse=True)
@@ -439,11 +460,11 @@ def get_posts_json(request):
 
 
 def like_toggle(request):
-    if request.user:
+    if request.user.is_authenticated:
         post_id = request.GET["post_id"]
         try:
             post = Post.objects.get(id=int(post_id))
-        except post.DoesNotExist:
+        except Post.DoesNotExist:
             return HttpResponseNotFound()
         except ValueError:
             return HttpResponseBadRequest()
