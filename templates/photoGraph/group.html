@@ -16,14 +16,14 @@
                 $.get('/photoGraph/join_group/',
                 {'group_slug': group_slug},
                 function(data) {
-                    $('#like_count').html(data);
-                    if ($('#join-btn').attr('data-is-member') == "False") {
+                    if (data.user_in_group) {
                         $('#join-btn').html("Leave group");
-                        $('#join-btn').attr('data-is-member', "True")
+                        $('#join-btn').attr('data-is-member', "True");
                     } else {
                         $('#join-btn').html("Join group");
-                        $('#join-btn').attr('data-is-member', "False")
+                        $('#join-btn').attr('data-is-member', "False");
                     }
+                    $('#members-count').html(data.group_size);
                     reqOngoing = false;
                 });
                 reqOngoing = true;
@@ -58,16 +58,16 @@
 {% block body_block %}
     {% if group %}
         <div id="group-details">
-            {% if user.is_authenticated %}
-            <div class="join-btn-container">
-                <button id="join-btn" data-group-slug="{{ group.slug }}" data-is-member="{{ is_user_member }}">
-                    {% if is_user_member %}
-                        Leave group
-                    {% else %}
-                        Join group
-                    {% endif %}
-                </button>
-            </div>
+            {% if user.is_authenticated and not user_is_creator %}
+                <div class="join-btn-container">
+                    <button id="join-btn" data-group-slug="{{ group.slug }}" data-is-member="{{ is_user_member }}">
+                        {% if is_user_member %}
+                            Leave group
+                        {% else %}
+                            Join group
+                        {% endif %}
+                    </button>
+                </div>
             {% endif %}
             <div class="detailsContainer">
                 <h1>{{ group }}</h1>
@@ -75,16 +75,10 @@
                 {% if group.about %}
                     <p><b>About: </b>{{ group.about }}</p>
                 {% endif %}
-                <p><b>Members:</b> {{ group.members.count }}</p>
+                <p><b>Members:</b> <span id="members-count">{{ group.members.count }}</span></p>
                 <p><b>Posts:</b> {{ group.posts.count }}</p>
             </div>
         </div>
-
-        <!--
-        {% for group_member in group_members %}
-            <p><a href="{% url 'main:show_user_profile' group_member.slug %}">{{ group_member }}</a></p>
-        {% endfor %}
-        -->
 
         <br>
         <hr>
