@@ -107,12 +107,13 @@ def show_group(request, group_slug):
         context_dict["group_slug"] = group_slug
     else:
         context_dict["posts"] = group.posts.all()
-        context_dict["user_is_creator"] = request.user.created_by.id == group.created_by.id
         context_dict["group"] = group
         if (request.user.is_authenticated):
             context_dict["is_user_member"] = request.user.created_by.groups.filter(slug=group_slug).exists()
+            context_dict["user_is_creator"] = request.user.created_by.id == group.created_by.id
         else:
             context_dict["is_user_member"] = False
+            context_dict["user_is_creator"] = False
         context_dict["posts"] = group.posts.all()
 
     return render(request, "photoGraph/group.html", context=context_dict)
