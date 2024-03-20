@@ -31,6 +31,7 @@ urlpatterns = [
     path("group/<slug:group_slug>/", views.show_group, name="show_group"),
     path("group_list/", views.show_group_list, name="show_group_list"),
     path("create_group/", views.create_group, name="create_group"),
+    path("join_group/", views.join_group, name="join_group"),
     path("contact/", views.contact_us_view, name="contact_us"),
     path("comment/<slug:post_slug>/", views.comment, name="comment"),
 ]
