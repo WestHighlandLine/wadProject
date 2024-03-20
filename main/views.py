@@ -102,13 +102,14 @@ def show_group(request, group_slug):
 
     try:
         group = Group.objects.get(slug=group_slug)
-        context_dict["group"] = group
-        context_dict["group_members"] = group.members.exclude(id=group.created_by.id)
-        context_dict["posts"] = group.posts.all()
-
     except Group.DoesNotExist:
         context_dict["group"] = None
         context_dict["group_slug"] = group_slug
+    else:
+        context_dict["group"] = group
+        context_dict["group_members"] = group.members.exclude(id=group.created_by.id)
+        context_dict["posts"] = group.posts.all()
+        context_dict["user_is_creator"] = request.user.created_by is group.created_by
 
     return render(request, "photoGraph/group.html", context=context_dict)
 
