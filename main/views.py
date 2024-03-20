@@ -17,18 +17,11 @@ from main.forms import (
     UserReportForm,
     CommentForm,
     GroupForm,
+    ContactUsForm,
 )
 from django.contrib import messages
-from django.contrib.auth.models import User
-from main.models import (
-    UserProfile,
-    Post,
-    Comment,
-    PostReport,
-    UserReport,
-    Like,
-    Group,
-)
+from main.models import UserProfile, Post, Comment, PostReport, User, UserReport, Like, Group
+from django.views import View
 
 
 def index(request):
@@ -37,10 +30,6 @@ def index(request):
 
 def about(request):
     return render(request, "photoGraph/about.html")
-
-
-def contact_us(request):
-    return render(request, "photoGraph/contact_us.html")
 
 
 def show_user_profile(request, user_profile_slug):
@@ -330,8 +319,8 @@ def password_change_view(request):
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)
-            # messages.sucess(request, "Password Changed Sucessfully")
-            return redirect(reverse("main:my_account"))  # should go back to the my account page
+            messages.success(request, "Password Changed Sucessfully")
+            return redirect("main:my_account")  # should go back to the my account page
         else:
             messages.error(request, "Please correct the error below.")
     else:
@@ -475,9 +464,13 @@ def like_toggle(request):
     return HttpResponse(len(likes))
 
 
-def contact_view(request):
-    messages.success(
-        request,
-        "Your message has been sent! Our admin team will be in touch with you shortly.",
-    )
-    return render(request, "contact.html", {})
+def contact_us_view(request):
+    if request.method == "POST":
+        form = ContactUsForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your message has now been sent to our admin team.")
+            return redirect(reverse("main:contact_us"))
+    else:
+        form = ContactUsForm()
+    return render(request, "photoGraph/contact_us.html", {"contact_form": form})

@@ -8,7 +8,6 @@ urlpatterns = [
     path("index/", views.index),
     path("home/", views.index),
     path("about/", views.about, name="about"),
-    path("about/contact_us/", views.contact_us, name="contact_us"),
     path("user/<slug:user_profile_slug>/", views.show_user_profile, name="show_user_profile"),
     path("location/", views.show_location, name="show_location"),
     path("user/<slug:user_profile_slug>/post/<slug:post_slug>/", views.view_post, name="view_post"),
@@ -32,6 +31,6 @@ urlpatterns = [
     path("group/<slug:group_slug>/", views.show_group, name="show_group"),
     path("group_list/", views.show_group_list, name="show_group_list"),
     path("create_group/", views.create_group, name="create_group"),
-    path("contact/", views.contact_us, name="contact_us"),
+    path("contact/", views.contact_us_view, name="contact_us"),
     path("comment/<slug:post_slug>/", views.comment, name="comment"),
 ]

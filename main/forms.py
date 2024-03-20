@@ -1,6 +1,8 @@
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 from django import forms
 from django.contrib.auth.models import User
-from main.models import UserProfile, Group, Comment, Post, PostReport, UserReport
+from main.models import UserProfile, Group, Comment, Post, PostReport, UserReport, ContactUs
 
 
 class UserForm(forms.ModelForm):
@@ -15,6 +17,22 @@ class UserForm(forms.ModelForm):
             "password",
         )
 
+    def clean_password(self):
+        password = self.cleaned_data.get("password")
+
+        if len(password) < 8:
+            raise forms.ValidationError("Your password must contain at least 8 characters.")
+        
+        try:
+            validate_password(password)
+        except ValidationError as e:
+            raise forms.ValidationError(e.messages[0])
+        
+        if password.isdigit():
+            raise forms.ValidationError("Your password can't be entirely numeric.")
+
+        return password
+
     def clean(self):
         cleaned_data = super(UserForm, self).clean()
         password = cleaned_data.get("password")
@@ -22,11 +40,11 @@ class UserForm(forms.ModelForm):
 
         if password != confirm_password:
             raise forms.ValidationError("Passwords do not match")
-
+        return cleaned_data
 
 class UserProfileForm(forms.ModelForm):
     profile_picture = forms.ImageField()
-    biography = forms.CharField(max_length=100, required=False)
+    biography = forms.CharField(max_length=100, required=False, label="Biography (optional)")
 
     class Meta:
         model = UserProfile
@@ -129,3 +147,14 @@ class ChangePost(forms.ModelForm):
     def clean(self):
         cleaned_data = super(self).clean()
         return cleaned_data
+    
+class ContactUsForm(forms.ModelForm):
+    name = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Your name'}))
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Your email'}))
+    subject = forms.CharField(max_length=200, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Subject'}))
+    message = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Your message'}))
+
+    class Meta:
+        model = ContactUs
+        fields = ('name', 'email', 'subject', 'message',)
+

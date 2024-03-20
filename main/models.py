@@ -129,3 +129,21 @@ class Like(models.Model):
 
     def __str__(self):
         return f"{self.user} likes {self.post.slug}"
+
+
+class ContactUs(models.Model):
+    name = models.CharField(max_length = 100)
+    email = models.EmailField()
+    subject = models.CharField(max_length = 200)
+    message = models.TextField()
+
+    def __str__(self) -> str:
+        return f"Message from {self.name}"
+    
+    def get_details(self):
+        return (
+            f"Name: {self.name}\n"
+            f"Email: {self.email}\n"
+            f"Subject: {self.subject}\n"
+            f"Message: {self.message}\n"
+        )
