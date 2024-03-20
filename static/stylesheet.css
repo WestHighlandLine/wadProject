@@ -78,6 +78,10 @@ a {
     margin: 0 0.5em;
 }
 
+.footer ul li a:hover {
+    color: #80ffb3;
+}
+
 #main-content {
     width: 80%;
     /*set to 80% and then moved to the right 10% should position it in the middle */

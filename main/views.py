@@ -314,9 +314,8 @@ def password_change_view(request):
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)
-            # messages.sucess(request, "Password Changed Sucessfully")
-            return redirect(
-                reverse("main:my_account")
+            messages.success(request, "Password Changed Sucessfully")
+            return redirect("main:my_account"
             )  # should go back to the my account page
         else:
             messages.error(request, "Please correct the error below.")
