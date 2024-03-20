@@ -104,6 +104,10 @@ def show_group(request, group_slug):
         group = Group.objects.get(slug=group_slug)
         context_dict["group"] = group
         context_dict["group_members"] = group.members.exclude(id=group.created_by.id)
+        if (request.user.is_authenticated):
+            context_dict["is_user_member"] = request.user.created_by.groups.filter(slug=group_slug).exists()
+        else:
+            context_dict["is_user_member"] = False
         context_dict["posts"] = group.posts.all()
 
     except Group.DoesNotExist:

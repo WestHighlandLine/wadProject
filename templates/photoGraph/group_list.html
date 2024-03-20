@@ -6,20 +6,32 @@
     All Groups
 {% endblock %}
 
+{% block custom_head %}
+<style>
+.group-item {
+    display: flex;
+    list-style-type: none;
+}
+.group-item li {
+    margin-right: auto;
+}
+</style>
+{% endblock %}
+
 {% block body_block %}
     {% if groups %}
-        <p><a href="{% url 'main:create_group' %}">Create a new group</a></p>
+        <li><a href="{% url 'main:create_group' %}">Create a new group</a></li>
         <h1>All groups</h1>
         {% for group in groups %}
             <hr>
-            <div style="display: grid; grid-template-columns: auto auto auto auto;">
-                <p><a href="{% url 'main:show_group' group.slug %}">{{ group }}</a></p>
-                <p><b>Members:</b> {{ group.members.count }}</p>
-                <p><b>Posts:</b> {{ group.posts.count }}</p>
-                <p><b>Created by:</b> <a href="{% url 'main:show_user_profile' group.created_by.slug %}">{{ group.created_by }}</a></p>
-            </div>
+            <ul class="group-item">
+                <li><a href="{% url 'main:show_group' group.slug %}">{{ group }}</a></li>
+                <li><b>Members:</b> {{ group.members.count }}</li>
+                <li><b>Posts:</b> {{ group.posts.count }}</li>
+                <li><b>Created by:</b> <a href="{% url 'main:show_user_profile' group.created_by.slug %}">{{ group.created_by }}</a></li>
+            </ul>
         {% endfor %}
     {% else %}
-        <p>There are currently no groups. <a href="{% url 'main:create_group' %}">Why not create one?</a></p>
+        <li>There are currently no groups. <a href="{% url 'main:create_group' %}">Why not create one?</a></li>
     {% endif %}
 {% endblock %}
