@@ -32,10 +32,10 @@ def generate_posts(directory):
     for filename in os.listdir(directory):
         try:
             print("\n" + filename)
-            filename = directory + "/" + filename
+            file_path = directory + "/" + filename
 
             # Based on https://stackoverflow.com/a/73267185
-            with open(filename, "rb") as src:
+            with open(file_path, "rb") as src:
                 img = Image(src)
 
             if img.has_exif:
@@ -50,16 +50,16 @@ def generate_posts(directory):
                 else:
                     post_in_group = bool(random.getrandbits(1))
                     if post_in_group:
-                        group = random.choice(test_user_profile.groups.all())
+                        test_group = random.choice(test_user_profile.groups.all())
                     else:
-                        group = None
+                        test_group = None
 
                     test_user_profile = random.choice(test_user_profiles)
                     Post.objects.create(
                         created_by=test_user_profile,
-                        group=group,
-                        caption=filename.split("/")[-1].split(".")[0].replace("_", " "),
-                        photo=ImageFile(open(filename, "rb")),
+                        group=test_group,
+                        caption=filename.split(".")[0].replace("_", " "),
+                        photo=ImageFile(open(file_path, "rb")),
                         latitude=coords[0],
                         longitude=coords[1],
                     )
