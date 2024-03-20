@@ -150,7 +150,7 @@ def join_group(request):
         else:
             user_profile.groups.add(group)
 
-    return JsonResponse({"user_in_group": not user_in_group, "group_size": group.count()}, safe=False)
+    return JsonResponse({"user_in_group": not user_in_group, "group_size": group.members.count()}, safe=False)
 
 
 def show_group_list(request):
