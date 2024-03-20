@@ -38,16 +38,12 @@ class UserProfileForm(forms.ModelForm):
 
 class GroupForm(forms.ModelForm):
     name = forms.CharField()
-    owner = forms.CharField()
-    is_private = forms.BooleanField()
-    about = forms.CharField()
+    about = forms.CharField(required=False)
 
     class Meta:
         model = Group
         fields = (
             "name",
-            "owner",
-            "is_private",
             "about",
         )
 

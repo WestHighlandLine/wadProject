@@ -64,7 +64,7 @@ My Account
 		{% post_template posts %}
 	{% else %}
 		<div>
-			<a href="{% url 'main:index' %}" style="text-decoration: none;"><!-- link to create post page--><h3>Create your first post now</h3></a>
+			<p><a href="{% url 'main:index' %}">Create your first post now</a></p>
 		</div>
 	{% endif %}
 </div>

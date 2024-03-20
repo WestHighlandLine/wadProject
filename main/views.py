@@ -16,6 +16,7 @@ from main.forms import (
     ReportForm,
     UserReportForm,
     CommentForm,
+    GroupForm,
 )
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -121,6 +122,25 @@ def show_group(request, group_slug):
         context_dict["group_slug"] = group_slug
 
     return render(request, "photoGraph/group.html", context=context_dict)
+
+
+@login_required
+def create_group(request):
+    if request.method == "POST":
+        form = GroupForm(request.POST)
+
+        if form.is_valid():
+            group = form.save(commit=False)
+            group.created_by = request.user.created_by
+            group.save()
+
+            return redirect(reverse("main:show_group_list"))
+        else:
+            print(form.errors)
+            messages.error(request, "Please correct the error below.")
+    else:
+        form = GroupForm()
+    return render(request, "photoGraph/create_group.html", {"form": form})
 
 
 def show_group_list(request):

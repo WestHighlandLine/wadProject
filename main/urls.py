@@ -31,6 +31,7 @@ urlpatterns = [
     path("like_toggle/", views.like_toggle, name="like_toggle"),
     path("group/<slug:group_slug>/", views.show_group, name="show_group"),
     path("group_list/", views.show_group_list, name="show_group_list"),
+    path("create_group/", views.create_group, name="create_group"),
     path("contact/", views.contact_us, name="contact_us"),
     path("comment/<slug:post_slug>/", views.comment, name="comment"),
 ]

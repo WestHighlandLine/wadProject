@@ -29,8 +29,8 @@ class Group(models.Model):
 
     name = models.CharField(unique=True, max_length=50)
     slug = models.SlugField(unique=True)
-    about = models.CharField(max_length=100)
-    color = models.CharField(max_length=7)
+    about = models.CharField(max_length=100, blank=True, null=True)
+    # color = models.CharField(max_length=7)
     # is_private = models.BooleanField(default=False)
 
     created_time = models.DateTimeField(auto_now_add=True)
