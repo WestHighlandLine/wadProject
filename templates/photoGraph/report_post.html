@@ -18,39 +18,38 @@
 {% endblock %}
 
 {% block body_block %}
-<h2>Report Post</h2>
+    <h2>Report Post</h2>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-<p>Post Caption: {{ post.caption }}</p>
-<div style="display: flex; margin-top: -10px;">
-    <div>
-        <p>Post Content: </p>
-        <br>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <p><b>Post caption:</b> {{ post.caption }}</p>
+    <div style="display: flex; margin-top: -10px;">
+        <div>
+            <p><b>Post image:</b></p><br>
+        </div>
+        <img src="{{ post.photo.url }}" alt="{{ post.caption }}" style="width: 300px; margin-left: 20px; margin-top: 20px;">    
     </div>
-    <img src="{{ post.photo.url }}" alt="{{ post.caption }}" style="width: 300px; margin-left: 20px; margin-top: 20px;">    
-</div>
 
-<p>Post Location: {{ post.location_name }}</p>
+    <p><b>Post location:</b> {{ post.location_name }}</p>
 
-<form method="post" action="{% url 'main:report_post' post.id %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <br>
-    <button type="submit">Submit Report</button>
-</form>
+    <form method="post" action="{% url 'main:report_post' post.slug %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <br>
+        <button type="submit">Submit Report</button>
+    </form>
 
-{% if show_popup %}
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        Swal.fire({
-            icon: 'success',
-            title: 'Report submitted successfully!',
-            showConfirmButton: true,
-            confirmButtonText: "OK" 
-        }).then(() => {
-            window.location.href = '{% url "main:view_post" user_profile_slug=post.created_by.slug post_slug=post.slug %}';
+    {% if show_popup %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            Swal.fire({
+                icon: 'success',
+                title: 'Report submitted successfully!',
+                showConfirmButton: true,
+                confirmButtonText: "OK" 
+            }).then(() => {
+                window.location.href = '{% url "main:view_post" post.created_by.slug post.slug %}';
+            });
         });
-    });
-</script>
-{% endif %}
+    </script>
+    {% endif %}
 {% endblock %}

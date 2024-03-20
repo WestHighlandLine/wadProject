@@ -1,0 +1,25 @@
+{% extends 'photoGraph/base.html' %}
+{% load static %}
+{% load template_tags %}
+
+
+{% block title_block %}
+    Create Group
+{% endblock %}
+
+{% block custom_head %}
+<style>
+    #main-content {
+        max-width: 500px;
+    }
+</style>
+{% endblock %}
+
+{% block body_block %}
+<h1>Create group</h1>
+<form id="createGroupForm" method="post" action="{% url 'main:create_group' %}" enctype="multipart/form-data">
+	{% csrf_token %}
+	{{ form.as_p }}
+	<input type="submit" name="submit" value="Create group" />
+</form>
+{% endblock %}

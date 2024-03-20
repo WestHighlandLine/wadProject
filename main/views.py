@@ -12,14 +12,17 @@ from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
 from main.forms import (
     UserForm,
     UserProfileForm,
-    PostForm, 
-    ReportForm, UserReportForm,
+    PostForm,
+    ReportForm,
+    UserReportForm,
     CommentForm,
+    GroupForm,
     ContactUsForm,
 )
 from django.contrib import messages
-from main.models import UserProfile, Post, Comment, PostReport, User, UserReport, Like
+from main.models import UserProfile, Post, Comment, PostReport, User, UserReport, Like, Group
 from django.views import View
+
 
 def index(request):
     return render(request, "photoGraph/index.html")
@@ -34,16 +37,14 @@ def show_user_profile(request, user_profile_slug):
 
     try:
         user_profile = UserProfile.objects.get(slug=user_profile_slug)
-
+    except UserProfile.DoesNotExist:
+        context_dict["user_profile"] = None
+    else:
         if request.user == user_profile.user:
             return redirect(reverse("main:my_account"))
 
-        user_posts = Post.objects.filter(created_by=user_profile)
         context_dict["user_profile"] = user_profile
-        context_dict["posts"] = user_posts
-
-    except UserProfile.DoesNotExist:
-        context_dict["user_profile"] = None
+        context_dict["posts"] = user_profile.posts.all()
 
     return render(request, "photoGraph/user_profile.html", context=context_dict)
 
@@ -70,19 +71,10 @@ def view_post(request, user_profile_slug, post_slug):
     try:
         post = Post.objects.get(slug=post_slug)
         context_dict["post"] = post
-
-        comments = Comment.objects.filter(post=post)
-        context_dict["comments"] = comments
+        context_dict["comments"] = post.comments.all()
 
         if request.user.is_authenticated:
-            has_user_liked = (
-                len(
-                    Like.objects.filter(
-                        post=post, user=UserProfile.objects.get(user=request.user)
-                    )
-                )
-                > 0
-            )
+            has_user_liked = len(Like.objects.filter(post=post, user=request.user.created_by)) > 0
         else:
             has_user_liked = False
 
@@ -95,13 +87,11 @@ def view_post(request, user_profile_slug, post_slug):
 
 @login_required
 def comment(request, post_slug):
-    current_user_profile = UserProfile.objects.get(user=request.user)
+    current_user_profile = request.user.created_by
     post = Post.objects.get(slug=post_slug)
 
     if request.method == "POST":
-        form = CommentForm(
-            request.POST, instance=Comment(created_by=current_user_profile, post=post)
-        )
+        form = CommentForm(request.POST, instance=Comment(created_by=current_user_profile, post=post))
         form.save()
 
     return redirect("main:view_post", post.created_by, post_slug)
@@ -112,25 +102,77 @@ def show_group(request, group_slug):
 
     try:
         group = Group.objects.get(slug=group_slug)
-        context_dict["group"] = group
-        context_dict["group_members"] = group.members.exclude(id=group.created_by.id)
-        context_dict["posts"] = Post.objects.filter(group=group)
-
     except Group.DoesNotExist:
         context_dict["group"] = None
         context_dict["group_slug"] = group_slug
+    else:
+        context_dict["posts"] = group.posts.all()
+        context_dict["group"] = group
+        if (request.user.is_authenticated):
+            context_dict["is_user_member"] = request.user.created_by.groups.filter(slug=group_slug).exists()
+            context_dict["user_is_creator"] = request.user.created_by.id == group.created_by.id
+        else:
+            context_dict["is_user_member"] = False
+            context_dict["user_is_creator"] = False
+        context_dict["posts"] = group.posts.all()
 
     return render(request, "photoGraph/group.html", context=context_dict)
 
 
 @login_required
-def report_post(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
+def create_group(request):
+    if request.method == "POST":
+        form = GroupForm(request.POST)
+
+        if form.is_valid():
+            group = form.save(commit=False)
+            group.created_by = request.user.created_by
+            group.save()
+
+            return redirect(reverse("main:show_group_list"))
+        else:
+            print(form.errors)
+            messages.error(request, "Please correct the error below.")
+    else:
+        form = GroupForm()
+    return render(request, "photoGraph/create_group.html", {"form": form})
+
+
+def join_group(request):
+    if request.user.is_authenticated:
+        group_slug = request.GET["group_slug"]
+        try:
+            group = Group.objects.get(slug=group_slug)
+        except Group.DoesNotExist:
+            return HttpResponseNotFound()
+        except ValueError:
+            return HttpResponseBadRequest()
+
+        user_profile = request.user.created_by
+        user_in_group = user_profile.groups.filter(slug=group_slug).exists()
+
+        if user_in_group:
+            user_profile.groups.remove(group)
+        else:
+            user_profile.groups.add(group)
+
+    return JsonResponse({"user_in_group": not user_in_group, "group_size": group.members.count()}, safe=False)
+
+
+def show_group_list(request):
+    context_dict = {}
+    context_dict["groups"] = sorted(Group.objects.all(), key=lambda x: x.members.count(), reverse=True)
+    return render(request, "photoGraph/group_list.html", context=context_dict)
+
+
+@login_required
+def report_post(request, post_slug):
+    post = Post.objects.get(slug=post_slug)
 
     if request.method == "POST":
         form = ReportForm(
             request.POST,
-            instance=PostReport(reporter=request.user.userprofile, post_id=post),
+            instance=PostReport(reporter=request.user.created_by, post_id=post),
         )
         if form.is_valid():
             form.save()
@@ -150,13 +192,9 @@ def report_detail(request, report_id):
         return redirect("main:index")
 
     report = get_object_or_404(PostReport, id=report_id)
-    related_reports = PostReport.objects.filter(post_id=report.post_id).exclude(
-        id=report_id
-    )
+    related_reports = PostReport.objects.filter(post_id=report.post_id).exclude(id=report_id)
     reasons = [report.reason] + list(related_reports.values_list("reason", flat=True))
-    return render(
-        request, "photoGraph/report_detail.html", {"report": report, "reasons": reasons}
-    )
+    return render(request, "photoGraph/report_detail.html", {"report": report, "reasons": reasons})
 
 
 @login_required
@@ -176,29 +214,27 @@ def delete_post_view(request, post_id):
 
 
 @login_required
-def report_user(request, user_id):
-    reported_user = get_object_or_404(UserProfile, user_id=user_id)
+def report_user(request, user_profile_slug):
+    reported_user_profile = UserProfile.objects.get(slug=user_profile_slug)
 
     if request.method == "POST":
         form = UserReportForm(
             request.POST,
-            instance=UserReport(
-                reporter=request.user.userprofile, user_id=reported_user.user
-            ),
+            instance=UserReport(reporter=request.user.created_by, user_id=reported_user_profile.user),
         )
         if form.is_valid():
             form.save()
             return render(
                 request,
                 "photoGraph/report_user.html",
-                {"reported_user": reported_user, "form": form, "show_popup": True},
+                {"reported_user_profile": reported_user_profile, "form": form, "show_popup": True},
             )
     else:
         form = UserReportForm()
     return render(
         request,
         "photoGraph/report_user.html",
-        {"reported_user": reported_user, "form": form},
+        {"reported_user_profile": reported_user_profile, "form": form},
     )
 
 
@@ -208,12 +244,8 @@ def user_report_detail(request, report_id):
         return redirect("main:index")
 
     user_report = get_object_or_404(UserReport, id=report_id)
-    related_reports = UserReport.objects.filter(user_id=user_report.user_id).exclude(
-        id=report_id
-    )
-    reasons = [user_report.reason] + list(
-        related_reports.values_list("reason", flat=True)
-    )
+    related_reports = UserReport.objects.filter(user_id=user_report.user_id).exclude(id=report_id)
+    reasons = [user_report.reason] + list(related_reports.values_list("reason", flat=True))
 
     context = {"report": user_report, "reasons": reasons}
     return render(request, "photograph/user_report_detail.html", context)
@@ -305,7 +337,7 @@ def update_profile(request):
     form = PasswordResetForm()
     if request.method == "POST":
         form.PasswordResetForm(request.POST)
-        form.save(commit=True)
+        form.save()
 
 
 def password_change_view(request):
@@ -315,8 +347,7 @@ def password_change_view(request):
             user = form.save()
             update_session_auth_hash(request, user)
             messages.success(request, "Password Changed Sucessfully")
-            return redirect("main:my_account"
-            )  # should go back to the my account page
+            return redirect("main:my_account")  # should go back to the my account page
         else:
             messages.error(request, "Please correct the error below.")
     else:
@@ -325,16 +356,14 @@ def password_change_view(request):
 
 
 def info_change_view(request):
-    user_profile = UserProfile.objects.get(user=request.user)
+    user_profile = request.user.created_by
 
     if request.method == "POST":
         form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
         if form.is_valid():
             form.save()
             messages.success(request, "Information Changed Sucessfully")
-            return redirect(
-                reverse("main:my_account")
-            )  # should go back to the my account page
+            return redirect(reverse("main:my_account"))  # should go back to the my account page
         else:
             messages.error(request, "Please correct the error below.")
     else:
@@ -345,8 +374,8 @@ def info_change_view(request):
 @login_required
 def my_account(request):
     if request.user.is_authenticated:
-        user_profile = UserProfile.objects.get(user=request.user)
-        user_posts = Post.objects.filter(created_by=request.user.userprofile)
+        user_profile = request.user.created_by
+        user_posts = user_profile.posts.all()
         return render(
             request,
             "photoGraph/my_account.html",
@@ -365,11 +394,11 @@ def edit_post(request, post_slug):
 @login_required
 def create_post(request):
     if request.method == "POST":
-        form = PostForm(request.POST, request.FILES)
+        form = PostForm(request.POST, request.FILES, request=request)
 
         if form.is_valid():
             post = form.save(commit=False)
-            post.created_by = UserProfile.objects.get(user=request.user)
+            post.created_by = request.user.created_by
             post.save()
 
             return redirect(reverse("main:index"))
@@ -378,10 +407,11 @@ def create_post(request):
             messages.error(request, "Please correct the error below.")
     else:
         form = PostForm(
+            request=request,
             initial={
                 "latitude": request.GET.get("lat", ""),
                 "longitude": request.GET.get("lng", ""),
-            }
+            },
         )
 
     return render(request, "photoGraph/create_post.html", {"form": form})
@@ -406,9 +436,7 @@ def get_posts_json(request):
             longitude__lte=southEast[1],
         )
 
-        postObjects = sorted(
-            postObjects, key=lambda p: len(Like.objects.filter(post=p)), reverse=True
-        )
+        postObjects = sorted(postObjects, key=lambda p: len(Like.objects.filter(post=p)), reverse=True)
     else:
         postObjects = Post.objects.all()
 
@@ -421,17 +449,13 @@ def get_posts_json(request):
             "lon": post.longitude,
             "user_name": post.created_by.slug,
             "location_name": post.location_name,
-            "location_url": reverse("main:show_location")
-            + "?location_name="
-            + post.location_name,
+            "location_url": reverse("main:show_location") + "?location_name=" + post.location_name,
             "likes": len(likes),
             "date": post.created_time,
             "caption": post.caption,
             "photo_url": post.photo.url,
             "user_url": reverse("main:show_user_profile", args=[post.created_by.slug]),
-            "post_url": reverse(
-                "main:view_post", args=[post.created_by.slug, post.slug]
-            ),
+            "post_url": reverse("main:view_post", args=[post.created_by.slug, post.slug]),
         }
         if post.location_name not in result.keys():
             result[post.location_name] = [postDict]
@@ -442,25 +466,18 @@ def get_posts_json(request):
 
 
 def like_toggle(request):
-    if request.user:
+    if request.user.is_authenticated:
         post_id = request.GET["post_id"]
         try:
             post = Post.objects.get(id=int(post_id))
-        except post.DoesNotExist:
+        except Post.DoesNotExist:
             return HttpResponseNotFound()
         except ValueError:
             return HttpResponseBadRequest()
 
-        user_profile = UserProfile.objects.get(user=request.user)
+        user_profile = request.user.created_by
 
-        has_user_liked = (
-            len(
-                Like.objects.filter(
-                    post=post, user=UserProfile.objects.get(user=request.user)
-                )
-            )
-            > 0
-        )
+        has_user_liked = len(Like.objects.filter(post=post, user=user_profile)) > 0
 
         if has_user_liked:
             # Unlike
@@ -475,13 +492,12 @@ def like_toggle(request):
 
 
 def contact_us_view(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = ContactUsForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Your message has now been sent to our admin team.')
-            return redirect(reverse('main:contact_us'))
-    else: 
+            messages.success(request, "Your message has now been sent to our admin team.")
+            return redirect(reverse("main:contact_us"))
+    else:
         form = ContactUsForm()
-    return render(request, 'photoGraph/contact_us.html', {'contact_form': form})
-
+    return render(request, "photoGraph/contact_us.html", {"contact_form": form})

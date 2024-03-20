@@ -20,7 +20,7 @@
 <form id="infoChange" method="post" action="{% url 'main:info_change' %}" enctype="multipart/form-data">
 	{% csrf_token %}
 	{{ form.as_p}}
-	<input type="submit" name="submit" value="Change User Information" />
+	<input type="submit" name="submit" value="Change user information" />
 </form>
 <p><a href="{% url 'main:my_account' %}">Back to User profile</a></p>
 </div>
