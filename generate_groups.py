@@ -11,13 +11,20 @@ import random
 import lorem
 
 
-def generate_groups(n=5):
+def generate_groups():
     test_user_profiles = list(UserProfile.objects.all())
+    group_names = [
+        "glasgow-landscapes",
+        "gothicArchitecture",
+        "greenery",
+        "Glaswegian-Core",
+        "scottish-tourists-101",
+    ]
 
-    for i in range(n):
+    for group_name in group_names:
         test_group = Group.objects.create(
             created_by=random.choice(test_user_profiles),
-            name=f"generate_test_group_{i+1}",
+            name=group_name,
             about=lorem.paragraph(),
         )
 
