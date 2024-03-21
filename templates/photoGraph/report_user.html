@@ -22,7 +22,9 @@
     <h2>Report User</h2>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    {% if reported.user_profile.biography %}
     <p><b>{{ reported_user_profile }}'s description:</b> {{ reported_user_profile.biography }}</p>
+    {% endif %}
     <div style="display: flex; margin-top: -10px;">
         <div>
             <p><b>{{ reported_user_profile }}'s profile picture:</b></p><br>
