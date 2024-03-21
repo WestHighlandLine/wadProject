@@ -21,8 +21,8 @@
     {% if report.user_id %}
         <p>User being reported: {{ report.user_id }}</p>
 
-        {% if report.user_id.userprofile.biography %}
-        <p>{{ report.user_id }}'s profile description: {{ report.user_id.userprofile.biography }}</p>
+        {% if report.user_id.created_by.biography %}
+            <p>{{ report.user_id }}'s profile description: {{ report.user_id.created_by.biography }}</p>
         {% endif %}
 
         {% if report.user_id %}
@@ -31,7 +31,7 @@
                     <p>{{ report.user_id }}'s profile picture: </p>
                     <br>
                 </div>
-                <img src="{{ report.user_id.userprofile.profile_picture.url }}" alt="User Profile Picture" style="width: 300px; margin-left: 20px; margin-top: 20px;">    
+                <img src="{{ report.user_id.created_by.profile_picture.url }}" alt="User Profile Picture" style="width: 300px; margin-left: 20px; margin-top: 20px;">    
             </div>
         {% else %}
             <p>No profile picture found.</p>
@@ -52,4 +52,5 @@
     <a href="{% url 'main:delete_user_view' report.user_id.id %}">Delete User and Report(s)</a>
     <br><br>
     <a href="{% url 'admin:main_userreport_changelist' %}">Back to User Reports</a>
+    <div style="margin-bottom: 20px;"></div>
 {% endblock %}
