@@ -21,7 +21,8 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.user.username
-
+    class Meta:
+        app_label = 'main'
 
 class Group(models.Model):
     created_by = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
@@ -41,7 +42,8 @@ class Group(models.Model):
 
     def __str__(self):
         return self.name
-
+    class Meta:
+        app_label = 'main'
 
 @receiver(post_save, sender=Group)
 def group_creator_is_owner(instance: Group, **kwargs):
@@ -89,7 +91,8 @@ class Post(models.Model):
             self.location_name = f"{self.latitude}, {self.longitude}"
 
         super(Post, self).save(*args, **kwargs)
-
+    class Meta:
+        app_label = 'main'
 
 class Comment(models.Model):
     created_by = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
@@ -98,7 +101,8 @@ class Comment(models.Model):
     comment = models.CharField(max_length=100)
 
     created_time = models.DateTimeField(auto_now_add=True)
-
+    class Meta:
+        app_label = 'main'
 
 class PostReport(models.Model):
     reporter = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
@@ -121,7 +125,7 @@ class UserReport(models.Model):
 
     class Meta:
         verbose_name_plural = "User Reports"
-
+        app_label = 'main'
 
 class Like(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
@@ -129,7 +133,8 @@ class Like(models.Model):
 
     def __str__(self):
         return f"{self.user} likes {self.post.slug}"
-
+    class Meta:
+        app_label = 'main'
 
 class ContactUs(models.Model):
     name = models.CharField(max_length = 100)
@@ -147,3 +152,5 @@ class ContactUs(models.Model):
             f"Subject: {self.subject}\n"
             f"Message: {self.message}\n"
         )
+    class Meta:
+        app_label = 'main'

@@ -66,6 +66,7 @@ def generate_posts(directory):
             else:
                 print("The Image has no EXIF information")
         except Exception as e:
+    
             print(e)
 
 

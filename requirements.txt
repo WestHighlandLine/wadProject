@@ -1,0 +1,9 @@
+Django==2.2.28
+django-registration-redux==2.2
+exif==1.6.0
+ipycanvas==0.13.1
+lorem==0.1.1
+pillow==10.2.0
+plum-py==0.8.7
+pytz==2024.1
+sqlparse==0.4.4
