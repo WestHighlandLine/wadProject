@@ -13,8 +13,7 @@ from main.forms import (
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-class FormsTestCase(TestCase):
-
+class UserProfileTestCase(TestCase):
     def test_user_profile_form_valid(self):
         form_data = {
             'biography': 'This is a test bio',
@@ -35,6 +34,7 @@ class FormsTestCase(TestCase):
         form = UserProfileForm(data=form_data)
         self.assertFalse(form.is_valid())
 
+class UserFormTestCase(TestCase):
     def test_user_form_correct_password(self):
         form_data = {
             "username": "testuser",
@@ -57,6 +57,7 @@ class FormsTestCase(TestCase):
         form = UserForm(data=form_data)
         self.assertFalse(form.is_valid())
 
+class CommentFormTestCase(TestCase):
     def test_comment_form(self):
         import datetime
 
@@ -85,7 +86,7 @@ class FormsTestCase(TestCase):
         form = CommentForm(data=comment_form_data)
         self.assertTrue(form.is_valid())
 
-
+class ContactUsFormTestCase(TestCase):
     def test_contact_us_form_valid(self):
         form_data = {
             'name': 'John Doe',
@@ -105,7 +106,8 @@ class FormsTestCase(TestCase):
         }
         form = ContactUsForm(data=form_data)
         self.assertFalse(form.is_valid())
-
+    
+class ReportFormTestCase(TestCase):
     def test_report_form_valid(self):
         form_data = {
             'reason': 'This is a test reason for reporting',
@@ -120,6 +122,8 @@ class FormsTestCase(TestCase):
         form = ReportForm(data=form_data)
         self.assertFalse(form.is_valid())
 
+
+class PostFormTestCase(TestCase):
     def test_post_form_valid(self):
         user = User.objects.create_user('testuser2', 'test2@example.com', 'password1234!')
         user_profile = UserProfile.objects.create(user=user)
@@ -156,6 +160,7 @@ class FormsTestCase(TestCase):
         form = PostForm(data=form_data, request = request)
         self.assertFalse(form.is_valid())
 
+class GroupFormTestCase(TestCase):
     def test_group_form_valid(self):
         form_data = {
             'name': 'New Unique Group', 
