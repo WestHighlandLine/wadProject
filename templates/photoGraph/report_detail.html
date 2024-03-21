@@ -22,7 +22,6 @@
     <p>Post ID: {{ report.post_id }}</p>
     {% if report.post_id %}
       <p>Post Caption: {{ report.post_id.caption }}</p>
-
       <div style="display: flex; margin-top: -10px;">
         <div>
             <p>Post Content: </p>
@@ -42,7 +41,7 @@
     <p>Created At: {{ report.created_at }}</p>
     
     <a href="{% url 'main:delete_post_view' report.post_id.id %}">Delete Post and Reports</a>
-    <br><br>
+    <br>
     <a href="{% url 'admin:main_postreport_changelist' %}">Back to Reports</a>
   {% endif %}
 {% endblock %}

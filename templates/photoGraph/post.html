@@ -54,7 +54,9 @@
                 {% endif %}
             </button>
         {% endif %}
-        <a href="{% url 'main:report_post' post.slug %}" class="report-link">Report this post</a>
+        {% if user.is_authenticated and user != post.created_by.user %}
+            <a href="{% url 'main:report_post' post.slug %}" class="report-link">Report this post</a>
+        {% endif %}
     </div>
     <div class="post-container">
         <a href="{{ post.photo.url }}" target="_blank" class="post-photo-link"><img src="{{ post.photo.url }}" class="post-photo" /></a><br/>
