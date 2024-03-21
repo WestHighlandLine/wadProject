@@ -166,7 +166,7 @@ def join_group(request):
 
 def show_group_list(request):
     context_dict = {}
-    context_dict["groups"] = sorted(Group.objects.all(), key=lambda x: x.groups_members.all().count(), reverse=True)
+    context_dict["groups"] = Group.objects.annotate(num_members=Count('members')).order_by('-num_members')
     return render(request, "photoGraph/group_list.html", context=context_dict)
 
 
