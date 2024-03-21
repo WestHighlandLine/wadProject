@@ -111,7 +111,9 @@ def show_group(request, group_slug):
         context_dict["posts"] = group.posts.all()
         context_dict["group"] = group
         if (request.user.is_authenticated):
-            context_dict["is_user_member"] = request.user.created_by.groups.filter(slug=group_slug).exists()
+         #   context_dict["is_user_member"] = request.user.created_by.groups.filter(slug=group_slug).exists()
+
+            context_dict["is_user_member"] = request.user.created_by.members.filter(slug=group_slug).exists()
             context_dict["user_is_creator"] = request.user.created_by.id == group.created_by.id
         else:
             context_dict["is_user_member"] = False
@@ -165,7 +167,7 @@ def join_group(request):
 
 def show_group_list(request):
     context_dict = {}
-    context_dict["groups"] = sorted(Group.objects.all(), key=lambda x: x.group_members.count(), reverse=True)
+    context_dict["groups"] = sorted(Group.objects.all(), key=lambda x: x.members.count(), reverse=True)
     return render(request, "photoGraph/group_list.html", context=context_dict)
 
 
