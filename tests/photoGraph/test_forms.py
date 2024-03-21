@@ -1,18 +1,12 @@
 from django.test import TestCase, RequestFactory
 from django.contrib.auth.models import User
 from main.models import UserProfile, Group, Comment, Post, PostReport, UserReport
-from main.forms import (
-    UserForm,
-    UserProfileForm,
-    GroupForm,
-    PostForm,
-    CommentForm,
-    ReportForm,
-    ContactUsForm
-)
+from main.forms import *
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 
+# run tests with command python - .\manage.py test tests.photoGraph.test_forms
+# all test cases pass as of 21/03/2024 20:18
 class UserProfileTestCase(TestCase):
     def test_user_profile_form_valid(self):
         form_data = {
@@ -59,7 +53,6 @@ class UserFormTestCase(TestCase):
 
 class CommentFormTestCase(TestCase):
     def test_comment_form(self):
-        import datetime
 
         user = User.objects.create_user('testuser', 'test@example.com', 'testpassword123')
 
@@ -159,6 +152,29 @@ class PostFormTestCase(TestCase):
         }
         form = PostForm(data=form_data, request = request)
         self.assertFalse(form.is_valid())
+
+class ChangePostFormTestCase(TestCase):
+
+    from unittest.mock import patch
+
+    @patch('main.forms.ChangePost.clean')
+    def test_change_post_form_valid(self, mock_clean):
+        # Setup mock to return a specific cleaned_data
+        mock_clean.return_value = {'caption': 'Valid Caption', 'photo': 'Valid Photo Path', 'latitude':'0.0',
+                                   'longitude':'0.0'}
+        
+        with open('tests/photoGraph/test_images/test_image.jpg', 'rb') as img:
+            file_data = {
+                'photo':SimpleUploadedFile('test_image.jpg', img.read(), content_type='image.jpeg')
+            }
+        form_data = {
+                'caption': 'Test Caption',
+                'latitude': '0.0',
+                'longitude': '0.0',
+            }    
+        form = ChangePost(data=form_data, files=file_data)
+        self.assertTrue(form.is_valid(), form.errors.as_text())
+
 
 class GroupFormTestCase(TestCase):
     def test_group_form_valid(self):
