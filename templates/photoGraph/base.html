@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-{% load staticfiles %}
+{% load static %}
 {% load template_tags %}
 
 <html>	
@@ -42,26 +42,20 @@
             </span>
 
             <ul>
-			<!--
-			I don`t know what other peoples ideas are, but I was thinking the log in button be
-			shifted to the far right of the nav bar, and changes to the my Account link once the user logs in
-			if you hover over the my account section, a dropdown should appear with links to: create post; logout
-			
-			logout could then pop up a messages asking if you are sure you want to log out, etc.
-			-->
+
 
                     <li><a href="{% url 'main:index' %}">Home</a></li>
-
+                    <li>&bull;</li>
+                    <li><a href="{% url 'main:show_group_list' %}">Groups</a></li>
+                    <li>&bull;</li>
                     {% if user.is_authenticated %}
-
                         <li><a href="{% url 'main:my_account' %}">Account</a></li>
+                        <li>&bull;</li>
                         <li><a href="{% url 'main:logout' %}">Logout</a></li>
-
                     {% else %}
-
-                    <li><a href="{% url 'main:login' %}">Login</a></li>
-                    <li><a href="{% url 'main:signup' %}">Sign Up</a></li>
-
+                        <li><a href="{% url 'main:login' %}">Login</a></li>
+                        <li>&bull;</li>
+                        <li><a href="{% url 'main:signup' %}">Sign Up</a></li>
                     {% endif %}
 
             </ul>
@@ -77,17 +71,6 @@
                 <li><a href="{% url 'main:about' %}">About</a></li>
                 <li>&bull;</li>
                 <li><a href="{% url 'main:contact_us' %}">Contact Us</a></li>
-                <li class="testing-divider">|</li>
-                <li class="testing-label">Testing:</li>
-                <li class="testing"><a href="{% url 'main:my_account' %}">Account</a></li>
-                <li class="testing">&bull;</li>
-                <li class="testing"><a href="{% url 'main:create_post' %}">Create</a></li>
-                <li class="testing">&bull;</li>
-                <li class="testing"><a href="{% url 'main:signup' %}">Sign Up</a></li>
-                <li class="testing">&bull;</li>
-                <li class="testing"><a href="{% url 'main:login' %}">Login</a></li>
-                <li class="testing">&bull;</li>
-                <li class="testing"><a href="{% url 'main:logout' %}">Logout</a></li>
             </ul>
         </div>
     </body>

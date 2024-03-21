@@ -1,5 +1,5 @@
 {% extends 'photoGraph/base.html' %}
-{% load staticfiles %}
+{% load static %}
 {% load template_tags %}
 
 {% block title_block %}
@@ -38,11 +38,11 @@
 
 {% block body_block %}
     <div class="post-title-container">
-        <span class="post-title">{{ post.caption }}</span> at <a href="{% url 'main:show_location' %}?location_name={{ post.location_name }}">{{ post.location_name }}</a>
+        <span class="post-title">{{ post.caption }}</span><a href="{% url 'main:show_location' %}?location_name={{ post.location_name }}">{{ post.location_name }}</a>
     </div>
     <div class="post-inner">
-        <span class="post-info-primary">Posted by: <a href="{% url 'main:show_user_profile' post.created_by.slug %}">{{ post.created_by.slug }}</a></span><br/>
-        <span class="post-info-secondary"><span id="like_count">{% get_likes post %}</span> likes, taken {{post.created_time}}</span>
+        <span class="post-info-primary">Posted by <a href="{% url 'main:show_user_profile' post.created_by.slug %}">{{ post.created_by }}</a>{% if post.group %} as part of <a href="{% url 'main:show_group' post.group.slug %}">{{ post.group }}</a>{% endif %}</span><br/>
+        <span class="post-info-secondary"><span id="like_count">{% get_likes post %}</span> likes, posted {{ post.created_time }}</span>
         <br>
         {% if user.is_authenticated %}
             <button id="like_toggle" data-has-user-liked="{{ has_user_liked }}" data-postid="{{ post.id }}" class="btn btn-primary btn-sm" type="button">
@@ -54,12 +54,30 @@
                 {% endif %}
             </button>
         {% endif %}
-        <a href="{% url 'main:report_post' post.id %}" class="report-link">Report this post</a>
+        <a href="{% url 'main:report_post' post.slug %}" class="report-link">Report this post</a>
     </div>
     <div class="post-container">
         <a href="{{ post.photo.url }}" target="_blank" class="post-photo-link"><img src="{{ post.photo.url }}" class="post-photo" /></a><br/>
         <div id="map"></div>
     </div>
+
+    <br>
+
+    <h3>Comments</h3>
+
+    {% if user.is_authenticated %}
+
+    <form method="post" action="{% url 'main:comment' post.slug %}" id="comment-form">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <button type="submit">Submit comment</button>
+    </form>
+
+    {% else %}
+        <form>
+            <p>You must <a href="{% url 'main:login' %}?next={{ request.path }}">login</a> to be able to comment on posts.</p>
+        </form>
+    {% endif %}
 
     <br>
 

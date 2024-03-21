@@ -31,6 +31,10 @@ a {
     background-color: #1b1b1b;
     color: white;
     height: 30px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 99999;
 }
 
 .nav-bar a {
@@ -76,6 +80,10 @@ a {
 .nav-bar ul li,
 .footer ul li {
     margin: 0 0.5em;
+}
+
+.footer ul li a:hover {
+    color: #80ffb3;
 }
 
 #main-content {
@@ -172,67 +180,59 @@ a {
 }
 
 /* Style for contact page */
-.body-block {
-    margin-left: 1rem;
-    margin-top: 1rem;
-    width: auto;
+.contact-container h1 {
+    text-align: center;
 }
 
-.contact-container {
-    text-align: left;
-    margin-bottom: 20px;
-}
-
-.contact-item {
+.form-group {
     margin-bottom: 15px;
 }
 
-.contact-heading {
-    text-align: justify;
-    font-size: 2rem;
-    font-weight: bold;
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.btn-send {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn-send:hover {
+    background-color: #45a049;
+}
+
+.contact-info {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.contact-info p {
+    margin-bottom: 5px;
+}
+
+.contact-info a {
+    color: #333;
+    text-decoration: none;
+}
+
+.contact-info a:hover {
     text-decoration: underline;
 }
-
-.contact-p {
-    text-align: justify;
-    font-size: x-large;
-}
-
-.p {
-    display: block;
-    margin-block-start: 1em;
-    margin-block-end: 1em;
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
-}
-
-.text-center {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.text-left {
-    text-align: left;
-}
-
-.hidden-box {
-    padding: 20px;
-    border: 0px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0);
-    margin: auto;
-    max-width: 800px;
-}
-
-.box-container {
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin: auto;
-    max-width: 800px;
-}
+/* end of contact us css */
 
 .inner-link {
     display: flex;
@@ -275,4 +275,46 @@ button, input[type=submit], input::file-selector-button {
     padding: 0.5em 1em;
     color: white;
     cursor: pointer;
+}
+
+form {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+}
+
+form input[type=text], input[type=email], input[type=password], input[type=number] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+form textarea {
+    width: 100%; 
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    resize: none; 
+}
+
+
+form input[type=submit], form button[type=submit] {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+form input[type=submit]:hover {
+    background-color: #45a049;
 }

@@ -1,14 +1,13 @@
 <div id="userDetails">
 	<div class="detailsContainer">
-		<h3>{{ user_profile }}</h3>
-        {% if user_profile.biography %}
+		<h1>{{ user_profile }}</h1>
 		    <p><b>Biography: </b>{{ user_profile.biography }}</p>
-        {% endif %}
         {% if show_edit_options %}
             <p><b>Email:</b> {{ user_profile.user.email }}</p>
 		    <br>
+
 		    <p id="passwordChangeLink"><a href="{% url 'main:passwordChange' %}"> Change password</a></p>
-		    <p id="editInfo"><a href="{% url 'main:infoChange' %}"> Change User information</a></p>
+		    <p id="editInfo"><a href="{% url 'main:info_change' %}">Edit user profile</a></p>
         {% endif %}
     </div>
     {% if user_profile.profile_picture %}

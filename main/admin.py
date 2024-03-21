@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.http.request import HttpRequest
-from main.models import UserProfile, Post, PostReport, UserReport, Like
+from main.models import UserProfile, Post, PostReport, UserReport, Like, ContactUs
 from django.urls import reverse
 from django.utils.html import format_html
 from django.db.models import Count
@@ -125,8 +125,13 @@ class LikeAdmin(admin.ModelAdmin):
     def has_change_permission(self, request):
         return False
 
+class ContactUsAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'subject', 'message',)
+    search_fields = ('name', 'email','subject',)
+
 admin.site.register(UserReport, UserReportAdmin)
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Post, PostAdmin)
 admin.site.register(PostReport, PostReportAdmin)
 admin.site.register(Like, LikeAdmin)
+admin.site.register(ContactUs, ContactUsAdmin)

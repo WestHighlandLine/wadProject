@@ -1,41 +1,89 @@
 {% extends 'photoGraph/base.html' %}
-{% load staticfiles %}
+{% load static %}
+{% load template_tags %}
 
 {% block title_block %}
     Contact Us
 {% endblock %}
 
+{% block custom_head %}
+<link rel="stylesheet" type="text/css" href="{% static 'stylesheet.css' %}">
+<style>
+    #main-content {
+        max-width: max-content;
+    }
+    .notification-success {
+        background-color: #4CAF50; 
+        color: white; 
+        padding: 16px; 
+        position: fixed; 
+        z-index: 1; 
+        right: 30px; 
+        top: 30px;
+        border-radius: 5px; 
+        display: none; 
+        text-align: center;
+    }
+    .notification-close-btn {
+        position: absolute;
+        float: center;
+        font-size: 22px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+</style>
+
+{% endblock %}
+
 {% block body_block %}
-<!--insert custom HTML here-->
-<div class="body-block">
-    <div class="hidden-box">
-        <div class="contact-container">
-            <h1 class="contact-heading text-left thin">Contact Us</h1>
-            <p class="contact-p text-left">If you have any queries regarding our page, please get in touch via the links below! 
-                Otherwise, please call 071632960892 to chat with one of our team members today.</p>
+<div class = "main-content">
+    <h1>Contact Us!</h1>
+    <form id="contact_form" method="post" action="{% url 'main:contact_us' %}">
+        {% csrf_token %}
+        {{ contact_form.non_field_errors }}
+        <div class="form-group">
+            <label for="id_name">Name:</label>
+            {{ contact_form.name }}
+            {{ contact_form.name.errors }}
         </div>
-    </div>
-    
-    <div class="bg-light box-container">
-        <div class="inner-link">
-            <address class="contact-item">
-                <strong>Email Address</strong>
-                <br>
-                <a href="mailto:#">first-name.last-name@example.com</a>
-            </address>
-    
-            <address class="contact-item">
-                <strong>Facebook</strong>
-                <br>
-                <a href="https://www.facebook.com/profile.php?id=100041422060850">https://www.facebook.com</a>
-            </address>
-    
-            <address class="contact-item">
-                <strong>Instagram</strong>
-                <br>
-                <a href="https://instagram.com/mhonghao?igshid=2mnxceom0ny9">https://instagram.com</a>
-            </address>
+        <div class="form-group">
+            <label for="id_email">Email:</label>
+            {{ contact_form.email }}
+            {{ contact_form.email.errors }} 
         </div>
+        <div class="form-group">
+            <label for="id_subject">Subject:</label>
+            {{ contact_form.subject }}
+            {{ contact_form.subject.errors }}
+        </div>
+        <div class="form-group">
+            <label for="id_message">Message:</label>
+            {{ contact_form.message }}
+            {{ contact_form.message.errors }}
+        </div>
+        <button type="submit" class="btn-send">Send Message</button>
+        <div id="successNotification" style="display:none;" class="notification-success">
+            Your message has been successfully submitted!
+            <span class="notification-close-btn" onclick="closeNotification()">&times;</span>
+        </div>               
+    </form>
+    <div class="contact-info">
+        <span class ="call-us">Call us: +071632960892</span> |
+        <a href="https://www.facebook.com">Facebook</a> |
+        <a href="https://www.instagram.com">Instagram</a>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('contact_form').addEventListener('submit', function(e) {
+            e.preventDefault(); 
+            document.getElementById('successNotification').style.display = 'block'; 
+            setTimeout(() => this.submit(), 1000);
+        });
+    });
+    function closeNotification() {
+        document.getElementById('successNotification').style.display = 'none';
+    }
+    </script>    
 {% endblock %}

@@ -1,16 +1,37 @@
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 from django import forms
 from django.contrib.auth.models import User
-from main.models import UserProfile, Group, Comment, Post, PostReport, UserReport
-from django.contrib.auth.forms import PasswordChangeForm
+from main.models import UserProfile, Group, Comment, Post, PostReport, UserReport, ContactUs
 
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
-    confirm_password=forms.CharField(widget=forms.PasswordInput())
+    confirm_password = forms.CharField(widget=forms.PasswordInput())
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password',)
+        fields = (
+            "username",
+            "email",
+            "password",
+        )
+
+    def clean_password(self):
+        password = self.cleaned_data.get("password")
+
+        if len(password) < 8:
+            raise forms.ValidationError("Your password must contain at least 8 characters.")
+        
+        try:
+            validate_password(password)
+        except ValidationError as e:
+            raise forms.ValidationError(e.messages[0])
+        
+        if password.isdigit():
+            raise forms.ValidationError("Your password can't be entirely numeric.")
+
+        return password
 
     def clean(self):
         cleaned_data = super(UserForm, self).clean()
@@ -18,104 +39,122 @@ class UserForm(forms.ModelForm):
         confirm_password = cleaned_data.get("confirm_password")
 
         if password != confirm_password:
-            raise forms.ValidationError(
-                "Passwords do not match"
-            )
-
-
+            raise forms.ValidationError("Passwords do not match")
+        return cleaned_data
 
 class UserProfileForm(forms.ModelForm):
-    profile_picture = forms.ImageField() 
+    profile_picture = forms.ImageField()
+    biography = forms.CharField(max_length=100, required=False, label="Biography (optional)")
 
     class Meta:
         model = UserProfile
-        fields = ('profile_picture',)
-
+        fields = (
+            "profile_picture",
+            "biography",
+        )
 
 
 class GroupForm(forms.ModelForm):
-
     name = forms.CharField()
-    owner = forms.CharField()
-    is_private = forms.BooleanField()
-    about = forms.CharField()
+    about = forms.CharField(required=False)
 
-    class Meta: 
+    class Meta:
         model = Group
-        fields = ('name', 'owner', 'is_private', 'about',)
-
+        fields = (
+            "name",
+            "about",
+        )
 
 
 class PostForm(forms.ModelForm):
-    caption = forms.CharField(label='Caption', max_length=255)
-    photo = forms.ImageField(label='Photo')
+    caption = forms.CharField(label="Caption", max_length=255)
+    photo = forms.ImageField(label="Photo")
+    group = forms.ModelChoiceField(label="Group (optional)", queryset=None, required=False)
     latitude = forms.DecimalField(label="Latitude")
     longitude = forms.DecimalField(label="Longitude")
 
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        super(PostForm, self).__init__(*args, **kwargs)
+        self.fields["group"].queryset = self.request.user.created_by.groups.all()
+
     class Meta:
         model = Post
-        fields = ("caption", "photo", "latitude", "longitude",)
-
+        fields = (
+            "caption",
+            "photo",
+            "group",
+            "latitude",
+            "longitude",
+        )
 
 
 class CommentForm(forms.ModelForm):
+    comment = forms.CharField(
+        widget=forms.Textarea(
+            attrs={
+                "class": "comment-textarea",
+                "rows": 5,
+                "placeholder": "Write a comment...",
+            }
+        ),
+        label="",
+    )
 
-    commenter = forms.ModelChoiceField(queryset=User.objects.all(), label='Commenter')
-    time = forms.DateTimeField(label='Time')
-    class Meta: 
+    class Meta:
         model = Comment
-        fields = ('commenter', 'post', 'comment', 'time', )
-
+        fields = ("comment",)
 
 
 class ReportForm(forms.ModelForm):
 
-    reason = forms.CharField(widget=forms.Textarea(attrs={'class': 'custom-textarea', 'rows': 5}), label='Reason')
+    reason = forms.CharField(
+        widget=forms.Textarea(attrs={"class": "custom-textarea", "rows": 5}),
+        label="Reason",
+    )
 
-    class Meta: 
+    class Meta:
         model = PostReport
-        fields = ('reason',)
-
+        fields = ("reason",)
 
 
 class UserReportForm(forms.ModelForm):
 
-    reason = forms.CharField(widget=forms.Textarea(attrs={'class': 'custom-textarea', 'rows': 5}), label='Reason')
+    reason = forms.CharField(
+        widget=forms.Textarea(attrs={"class": "custom-textarea", "rows": 5}),
+        label="Reason",
+    )
 
-    class Meta: 
+    class Meta:
         model = UserReport
-        fields = ('reason',)
-    
+        fields = ("reason",)
 
-
-class CustomPasswordChangeForm(PasswordChangeForm):
-    
-    input_new_password = forms.CharField(
-        label="Input New Password",
-        widget=forms.PasswordInput(),
-    )
-    new_password_confirm = forms.CharField(
-        label="Confirm New Password",
-        widget=forms.PasswordInput(),
-    )
 
 class ChangePost(forms.ModelForm):
 
-    caption = forms.CharField(label='Caption', max_length=255)
-    photo = forms.ImageField(label='Photo')
-    
+    caption = forms.CharField(label="Caption", max_length=255)
+    photo = forms.ImageField(label="Photo")
+
     class Meta:
         model = Post
-        fields = ('caption', 'photo', 'latitude', 'longitude',)
-    
+        fields = (
+            "caption",
+            "photo",
+            "latitude",
+            "longitude",
+        )
+
     def clean(self):
         cleaned_data = super(self).clean()
         return cleaned_data
-
-class ChangeInfoForm(forms.ModelForm):
-    picture = forms.ImageField() 
+    
+class ContactUsForm(forms.ModelForm):
+    name = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Your name'}))
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Your email'}))
+    subject = forms.CharField(max_length=200, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Subject'}))
+    message = forms.CharField(widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Your message'}))
 
     class Meta:
-        model = UserProfile
-        fields = ('picture',)
+        model = ContactUs
+        fields = ('name', 'email', 'subject', 'message',)
 

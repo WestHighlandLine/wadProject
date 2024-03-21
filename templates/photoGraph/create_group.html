@@ -4,7 +4,7 @@
 
 
 {% block title_block %}
-    Create Post
+    Create Group
 {% endblock %}
 
 {% block custom_head %}
@@ -12,17 +12,14 @@
     #main-content {
         max-width: 500px;
     }
-    #id_caption, #id_latitude, #id_longitude, #id_photo {
-        width:100%;
-    }
 </style>
 {% endblock %}
 
 {% block body_block %}
-<h1>Create post</h1>
-<form id="createPostForm" method="post" action="{% url 'main:create_post' %}" enctype="multipart/form-data">
+<h1>Create group</h1>
+<form id="createGroupForm" method="post" action="{% url 'main:create_group' %}" enctype="multipart/form-data">
 	{% csrf_token %}
 	{{ form.as_p }}
-	<input type="submit" name="submit" value="Create post" />
+	<input type="submit" name="submit" value="Create group" />
 </form>
 {% endblock %}

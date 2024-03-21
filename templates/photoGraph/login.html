@@ -1,5 +1,6 @@
 {% extends 'photoGraph/base.html' %}
-{% load staticfiles %}
+{% load static %}
+{% load template_tags %}
 
 {% block title_block %}
     Login
@@ -43,7 +44,7 @@
     <br />
     <br>
     <input type="hidden" name="next" value="" size="50" id="next"/>
-    <input type="submit" value="submit" />
+    <input type="submit" value="Submit" />
 </form><br/>
 <a href="{% url 'main:signup' %}">Or sign-up...</a>
 
