@@ -111,7 +111,8 @@ def show_group(request, group_slug):
         context_dict["posts"] = group.posts.all()
         context_dict["group"] = group
         if (request.user.is_authenticated):
-            context_dict["is_user_member"] = request.user.created_by.groups.filter(slug=group_slug).exists()
+            #context_dict["is_user_member"] = request.user.created_by.groups.filter(slug=group_slug).exists()
+            context_dict["is_user_member"] = group.members.filter(id=request.user.created_by.id).exists()
             context_dict["user_is_creator"] = request.user.created_by.id == group.created_by.id
         else:
             context_dict["is_user_member"] = False
