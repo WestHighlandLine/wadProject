@@ -115,7 +115,7 @@ class PostReport(models.Model):
 
     class Meta:
         verbose_name_plural = "Post Reports"
-
+        app_label = 'main'
 
 class UserReport(models.Model):
     reporter = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
