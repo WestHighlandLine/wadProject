@@ -26,7 +26,7 @@ class UserProfile(models.Model):
 
 class Group(models.Model):
     created_by = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    members = models.ManyToManyField(UserProfile, related_name="groups")
+    members = models.ManyToManyField(UserProfile, related_name="groups_members")
 
     name = models.CharField(unique=True, max_length=50)
     slug = models.SlugField(unique=True)
