@@ -129,6 +129,12 @@ class ContactUsAdmin(admin.ModelAdmin):
     list_display = ('name', 'email', 'subject', 'message',)
     search_fields = ('name', 'email','subject',)
 
+    def has_add_permission(self, request):
+        return False
+    
+    def has_change_permission(self, request):
+        return False
+
 admin.site.register(UserReport, UserReportAdmin)
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Post, PostAdmin)
