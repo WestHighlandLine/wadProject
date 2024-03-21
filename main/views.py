@@ -22,7 +22,7 @@ from main.forms import (
 from django.contrib import messages
 from main.models import UserProfile, Post, Comment, PostReport, User, UserReport, Like, Group
 from django.views import View
-
+from django.db.models import Count
 
 
 
@@ -166,7 +166,7 @@ def join_group(request):
 
 def show_group_list(request):
     context_dict = {}
-    context_dict["groups"] = Group.objects.annotate(num_members=Count('members')).order_by('-num_members')
+    context_dict["groups"] = sorted(Group.objects.all(), key=lambda x: x.members.all().count(), reverse=True)
     return render(request, "photoGraph/group_list.html", context=context_dict)
 
 
