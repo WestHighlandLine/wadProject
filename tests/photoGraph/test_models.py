@@ -8,7 +8,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from unittest.mock import patch
 
 # run tests with command - python .\manage.py test tests.photoGraph.test_models
-# all test cases pass as of 21/03/2024 20:18
+# all test cases pass as of 22/03/2024 14:30
 
 class UserProfileModelTestCase(TestCase):
     def setUp(self):

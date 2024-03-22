@@ -6,7 +6,7 @@ from main.forms import *
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 # run tests with command python - .\manage.py test tests.photoGraph.test_forms
-# all test cases pass as of 21/03/2024 20:18
+# all test cases pass as of 22/03/2024 14:30
 class UserProfileTestCase(TestCase):
     def test_user_profile_form_valid(self):
         form_data = {

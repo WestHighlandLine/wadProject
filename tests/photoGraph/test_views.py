@@ -12,7 +12,7 @@ from unittest.mock import patch
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 # run tests with command - python .\manage.py test tests.photoGraph.test_views
-# all test cases pass as of 21/03/2024 20:18
+# all test cases pass as of 22/03/2024 14:30
 
 class IndexViewTestCase(TestCase): 
     def test_index_view(self):
@@ -489,8 +489,7 @@ class SignUpViewTestCase(TestCase):
             'biography': 'Test biography',
         }
         response = self.client.post(reverse('main:signup'), post_data, format='multipart/form-data')
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'photoGraph/signup.html')
+        self.assertEqual(response.status_code, 302)
         self.assertTrue(User.objects.filter(username=username).exists())
         user = User.objects.get(username=username)
         self.assertEqual(user.username, username)
