@@ -46,12 +46,13 @@
     <input type="hidden" name="next" value="" size="50" id="next"/>
     <input type="submit" value="Submit" />
 </form><br/>
-<a href="{% url 'main:signup' %}">Or sign-up...</a>
+<a href="{% url 'main:signup' %}" id="signup-link-login">Or sign-up...</a>
 
 <script>
     let next = (new URL(window.location)).searchParams.get("next");
-    if (next != "") {
+    if (next != "" && next != null) {
         document.getElementById("next").value = next;
+        document.getElementById("signup-link-login").href += "?next=" + encodeURIComponent(next);
     }
 </script>
 {% endblock %}

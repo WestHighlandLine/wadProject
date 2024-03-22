@@ -111,7 +111,7 @@ def show_group(request, group_slug):
         context_dict["posts"] = group.posts.all()
         context_dict["group"] = group
         if (request.user.is_authenticated):
-            #context_dict["is_user_member"] = request.user.created_by.groups.filter(slug=group_slug).exists()
+            #context_dict["is_user_member"] = request.user.created_by.groups_members.filter(slug=group_slug).exists()
             context_dict["is_user_member"] = group.members.filter(id=request.user.created_by.id).exists()
             context_dict["user_is_creator"] = request.user.created_by.id == group.created_by.id
         else:
@@ -152,12 +152,12 @@ def join_group(request):
             return HttpResponseBadRequest()
 
         user_profile = request.user.created_by
-        user_in_group = user_profile.groups.filter(slug=group_slug).exists()
+        user_in_group = user_profile.groups_members.filter(slug=group_slug).exists()
 
         if user_in_group:
-            user_profile.groups.remove(group)
+            user_profile.groups_members.remove(group)
         else:
-            user_profile.groups.add(group)
+            user_profile.groups_members.add(group)
 
     return JsonResponse({"user_in_group": not user_in_group, "group_size": group.members.count()}, safe=False)
 
@@ -274,8 +274,6 @@ def delete_user_view(request, user_id):
 
 
 def signup(request):
-    registered = False
-
     if request.method == "POST":
         user_form = UserForm(request.POST)
         profile_form = UserProfileForm(request.POST, request.FILES)
@@ -291,7 +289,14 @@ def signup(request):
                 profile.picture = request.FILES["picture"]
 
             profile.save()
-            registered = True
+
+            # Registering done! Login the user, and redirect them to where they were going
+            login(request, user)
+            next = request.POST.get("next", None)
+            redirect_url = reverse("main:index")
+            if next:
+                redirect_url = next
+            return redirect(redirect_url)
         else:
             print(user_form.errors, profile_form.errors)
     else:
@@ -303,8 +308,7 @@ def signup(request):
         "photoGraph/signup.html",
         context={
             "user_form": user_form,
-            "profile_form": profile_form,
-            "registered": registered,
+            "profile_form": profile_form
         },
     )
 

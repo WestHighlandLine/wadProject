@@ -50,7 +50,7 @@ def generate_posts(directory):
                 else:
                     post_in_group = bool(random.getrandbits(1))
                     if post_in_group:
-                        test_group = random.choice(test_user_profile.groups.all())
+                        test_group = random.choice(test_user_profile.groups_members.all())
                     else:
                         test_group = None
 
