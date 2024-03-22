@@ -76,7 +76,7 @@ class PostForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
         super(PostForm, self).__init__(*args, **kwargs)
-        self.fields["group"].queryset = self.request.user.created_by.groups.all()
+        self.fields["group"].queryset = self.request.user.created_by.groups_members.all()
 
     class Meta:
         model = Post
