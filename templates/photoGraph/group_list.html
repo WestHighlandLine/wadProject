@@ -26,7 +26,7 @@
             <hr>
             <ul class="group-item">
                 <li><a href="{% url 'main:show_group' group.slug %}">{{ group }}</a></li>
-                <li><b>Members:</b> {{ group.group_members.count }}</li>
+                <li><b>Members:</b> {{ group.members.count }}</li>
                 <li><b>Posts:</b> {{ group.posts.count }}</li>
                 <li><b>Created by:</b> <a href="{% url 'main:show_user_profile' group.created_by.slug %}">{{ group.created_by }}</a></li>
             </ul>
