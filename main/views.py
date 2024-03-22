@@ -25,7 +25,6 @@ from django.views import View
 from django.db.models import Count
 
 
-
 def index(request):
     return render(request, "photoGraph/index.html")
 
@@ -110,8 +109,8 @@ def show_group(request, group_slug):
     else:
         context_dict["posts"] = group.posts.all()
         context_dict["group"] = group
-        if (request.user.is_authenticated):
-            #context_dict["is_user_member"] = request.user.created_by.groups_members.filter(slug=group_slug).exists()
+        if request.user.is_authenticated:
+            # context_dict["is_user_member"] = request.user.created_by.groups_members.filter(slug=group_slug).exists()
             context_dict["is_user_member"] = group.members.filter(id=request.user.created_by.id).exists()
             context_dict["user_is_creator"] = request.user.created_by.id == group.created_by.id
         else:
@@ -160,8 +159,6 @@ def join_group(request):
             user_profile.groups_members.add(group)
 
     return JsonResponse({"user_in_group": not user_in_group, "group_size": group.members.count()}, safe=False)
-
-
 
 
 def show_group_list(request):
@@ -306,10 +303,7 @@ def signup(request):
     return render(
         request,
         "photoGraph/signup.html",
-        context={
-            "user_form": user_form,
-            "profile_form": profile_form
-        },
+        context={"user_form": user_form, "profile_form": profile_form},
     )
 
 
